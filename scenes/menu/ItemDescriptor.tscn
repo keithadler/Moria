@@ -60,7 +60,6 @@ margin_left = -1.0
 margin_top = -1.0
 margin_right = 16.0
 margin_bottom = 16.0
-color = Color( 0.462745, 0.517647, 0.282353, 1 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -70,7 +69,7 @@ margin_left = 1.0
 margin_top = 1.0
 margin_right = 16.0
 margin_bottom = 16.0
-color = Color( 0.141176, 0.192157, 0.215686, 1 )
+color = Color( 0, 0, 0, 1 )
 __meta__ = {
 "_edit_lock_": true
 }

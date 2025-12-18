@@ -10,11 +10,14 @@ onready var shortcuts = get_node("Shortcuts")
 onready var fatigue = get_node("Fatigue")
 onready var status = ""
 
+onready var tween = get_node("SmoothMove")
+
 var currentVision: Array = []
 var charClass: int = 0
 var statuses: Dictionary = {}
 var enchants: Dictionary = {}
 var pos = Vector2(0, 0)
+var spawnPos = Vector2(0, 0)
 
 func _ready():
 	Ref.character = self
@@ -170,6 +173,12 @@ func takeHit(dmg: int, bypassProt: int = 0):
 	realDmg = StatusEngine.decreaseStatusRanks(self, realDmg, Data.STATUS_SHIELD)
 	stats.hp -= realDmg
 	Ref.ui.writeCharacterTakeHit(realDmg)
+	
+	# Check for death
+	if stats.hp <= 0:
+		die()
+		return realDmg
+	
 	if !isCritical and stats.hpPercent() < 0.25:
 		if statuses.has(Data.STATUS_ENCHANT + Data.ENCH_ESCAPE):
 			var s = SpellEngine.createSpellStatus(Data.STATUS_INVISIBLE, 1, 5)
@@ -324,7 +333,8 @@ func rest():
 		spells.spellsUses[s] = Data.spells[s][Data.SP_USES][rank]
 
 func refreshMapPosition():
-	position = 9 * pos
+	tween.interpolate_property(self, "position", position, 9 * pos, 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	tween.start()
 
 func getRandomCloseCell():
 	if currentVision.empty():
@@ -344,3 +354,14 @@ func getDisplaYStatusList() -> Array:
 
 func ignore(entity) -> bool:
 	return false
+
+func die():
+	# Disable input
+	Ref.game.set_process_input(false)
+	# Write death message
+	Ref.ui.write("You have died!")	
+	# Brief pause so player can see the death message
+	yield(get_tree().create_timer(4.0), "timeout")
+	
+	# Return to title screen
+	get_tree().change_scene("res://scenes/UI/TitleScreen.tscn")

@@ -36,7 +36,7 @@ func newFloor():
 	get_parent().drawFloor(array)
 	rooms = decorator.getTreasuresCandidates(50)
 	decorator.flagMap()
-	# Place tresor rooms
+	# Place treasure rooms
 	var treasureThreshold = 0.215
 	var nTreasures = randf()
 	while nTreasures > 0:
@@ -88,6 +88,7 @@ func newFloor():
 	# Draw entries
 	dungeon.set_cellv(exits[1], GLOBAL.PASS_ID, false, false, false, Vector2(2, 0))
 	dungeon.set_cellv(specialDoor, GLOBAL.PASS_ID, false, false, false, Vector2(1, 0))
+	get_parent().encounterHandler.createEncounters()
 	return exits[0]
 
 func generate():

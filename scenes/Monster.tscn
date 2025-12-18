@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://sprites/chars.png" type="Texture" id=1]
+[ext_resource path="res://sprites/chars_full.png" type="Texture" id=1]
 [ext_resource path="res://scripts/Monster.gd" type="Script" id=2]
 [ext_resource path="res://sprites/masks.png" type="Texture" id=3]
 [ext_resource path="res://scripts/monster/Stats.gd" type="Script" id=4]
@@ -21,12 +21,14 @@ frame = 6
 [node name="BodySprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 centered = false
-hframes = 4
-vframes = 16
-frame = 2
+hframes = 26
+vframes = 26
+frame = 36
 
 [node name="Stats" type="Node" parent="."]
 script = ExtResource( 4 )
 
 [node name="Actions" type="Node" parent="."]
 script = ExtResource( 5 )
+
+[node name="SmoothMove" type="Tween" parent="."]

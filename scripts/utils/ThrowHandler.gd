@@ -9,6 +9,39 @@ func throwAsync(itemId: int):
 		yield(throwing, "completed")
 	MasterInput.setMaster(Ref.game)
 
+#func throwCharacter(itemId: int):
+#	var item = Data.throwings[GLOBAL.items[itemId][GLOBAL.IT_BASE]]
+#	if GLOBAL.targets.size() == 0:
+#		Ref.ui.noTarget()
+#		return
+#	Ref.game.set_process_input(false)
+#	Ref.ui.askForTarget(GLOBAL.targets.keys(), self)
+#	var coroutineReturn = yield(Ref.ui, "coroutine_signal")
+#	if coroutineReturn == -1:
+#		return
+#	var targetId = GLOBAL.targets.keys()[coroutineReturn]
+#	var entity = instance_from_id(targetId)
+#	yield(castProjectile(GLOBAL.targets[targetId], item[Data.TH_PROJ]), "completed")
+#	Ref.ui.writeCharacterShoot(entity.stats.entityName, item[Data.TH_NAME])
+#	if StatusEngine.getStatusRank(entity, Data.STATUS_REPEL_MISSILES) >= 0 and randf() < 0.15:
+#		Ref.ui.writeDeflectMonster(entity.stats.entityName)
+#	if item[Data.TH_DMG] != null:
+#		var result = Ref.character.stats.hitDices.roll(Ref.character)
+#		if result >= entity.stats.ca:
+#			Ref.ui.writeCharacterStrike(entity.stats.entityName, result, entity.stats.ca)
+#			var wpDmg = item[Data.TH_DMG]
+#			entity.takeHit(GeneralEngine.dmgDice(wpDmg.x, wpDmg.y, 0, Data.DMG_SLASH).roll(Ref.character))
+#		else:
+#			Ref.ui.writeCharacterMiss(entity.stats.entityName, result, entity.stats.ca)
+#	if item[Data.TH_EFFECT] != null:
+#		SpellEngine.applyEffect(Ref.character, instance_from_id(targetId), item[Data.TH_EFFECT], true, 1, 99)
+#	Ref.character.inventory.throwings.erase(itemId)
+#	Ref.character.shortcuts.refreshShortcuts(GLOBAL.items[itemId][GLOBAL.IT_STACK])
+#	Ref.character.fatigue.fightCost()
+#	Ref.game.set_process_input(true)
+#	GLOBAL.currentMode = GLOBAL.MODE_NORMAL
+#	GeneralEngine.newTurn()
+
 func throwCharacter(itemId: int):
 	var item = Data.throwings[GLOBAL.items[itemId][GLOBAL.IT_BASE]]
 	if GLOBAL.targets.size() == 0:
@@ -33,8 +66,25 @@ func throwCharacter(itemId: int):
 			entity.takeHit(GeneralEngine.dmgDice(wpDmg.x, wpDmg.y, 0, Data.DMG_SLASH).roll(Ref.character))
 		else:
 			Ref.ui.writeCharacterMiss(entity.stats.entityName, result, entity.stats.ca)
+	
+	# ============================================================
+	# FIX ATTEMPT: Handle effect properly based on its structure
+	# ============================================================
 	if item[Data.TH_EFFECT] != null:
-		SpellEngine.applyEffect(Ref.character, instance_from_id(targetId), item[Data.TH_EFFECT], true, 1, 99)
+		var effect = item[Data.TH_EFFECT]
+		
+		# Check if effect is an array or single int
+		if typeof(effect) == TYPE_ARRAY:
+			# Effect is [spellId, rank, savingCap] or similar
+			var spellId = effect[0]
+			var rank = effect[1] if effect.size() > 1 else 1
+			var savingCap = effect[2] if effect.size() > 2 else 99
+			SpellEngine.applyEffect(Ref.character, entity, spellId, true, rank, savingCap)
+		else:
+			# Effect is just a spell ID
+			SpellEngine.applyEffect(Ref.character, entity, effect, true, 1, 99)
+	# ============================================================
+	
 	Ref.character.inventory.throwings.erase(itemId)
 	Ref.character.shortcuts.refreshShortcuts(GLOBAL.items[itemId][GLOBAL.IT_STACK])
 	Ref.character.fatigue.fightCost()
@@ -65,5 +115,22 @@ func castThrowMonster(itemId: int, caster, target, path: Array):
 			target.takeHit(GeneralEngine.dmgDice(wpDmg.x, wpDmg.y, 0, Data.DMG_SLASH).roll(caster))
 		else:
 			Ref.ui.writeMonsterMiss(caster.stats.entityName, target.stats.entityName, result, target.stats.ca)
+	
+	# ============================================================
+	# FIX: Same fix for monster throws
+	# ============================================================
 	if item[Data.TH_EFFECT] != null:
-		SpellEngine.applyEffect(caster, target, item[Data.TH_EFFECT], true, 1, 99)
+		var effect = item[Data.TH_EFFECT]
+		
+		if typeof(effect) == TYPE_ARRAY:
+			# Safety check: make sure array isn't empty
+			if effect.size() == 0:
+				print("Warning: TH_EFFECT is empty array for item: ", item[Data.TH_NAME])
+			else:
+				var spellId = effect[0]
+				var rank = effect[1] if effect.size() > 1 else 1
+				var savingCap = effect[2] if effect.size() > 2 else 99
+				SpellEngine.applyEffect(caster, target, spellId, true, rank, savingCap)
+		else:
+			SpellEngine.applyEffect(caster, target, effect, true, 1, 99)
+	# ============================================================

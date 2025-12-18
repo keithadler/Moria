@@ -31,7 +31,7 @@ margin_left = 96.0
 margin_top = 36.0
 margin_right = 129.0
 margin_bottom = 45.0
-color = Color( 0.247059, 0.313726, 0.247059, 1 )
+color = Color( 0, 0, 0, 1 )
 
 [node name="Selected2" type="ColorRect" parent="Selected"]
 show_behind_parent = true
@@ -39,7 +39,6 @@ margin_left = -1.0
 margin_top = -1.0
 margin_right = 34.0
 margin_bottom = 10.0
-color = Color( 0.462745, 0.517647, 0.282353, 1 )
 
 [node name="TextContainer" type="Node2D" parent="."]
 scale = Vector2( 0.25, 0.25 )
@@ -54,6 +53,7 @@ margin_bottom = 180.0
 theme = ExtResource( 2 )
 text = "Fighter"
 align = 1
+valign = 1
 __meta__ = {
 "_editor_description_": ""
 }
@@ -66,6 +66,7 @@ margin_bottom = 180.0
 theme = ExtResource( 2 )
 text = "Thief"
 align = 1
+valign = 1
 __meta__ = {
 "_editor_description_": ""
 }
@@ -78,6 +79,7 @@ margin_bottom = 180.0
 theme = ExtResource( 2 )
 text = "Mage"
 align = 1
+valign = 1
 __meta__ = {
 "_editor_description_": ""
 }
@@ -90,6 +92,7 @@ margin_bottom = 180.0
 theme = ExtResource( 2 )
 text = "Cleric"
 align = 1
+valign = 1
 __meta__ = {
 "_editor_description_": ""
 }
@@ -102,6 +105,7 @@ margin_bottom = 180.0
 theme = ExtResource( 2 )
 text = "Paladin"
 align = 1
+valign = 1
 __meta__ = {
 "_editor_description_": ""
 }
@@ -114,6 +118,7 @@ margin_bottom = 180.0
 theme = ExtResource( 2 )
 text = "Bard"
 align = 1
+valign = 1
 __meta__ = {
 "_editor_description_": ""
 }
@@ -126,6 +131,7 @@ margin_bottom = 180.0
 theme = ExtResource( 2 )
 text = "Druid"
 align = 1
+valign = 1
 __meta__ = {
 "_editor_description_": ""
 }
@@ -138,6 +144,7 @@ margin_bottom = 180.0
 theme = ExtResource( 2 )
 text = "Ranger"
 align = 1
+valign = 1
 __meta__ = {
 "_editor_description_": ""
 }

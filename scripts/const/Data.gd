@@ -379,7 +379,7 @@ const monsters = {
 		#Name HP Hit Dmg
 		"Skeleton", 6, 0, Vector3(1, 4, 0),
 		#AC Prot Sprite XP MOVE
-		3, 1, 2, 4, true,
+		3, 1, 36, 4, true,
 		#CasterLvl WIL PHY CR
 		1, 0, 0, 1,
 		[
@@ -390,13 +390,13 @@ const monsters = {
 	],
 	MO_GIANT_BAT: [
 		"Giant bat", 4, -1, Vector3(1, 1, 0),
-		3, 0, 8, 4, true,
+		3, 0, 53, 4, true,
 		1, 0, 0, 1,
 		[]
 	],
 	MO_GIANT_SNAKE: [
 		"Giant snake", 4, -1, Vector3(1, 1, 0),
-		3, 0, 29, 4, true,
+		3, 0, 70, 4, true,
 		1, 0, 0, 1,
 		[
 			[SP_SNAKE_CONSTRICT, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
@@ -412,19 +412,19 @@ const monsters = {
 	],
 	MO_LESSER_SKELETON: [
 		"Lesser skeleton", 4, -1, Vector3(1, 1, 0),
-		3, 0, 30, 4, true,
+		3, 0, 36, 4, true,
 		1, 0, 0, 2,
 		[]
 	],
 	MO_GOBLIN: [
 		"Goblin", 4, -1, Vector3(1, 1, 0),
-		3, 0, 1, 4, true,
+		3, 0, 58, 4, true,
 		1, 0, 0, 3,
 		[]
 	],
 	MO_SPIDER: [
 		"Spider", 4, -1, Vector3(1, 1, 0),
-		3, 0, 3, 4, true,
+		3, 0, 49, 4, true,
 		1, 0, 0, 4,
 		[
 			[SP_SPIDER_BITE, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
@@ -432,13 +432,13 @@ const monsters = {
 	],
 	MO_SHAMAN_GOBLIN: [
 		"Shaman goblin", 4, -1, Vector3(1, 1, 0),
-		3, 0, 5, 4, true,
+		3, 0, 58, 4, true,
 		1, 0, 0, 5,
 		[]
 	],
 	MO_ZOMBIE: [
 		"Zombie", 4, -1, Vector3(1, 1, 0),
-		3, 0, 22, 4, true,
+		3, 0, 51, 4, true,
 		1, 0, 0, 5,
 		[
 			[SP_ZOMBIE_SCREAM, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
@@ -625,14 +625,14 @@ const W_SKILL = 6
 const W_ICON = 7
 
 const weapons = {
-	W_CLUB: 		["Club",		null, Vector2(1,  4), "B", 0, false, 0,  0],
-	W_DAGGER:		["Dagger",		null, Vector2(1,  4), "S", 1, false, 0,  1],
-	W_HATCHET: 		["Hatchet",		null, Vector2(1,  6), "S", 1, false, 2,  2],
+	W_CLUB: 		["Wooden Bat",		null, Vector2(1,  4), "B", 0, false, 0,  0],
+	W_DAGGER:		["Makeshift Dagger",		null, Vector2(1,  4), "S", 1, false, 0,  1],
+	W_HATCHET: 		["Rusted Axe",		null, Vector2(1,  6), "S", 1, false, 2,  2],
 	W_MACE: 		["Mace",		null, Vector2(1,  8), "B", 2, false, 2,  3],
-	W_SHORTSWORD: 	["Shortsword",	null, Vector2(2,  4), "S", 3, false, 2,  4],
-	W_AXE: 			["Hand axe",	null, Vector2(1, 10), "S", 4, false, 4,  5],
-	W_LONGSWORD: 	["Longsword",	null, Vector2(2, 10), "S", 5, false, 4,  6],
-	W_MORNING: 		["Morning star",null, Vector2(3,  6), "P", 6, false, 4,  7],
+	W_SHORTSWORD: 	["Knife",	null, Vector2(2,  4), "S", 3, false, 2,  4],
+	W_AXE: 			["Machete",	null, Vector2(1, 10), "S", 4, false, 4,  5],
+	W_LONGSWORD: 	["Katana",	null, Vector2(2, 10), "S", 5, false, 4,  6],
+	W_MORNING: 		["Spiked Bat",null, Vector2(3,  6), "P", 6, false, 4,  7],
 	
 	W_STAFF: 		["Staff",		null, Vector2(1,  6), "B", 0, true, 0,  8],
 	W_GREATCLUB: 	["Greatclub",	null, Vector2(1,  8), "B", 1, true, 0,  9],
@@ -1820,7 +1820,7 @@ const featDescriptions = {
 	FEAT_MAGE: "Choose a specialist school (and a forbidden one), choosen school have 20% more uses.",
 	FEAT_CLERIC: "Choose a sphere to increase your masteries and skills in magic shools.",
 	FEAT_PALADIN: "+1 to CA when wearing 2H wepon, +1 damage per dice rolled when wearing 1H weapon.",
-	FEAT_BARD: "Scrolls have a 20% chance not to disaperear when readed.",
+	FEAT_BARD: "Scrolls have a 20% chance not to disaperear when read.",
 	FEAT_DRUID: "+1 to all save rolls against spells.",
 	FEAT_RANGER: "You have no malus to rolls when under 100 fatigue.",
 	
@@ -1897,6 +1897,18 @@ const ENC_IS_LOW = 1
 const ENC_IS_RARE = 2
 const encounters = {
 	BIOME_DUNGEON: [
+		[[[MO_GIANT_BAT, 1, 1]], true, false],
+		[[[MO_GIANT_BAT, 2, 2]], true, true],
+		[[[MO_GIANT_SNAKE, 1, 1]], true, false],
+		[[[MO_LESSER_SKELETON, 1, 1]], true, false],
+		[[[MO_GOBLIN, 1, 1]], true, true],
+		[[[MO_LESSER_SKELETON, 2, 2]], false, false],
+		[[[MO_GIANT_SNAKE, 3, 3]], false, true],
+		[[[MO_GIANT_LEECH, 2, 4]], false, false],
+		[[[MO_GOBLIN, 1, 1]], false, false],
+		[[[MO_SPIDER, 1, 1]], false, false],
+	],
+	BIOME_CAVERN: [
 		[[[MO_GIANT_BAT, 1, 1]], true, false],
 		[[[MO_GIANT_BAT, 2, 2]], true, true],
 		[[[MO_GIANT_SNAKE, 1, 1]], true, false],

@@ -70,20 +70,52 @@ func _ready():
 		_:
 			Ref.character.init(Data.CL_FIGHTER)
 			startGame()
+		7:
+			saveSystem.loadGame(Ref.character.stats.charName)
 
 func _process(delta):
 	if autoexplore:
-		if !GLOBAL.targets.empty():
-			Ref.ui.write("You cannot explore there are enemies on sight.")
-			autoexplore = false
+		# Health check
+		if Ref.character.stats.hpPercent() < 0.05:
+			Ref.ui.write("Health too low for auto-explore!")
+			setAutoExplore(false)
 			return
-		var dir = pathfinder.findNextStep(pathfinder.exploreMap, Ref.character.pos)
+		
+		var dir = null
+		
+		# First priority: collect items on the ground
+		if !GLOBAL.itemsOnFloor.empty():
+			# Check if we're standing on an item
+			if GLOBAL.itemsOnFloor.has(Ref.character.pos):
+				pickupLootHandler.pickupLootAsync()
+				return
+			
+			# Find nearest item using pathfinder
+			var itemMap = pathfinder.dijkstraComputeToItems()
+			if itemMap != null:
+				dir = pathfinder.findNextStep(itemMap, Ref.character.pos)
+		
+		# Second priority: explore unexplored tiles
 		if dir == null:
-			pathfinder.dijkstraCompute()
 			dir = pathfinder.findNextStep(pathfinder.exploreMap, Ref.character.pos)
 			if dir == null:
-				Ref.ui.write("Nothing to explore.")
+				pathfinder.dijkstraCompute()
+				dir = pathfinder.findNextStep(pathfinder.exploreMap, Ref.character.pos)
+		
+		# Third priority: go to exit (pass entrance position to exclude it)
+		if dir == null:
+			var exitMap = pathfinder.dijkstraComputeToExit(Ref.character.spawnPos)
+			if exitMap != null:
+				dir = pathfinder.findNextStep(exitMap, Ref.character.pos)
+				if dir == null:
+					Ref.ui.write("Reached the exit!")
+					setAutoExplore(false)
+					return
+			else:
+				Ref.ui.write("Nothing left to do.")
+				setAutoExplore(false)
 				return
+		
 		Ref.character.moveAsync(dir)
 	else:
 		GeneralEngine.newTurn()
@@ -108,8 +140,8 @@ func startGame():
 			Ref.currentLevel.spawnMonster(Data.MO_DUMMY_WEAK, Vector2(24, 4))
 			dungeonGenerator.loadAllItems()
 		_:
-#			WorldHandler.setLocation(1, Data.BIOME_DUNGEON)
-			WorldHandler.setLocation(1, Data.BIOME_TROLL_BOSS)
+			WorldHandler.setLocation(1, Data.BIOME_DUNGEON)
+#			WorldHandler.setLocation(1, Data.BIOME_TROLL_BOSS)
 			WorldHandler.currentCR = 2
 			newFloor()
 	Ref.currentLevel.refresh_view()
@@ -188,6 +220,7 @@ func newFloor():
 		_:
 			spawnPos = dungeonGenerator.newFloor()
 	Ref.currentLevel.initSecrets()
+	Ref.character.spawnPos = spawnPos
 	Ref.currentLevel.placeCharacter(spawnPos)
 	for a in Ref.currentLevel.allies.get_children():
 		var cell = Ref.character.getRandomCloseCell()

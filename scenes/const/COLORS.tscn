@@ -9,13 +9,13 @@ const green: Color = Color(\"24b537\")
 const yellow: Color = Color(\"d7b537\")
 const purple: Color = Color(\"b031b0\")
 const cyan: Color = Color(\"24ccc4\")
-const white: Color = Color(\"cedbe1\")
+const white: Color = Color(\"ffffff\") # old white cedbe1
 
 const shade1: Color = Color(\"acb56b\")
 const shade2: Color = Color(\"768448\")
-const shade3: Color = Color(\"546341\")
-const shade4: Color = Color(\"3f503f\")
-const shade5: Color = Color(\"2c3a38\")
+const shade3: Color = Color(\"313131\") #unselected tab
+const shade4: Color = Color(\"ff0000\")
+const shade5: Color = Color(\"ffffff\") #scroll bar
 const shade6: Color = Color(\"243137\")
 "
 

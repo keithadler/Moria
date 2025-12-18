@@ -8,6 +8,8 @@ onready var bodySprite = get_node("BodySprite")
 onready var mask = get_node("Mask")
 onready var status = "sleep"
 
+onready var tween = get_node("SmoothMove")
+
 const bossNeighbors = [
 	Vector2(-1, 0), Vector2(-1, 1), Vector2(0, -1), Vector2(1, -1),
 	Vector2(2, 0), Vector2(2, 1), Vector2(0, 2), Vector2(1, 2)
@@ -213,7 +215,8 @@ func setPosition(newPos: Vector2):
 	refreshMapPosition()
 
 func refreshMapPosition():
-	position = 9 * pos
+	tween.interpolate_property(self, "position", position, 9 * pos, 0.3, Tween.TRANS_EXPO, Tween.EASE_IN_OUT)
+	tween.start()
 
 func takeHit(dmg: int, bypassProt: int = 0):
 	if status == "dead":

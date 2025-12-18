@@ -549,4 +549,6 @@ func updateLocation(biome: int, currentFloor: int):
 			locationLabel.text += "Dungeon "
 		Data.BIOME_CAVERN:
 			locationLabel.text += "Cavern "
+		Data.BIOME_TROLL_BOSS:
+			locationLabel.text += "Encounter "
 	locationLabel.text += Utils.toRoman(currentFloor)

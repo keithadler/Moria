@@ -273,7 +273,7 @@ visible = false
 [node name="ColorRect" type="ColorRect" parent="DetailPanel"]
 margin_right = 342.0
 margin_bottom = 180.0
-color = Color( 0.141176, 0.192157, 0.215686, 1 )
+color = Color( 0, 0, 0, 1 )
 
 [node name="Label" type="TileMap" parent="DetailPanel"]
 position = Vector2( 0, 81 )

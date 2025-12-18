@@ -284,3 +284,111 @@ func get_line(start:Vector2, end:Vector2):
 	if swapped:
 		points.invert()
 	return points
+
+# Add these to your Pathfinder script
+
+func dijkstraComputeToItems():
+	if GLOBAL.itemsOnFloor.empty():
+		return null
+	
+	var itemMap: Array = []
+	for i in range(GLOBAL.FLOOR_SIZE_X+1):
+		itemMap.append([])
+		for _j in range(GLOBAL.FLOOR_SIZE_Y+1):
+			itemMap[i].append(9999)
+	
+	# Set all item positions as goals
+	for itemCell in GLOBAL.itemsOnFloor.keys():
+		itemMap[itemCell.x][itemCell.y] = 0
+	
+	# Get walkable cells
+	var cells = Ref.currentLevel.dungeon.get_used_cells_by_id(GLOBAL.FLOOR_ID)
+	cells.append_array(Ref.currentLevel.dungeon.get_used_cells_by_id(GLOBAL.DOOR_ID))
+	
+	# Remove obstacles
+	for chest in GLOBAL.chests.values():
+		cells.erase(chest[GLOBAL.CH_POS])
+	for door in GLOBAL.testedDoors:
+		cells.erase(door)
+	
+	# Run Dijkstra
+	var stop = false
+	while !stop:
+		stop = true
+		for cell in cells:
+			if (itemMap[cell.x][cell.y] - itemMap[cell.x-1][cell.y]) > 1:
+				itemMap[cell.x][cell.y] = itemMap[cell.x-1][cell.y] + 1
+				stop = false
+			if (itemMap[cell.x][cell.y] - itemMap[cell.x+1][cell.y]) > 1:
+				itemMap[cell.x][cell.y] = itemMap[cell.x+1][cell.y] + 1
+				stop = false
+			if (itemMap[cell.x][cell.y] - itemMap[cell.x][cell.y-1]) > 1:
+				itemMap[cell.x][cell.y] = itemMap[cell.x][cell.y-1] + 1
+				stop = false
+			if (itemMap[cell.x][cell.y] - itemMap[cell.x][cell.y+1]) > 1:
+				itemMap[cell.x][cell.y] = itemMap[cell.x][cell.y+1] + 1
+				stop = false
+	
+	return itemMap
+
+func dijkstraComputeToExit(entryPos: Vector2):
+	# Find only PASS_ID cells (exits), not MERCHANT_ID
+	var exitCells = Ref.currentLevel.dungeon.get_used_cells_by_id(GLOBAL.PASS_ID)
+	if exitCells.empty():
+		return null
+	
+	# Find the entrance door (it should be adjacent to the spawn position)
+	var entranceDoor = null
+	for dir in [Vector2(-1, 0), Vector2(1, 0), Vector2(0, -1), Vector2(0, 1)]:
+		var checkPos = entryPos + dir
+		if exitCells.has(checkPos):
+			entranceDoor = checkPos
+			break
+	
+	# Remove the entrance door if found
+	if entranceDoor != null:
+		exitCells.erase(entranceDoor)
+	
+	if exitCells.empty():
+		return null
+	
+	var exitMap: Array = []
+	for i in range(GLOBAL.FLOOR_SIZE_X+1):
+		exitMap.append([])
+		for _j in range(GLOBAL.FLOOR_SIZE_Y+1):
+			exitMap[i].append(9999)
+	
+	# Set exit positions as goals
+	for exitCell in exitCells:
+		exitMap[exitCell.x][exitCell.y] = 0
+	
+	# Get walkable cells
+	var cells = Ref.currentLevel.dungeon.get_used_cells_by_id(GLOBAL.FLOOR_ID)
+	cells.append_array(Ref.currentLevel.dungeon.get_used_cells_by_id(GLOBAL.DOOR_ID))
+	cells.append_array(exitCells)
+	
+	# Remove obstacles
+	for chest in GLOBAL.chests.values():
+		cells.erase(chest[GLOBAL.CH_POS])
+	for door in GLOBAL.testedDoors:
+		cells.erase(door)
+	
+	# Run Dijkstra
+	var stop = false
+	while !stop:
+		stop = true
+		for cell in cells:
+			if (exitMap[cell.x][cell.y] - exitMap[cell.x-1][cell.y]) > 1:
+				exitMap[cell.x][cell.y] = exitMap[cell.x-1][cell.y] + 1
+				stop = false
+			if (exitMap[cell.x][cell.y] - exitMap[cell.x+1][cell.y]) > 1:
+				exitMap[cell.x][cell.y] = exitMap[cell.x+1][cell.y] + 1
+				stop = false
+			if (exitMap[cell.x][cell.y] - exitMap[cell.x][cell.y-1]) > 1:
+				exitMap[cell.x][cell.y] = exitMap[cell.x][cell.y-1] + 1
+				stop = false
+			if (exitMap[cell.x][cell.y] - exitMap[cell.x][cell.y+1]) > 1:
+				exitMap[cell.x][cell.y] = exitMap[cell.x][cell.y+1] + 1
+				stop = false
+	
+	return exitMap

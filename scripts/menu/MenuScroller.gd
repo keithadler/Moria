@@ -24,8 +24,8 @@ func setArrows(startIndex: int, maxIndex: int):
 	else:
 		up.frame = 5
 	if down.frame == 7 and up.frame == 5:
-		elevator.color = Colors.shade5
-	else:
 		elevator.color = Colors.shade3
+	else:
+		elevator.color = Colors.shade5
 		elevator.margin_top = length * (float(startIndex)/float(maxIndex))
 		elevator.margin_bottom = length * (float(startIndex+elements)/float(maxIndex))

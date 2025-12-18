@@ -118,7 +118,8 @@ tracks/1/keys = {
 [node name="Game" type="Node2D"]
 scale = Vector2( 4, 4 )
 script = ExtResource( 15 )
-debugClass = 1
+start = 4
+debugClass = 4
 
 [node name="Utils" type="Node" parent="."]
 
@@ -267,7 +268,6 @@ margin_top = -10.0
 margin_right = 936.0
 margin_bottom = 296.0
 theme = ExtResource( 33 )
-custom_colors/default_color = Color( 0.807843, 0.858824, 0.882353, 1 )
 bbcode_enabled = true
 scroll_active = false
 scroll_following = true
@@ -289,6 +289,7 @@ margin_right = 1335.0
 margin_bottom = 296.0
 theme = ExtResource( 33 )
 custom_constants/line_spacing = 1
+valign = 1
 clip_text = true
 
 [node name="SideMenu" type="TileMap" parent="UI"]
@@ -309,6 +310,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "HP"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Location" type="Node2D" parent="UI/SideMenu"]
 position = Vector2( 360, 16.25 )
@@ -321,6 +325,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "in "
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Level" type="Node2D" parent="UI/SideMenu"]
 position = Vector2( 360, 27 )
@@ -333,6 +340,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "Level"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Level" type="Label" parent="UI/SideMenu/Level/Label"]
 margin_left = 72.0
@@ -342,6 +352,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "10"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="XPLabel" type="Label" parent="UI/SideMenu/Level/Label"]
 margin_left = 180.0
@@ -351,6 +364,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "XP"
 align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="CurrentXP" type="Label" parent="UI/SideMenu/Level/Label"]
 margin_left = 216.0
@@ -360,6 +376,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "98"
 align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Slash" type="Label" parent="UI/SideMenu/Level/Label"]
 margin_left = 288.0
@@ -369,6 +388,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "/"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="MaxXP" type="Label" parent="UI/SideMenu/Level/Label"]
 margin_left = 324.0
@@ -377,6 +399,9 @@ margin_bottom = 35.0
 custom_fonts/font = ExtResource( 8 )
 text = "10"
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="HPContainer" type="Node2D" parent="UI/SideMenu"]
 position = Vector2( 360, 36 )
@@ -389,6 +414,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "HP"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Current" type="Label" parent="UI/SideMenu/HPContainer/Label"]
 margin_left = 72.0
@@ -398,6 +426,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "10"
 align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Slash" type="Label" parent="UI/SideMenu/HPContainer/Label"]
 margin_left = 180.0
@@ -407,6 +438,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "/"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Max" type="Label" parent="UI/SideMenu/HPContainer/Label"]
 margin_left = 216.0
@@ -415,6 +449,9 @@ margin_bottom = 35.0
 custom_fonts/font = ExtResource( 8 )
 text = "10"
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="FatigueContainer" type="Node2D" parent="UI/SideMenu"]
 position = Vector2( 360, 45 )
@@ -424,9 +461,12 @@ scale = Vector2( 0.25, 0.25 )
 margin_right = 72.0
 margin_bottom = 35.0
 custom_fonts/font = ExtResource( 8 )
-text = "Fatigue"
+text = "Stam"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Current" type="Label" parent="UI/SideMenu/FatigueContainer/Label"]
 margin_left = 72.0
@@ -436,6 +476,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "1000"
 align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Slash" type="Label" parent="UI/SideMenu/FatigueContainer/Label"]
 margin_left = 180.0
@@ -445,6 +488,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "/"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Max" type="Label" parent="UI/SideMenu/FatigueContainer/Label"]
 margin_left = 216.0
@@ -453,6 +499,9 @@ margin_bottom = 35.0
 custom_fonts/font = ExtResource( 8 )
 text = "1000"
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="DmgContainer" type="Node2D" parent="UI/SideMenu"]
 position = Vector2( 360, 54 )
@@ -465,6 +514,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "Dmg"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Current" type="RichTextLabel" parent="UI/SideMenu/DmgContainer/Label"]
 margin_left = 26.0
@@ -473,6 +525,9 @@ margin_bottom = 35.0
 custom_fonts/normal_font = ExtResource( 8 )
 bbcode_enabled = true
 scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="HitContainer" type="Node2D" parent="UI/SideMenu"]
 position = Vector2( 414, 54 )
@@ -485,6 +540,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "Hit"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Current" type="Label" parent="UI/SideMenu/HitContainer/Label"]
 margin_left = 72.0
@@ -494,6 +552,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "10"
 align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="CAContainer" type="Node2D" parent="UI/SideMenu"]
 position = Vector2( 360, 63 )
@@ -506,6 +567,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "CA"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Current" type="Label" parent="UI/SideMenu/CAContainer/Label"]
 margin_left = 72.0
@@ -515,6 +579,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "10"
 align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="ProtContainer" type="Node2D" parent="UI/SideMenu"]
 position = Vector2( 360, 72 )
@@ -527,6 +594,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "Prot"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Current" type="Label" parent="UI/SideMenu/ProtContainer/Label"]
 margin_left = 72.0
@@ -536,6 +606,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "10"
 align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="LockContainer" type="Node2D" parent="UI/SideMenu"]
 position = Vector2( 360, 81 )
@@ -545,9 +618,12 @@ scale = Vector2( 0.25, 0.25 )
 margin_right = 72.0
 margin_bottom = 35.0
 custom_fonts/font = ExtResource( 8 )
-text = "Lockpicks"
+text = "Lock"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Current" type="Label" parent="UI/SideMenu/LockContainer/Label"]
 margin_left = 72.0
@@ -557,6 +633,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "10"
 align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="GoldContainer" type="Node2D" parent="UI/SideMenu"]
 position = Vector2( 360, 90 )
@@ -569,6 +648,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "Gold"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Current" type="Label" parent="UI/SideMenu/GoldContainer/Label"]
 margin_left = 72.0
@@ -578,6 +660,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "10"
 align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="rFire" type="Node2D" parent="UI/SideMenu"]
 position = Vector2( 360, 99 )
@@ -590,6 +675,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "rFire"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Current" type="Label" parent="UI/SideMenu/rFire/Label"]
 margin_left = 72.0
@@ -599,6 +687,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "-"
 align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="rPoison" type="Node2D" parent="UI/SideMenu"]
 position = Vector2( 360, 108 )
@@ -611,6 +702,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "rPois"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="Current" type="Label" parent="UI/SideMenu/rPoison/Label"]
 margin_left = 72.0
@@ -620,6 +714,9 @@ custom_fonts/font = ExtResource( 8 )
 text = "-"
 align = 2
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="MonsterPanelList" parent="UI" instance=ExtResource( 30 )]
 position = Vector2( 351, 144 )
@@ -632,7 +729,7 @@ visible = false
 modulate = Color( 1, 1, 1, 0 )
 margin_right = 477.0
 margin_bottom = 270.0
-color = Color( 0.141176, 0.192157, 0.215686, 1 )
+color = Color( 0, 0, 0, 1 )
 script = ExtResource( 34 )
 
 [node name="TextContainer" type="Node2D" parent="UI/FadePanel"]
