@@ -83,8 +83,23 @@ func _process(delta):
 		
 		var dir = null
 		
-		# First priority: collect items on the ground
-		if !GLOBAL.itemsOnFloor.empty():
+		# First priority: attack nearby enemies
+		if !GLOBAL.targets.empty():
+			# Get all monster positions
+			var monster_positions = []
+			for target_id in GLOBAL.targets.keys():
+				var entity = instance_from_id(target_id)
+				if entity != null:
+					monster_positions.append(entity.pos)
+			
+			# Find nearest monster using pathfinder
+			if !monster_positions.empty():
+				var monsterMap = pathfinder.dijkstraComputeToMonsters(monster_positions)
+				if monsterMap != null:
+					dir = pathfinder.findNextStep(monsterMap, Ref.character.pos)
+		
+		# Second priority: collect items on the ground
+		if dir == null and !GLOBAL.itemsOnFloor.empty():
 			# Check if we're standing on an item
 			if GLOBAL.itemsOnFloor.has(Ref.character.pos):
 				pickupLootHandler.pickupLootAsync()
@@ -95,14 +110,14 @@ func _process(delta):
 			if itemMap != null:
 				dir = pathfinder.findNextStep(itemMap, Ref.character.pos)
 		
-		# Second priority: explore unexplored tiles
+		# Third priority: explore unexplored tiles
 		if dir == null:
 			dir = pathfinder.findNextStep(pathfinder.exploreMap, Ref.character.pos)
 			if dir == null:
 				pathfinder.dijkstraCompute()
 				dir = pathfinder.findNextStep(pathfinder.exploreMap, Ref.character.pos)
 		
-		# Third priority: go to exit (pass entrance position to exclude it)
+		# Fourth priority: go to exit (pass entrance position to exclude it)
 		if dir == null:
 			var exitMap = pathfinder.dijkstraComputeToExit(Ref.character.spawnPos)
 			if exitMap != null:
@@ -116,7 +131,8 @@ func _process(delta):
 				setAutoExplore(false)
 				return
 		
-		Ref.character.moveAsync(dir)
+		if dir != null:
+			Ref.character.moveAsync(dir)
 	else:
 		GeneralEngine.newTurn()
 

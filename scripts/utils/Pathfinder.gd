@@ -331,6 +331,54 @@ func dijkstraComputeToItems():
 	
 	return itemMap
 
+func dijkstraComputeToMonsters(monster_positions: Array):
+	if monster_positions.empty():
+		return null
+	
+	var monsterMap: Array = []
+	for i in range(GLOBAL.FLOOR_SIZE_X+1):
+		monsterMap.append([])
+		for _j in range(GLOBAL.FLOOR_SIZE_Y+1):
+			monsterMap[i].append(9999)
+	
+	# Set all monster positions as goals
+	for pos in monster_positions:
+		if pos.x >= 0 and pos.x < GLOBAL.FLOOR_SIZE_X and pos.y >= 0 and pos.y < GLOBAL.FLOOR_SIZE_Y:
+			monsterMap[pos.x][pos.y] = 0
+	
+	# Get walkable cells
+	var cells = Ref.currentLevel.dungeon.get_used_cells_by_id(GLOBAL.FLOOR_ID)
+	cells.append_array(Ref.currentLevel.dungeon.get_used_cells_by_id(GLOBAL.DOOR_ID))
+	
+	# Remove obstacles
+	for chest in GLOBAL.chests.values():
+		cells.erase(chest[GLOBAL.CH_POS])
+	for door in GLOBAL.testedDoors:
+		cells.erase(door)
+	
+	# Run Dijkstra
+	var stop = false
+	while !stop:
+		stop = true
+		for cell in cells:
+			if cell.x <= 0 or cell.x >= GLOBAL.FLOOR_SIZE_X or cell.y <= 0 or cell.y >= GLOBAL.FLOOR_SIZE_Y:
+				continue
+				
+			if (monsterMap[cell.x][cell.y] - monsterMap[cell.x-1][cell.y]) > 1:
+				monsterMap[cell.x][cell.y] = monsterMap[cell.x-1][cell.y] + 1
+				stop = false
+			if (monsterMap[cell.x][cell.y] - monsterMap[cell.x+1][cell.y]) > 1:
+				monsterMap[cell.x][cell.y] = monsterMap[cell.x+1][cell.y] + 1
+				stop = false
+			if (monsterMap[cell.x][cell.y] - monsterMap[cell.x][cell.y-1]) > 1:
+				monsterMap[cell.x][cell.y] = monsterMap[cell.x][cell.y-1] + 1
+				stop = false
+			if (monsterMap[cell.x][cell.y] - monsterMap[cell.x][cell.y+1]) > 1:
+				monsterMap[cell.x][cell.y] = monsterMap[cell.x][cell.y+1] + 1
+				stop = false
+	
+	return monsterMap
+
 func dijkstraComputeToExit(entryPos: Vector2):
 	# Find only PASS_ID cells (exits), not MERCHANT_ID
 	var exitCells = Ref.currentLevel.dungeon.get_used_cells_by_id(GLOBAL.PASS_ID)

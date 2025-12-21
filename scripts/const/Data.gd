@@ -260,9 +260,9 @@ const skillDescriptions = {
 }
 
 # Level caps
-const lvlCaps = [0, 30, 50, 75, 110, 150, 200, 275]
-const skpGains = [0, 0, 2, 1, 2, 1, 2, 1, 2]
-const ftpGains = [0, 0, 0, 1, 0, 1, 0, 1, 0]
+const lvlCaps = [0, 30, 50, 75, 110, 150, 200, 275, 1000, 10000]
+const skpGains = [0, 0, 2, 1, 2, 1, 2, 1, 2, 3, 0]
+const ftpGains = [0, 0, 0, 1, 0, 1, 0, 1, 0, 2, 0]
 
 # Fatigue
 const FA_INITIAL = 1000
@@ -379,7 +379,7 @@ const monsters = {
 		#Name HP Hit Dmg
 		"Skeleton", 6, 0, Vector3(1, 4, 0),
 		#AC Prot Sprite XP MOVE
-		3, 1, 36, 4, true,
+		3, 1, 62, 4, true,
 		#CasterLvl WIL PHY CR
 		1, 0, 0, 1,
 		[
@@ -390,13 +390,13 @@ const monsters = {
 	],
 	MO_GIANT_BAT: [
 		"Giant bat", 4, -1, Vector3(1, 1, 0),
-		3, 0, 53, 4, true,
+		3, 0, 157, 4, true,
 		1, 0, 0, 1,
 		[]
 	],
 	MO_GIANT_SNAKE: [
 		"Giant snake", 4, -1, Vector3(1, 1, 0),
-		3, 0, 70, 4, true,
+		3, 0, 330, 4, true,
 		1, 0, 0, 1,
 		[
 			[SP_SNAKE_CONSTRICT, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
@@ -404,7 +404,7 @@ const monsters = {
 	],
 	MO_GIANT_LEECH: [
 		"Giant leech", 4, -1, Vector3(1, 1, 0),
-		3, 0, 25, 4, true,
+		3, 0, 158, 4, true,
 		1, 0, 0, 2,
 		[
 			[SP_LEECH_BITE, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
@@ -412,19 +412,19 @@ const monsters = {
 	],
 	MO_LESSER_SKELETON: [
 		"Lesser skeleton", 4, -1, Vector3(1, 1, 0),
-		3, 0, 36, 4, true,
+		3, 0, 62, 4, true,
 		1, 0, 0, 2,
 		[]
 	],
 	MO_GOBLIN: [
 		"Goblin", 4, -1, Vector3(1, 1, 0),
-		3, 0, 58, 4, true,
+		3, 0, 318, 4, true,
 		1, 0, 0, 3,
 		[]
 	],
 	MO_SPIDER: [
 		"Spider", 4, -1, Vector3(1, 1, 0),
-		3, 0, 49, 4, true,
+		3, 0, 179, 4, true,
 		1, 0, 0, 4,
 		[
 			[SP_SPIDER_BITE, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
@@ -432,13 +432,13 @@ const monsters = {
 	],
 	MO_SHAMAN_GOBLIN: [
 		"Shaman goblin", 4, -1, Vector3(1, 1, 0),
-		3, 0, 58, 4, true,
+		3, 0, 318, 4, true,
 		1, 0, 0, 5,
 		[]
 	],
 	MO_ZOMBIE: [
 		"Zombie", 4, -1, Vector3(1, 1, 0),
-		3, 0, 51, 4, true,
+		3, 0, 285, 4, true,
 		1, 0, 0, 5,
 		[
 			[SP_ZOMBIE_SCREAM, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
@@ -625,14 +625,14 @@ const W_SKILL = 6
 const W_ICON = 7
 
 const weapons = {
-	W_CLUB: 		["Wooden Bat",		null, Vector2(1,  4), "B", 0, false, 0,  0],
-	W_DAGGER:		["Makeshift Dagger",		null, Vector2(1,  4), "S", 1, false, 0,  1],
-	W_HATCHET: 		["Rusted Axe",		null, Vector2(1,  6), "S", 1, false, 2,  2],
+	W_CLUB: 		["Wooden Club",		null, Vector2(1,  4), "B", 0, false, 0,  0],
+	W_DAGGER:		["Dagger",		null, Vector2(1,  4), "S", 1, false, 0,  1],
+	W_HATCHET: 		["Hatchet",		null, Vector2(1,  6), "S", 1, false, 2,  2],
 	W_MACE: 		["Mace",		null, Vector2(1,  8), "B", 2, false, 2,  3],
-	W_SHORTSWORD: 	["Knife",	null, Vector2(2,  4), "S", 3, false, 2,  4],
-	W_AXE: 			["Machete",	null, Vector2(1, 10), "S", 4, false, 4,  5],
+	W_SHORTSWORD: 	["Shortsword",	null, Vector2(2,  4), "S", 3, false, 2,  4],
+	W_AXE: 			["Axe",	null, Vector2(1, 10), "S", 4, false, 4,  5],
 	W_LONGSWORD: 	["Katana",	null, Vector2(2, 10), "S", 5, false, 4,  6],
-	W_MORNING: 		["Spiked Bat",null, Vector2(3,  6), "P", 6, false, 4,  7],
+	W_MORNING: 		["Morning Star",null, Vector2(3,  6), "P", 6, false, 4,  7],
 	
 	W_STAFF: 		["Staff",		null, Vector2(1,  6), "B", 0, true, 0,  8],
 	W_GREATCLUB: 	["Greatclub",	null, Vector2(1,  8), "B", 1, true, 0,  9],
@@ -1869,7 +1869,7 @@ const TR_NAME = 0
 const TR_TYPE = 1
 const TR_ICON = 2
 const traps = {
-	0: ["Dart trap", TR_DART, 6],
+	0: ["Spike trap", TR_DART, 6],
 }
 
 const BIOME_DUNGEON = 0
