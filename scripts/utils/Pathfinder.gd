@@ -379,6 +379,62 @@ func dijkstraComputeToMonsters(monster_positions: Array):
 	
 	return monsterMap
 
+func dijkstraComputeToChests():
+	if GLOBAL.chests.empty():
+		return null
+	
+	var chestMap: Array = []
+	for i in range(GLOBAL.FLOOR_SIZE_X+1):
+		chestMap.append([])
+		for _j in range(GLOBAL.FLOOR_SIZE_Y+1):
+			chestMap[i].append(9999)
+	
+	# Set ONLY unlocked chest positions as goals
+	var hasTargets = false
+	for chest_data in GLOBAL.chests.values():
+		var chest_pos = chest_data[GLOBAL.CH_POS]
+		var lock_level = chest_data[GLOBAL.CH_LOCKED]
+		
+		# Only target if completely unlocked
+		if lock_level == 0:
+			chestMap[chest_pos.x][chest_pos.y] = 0
+			hasTargets = true
+	
+	# No valid chests to target
+	if !hasTargets:
+		return null
+	
+	# Get walkable cells
+	var cells = Ref.currentLevel.dungeon.get_used_cells_by_id(GLOBAL.FLOOR_ID)
+	cells.append_array(Ref.currentLevel.dungeon.get_used_cells_by_id(GLOBAL.DOOR_ID))
+	
+	# Remove obstacles
+	for door in GLOBAL.testedDoors:
+		cells.erase(door)
+	
+	# Run Dijkstra
+	var stop = false
+	while !stop:
+		stop = true
+		for cell in cells:
+			if cell.x <= 0 or cell.x >= GLOBAL.FLOOR_SIZE_X or cell.y <= 0 or cell.y >= GLOBAL.FLOOR_SIZE_Y:
+				continue
+			
+			if (chestMap[cell.x][cell.y] - chestMap[cell.x-1][cell.y]) > 1:
+				chestMap[cell.x][cell.y] = chestMap[cell.x-1][cell.y] + 1
+				stop = false
+			if (chestMap[cell.x][cell.y] - chestMap[cell.x+1][cell.y]) > 1:
+				chestMap[cell.x][cell.y] = chestMap[cell.x+1][cell.y] + 1
+				stop = false
+			if (chestMap[cell.x][cell.y] - chestMap[cell.x][cell.y-1]) > 1:
+				chestMap[cell.x][cell.y] = chestMap[cell.x][cell.y-1] + 1
+				stop = false
+			if (chestMap[cell.x][cell.y] - chestMap[cell.x][cell.y+1]) > 1:
+				chestMap[cell.x][cell.y] = chestMap[cell.x][cell.y+1] + 1
+				stop = false
+	
+	return chestMap
+
 func dijkstraComputeToExit(entryPos: Vector2):
 	# Find only PASS_ID cells (exits), not MERCHANT_ID
 	var exitCells = Ref.currentLevel.dungeon.get_used_cells_by_id(GLOBAL.PASS_ID)

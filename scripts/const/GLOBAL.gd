@@ -183,6 +183,7 @@ func getTrapByPos(cell: Vector2) -> Trap:
 var hiddenDoors: Array = []
 var lockedDoors: Array = []
 var testedDoors: Array = []
+#var testedChests: Array = []
 
 func testDoor(pos: Vector2):
 	if testedDoors.has(pos):

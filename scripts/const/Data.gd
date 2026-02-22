@@ -260,9 +260,9 @@ const skillDescriptions = {
 }
 
 # Level caps
-const lvlCaps = [0, 30, 50, 75, 110, 150, 200, 275, 1000, 10000]
-const skpGains = [0, 0, 2, 1, 2, 1, 2, 1, 2, 3, 0]
-const ftpGains = [0, 0, 0, 1, 0, 1, 0, 1, 0, 2, 0]
+const lvlCaps = [0, 30, 50, 75, 110, 150, 200, 275]
+const skpGains = [0, 0, 2, 1, 2, 1, 2, 1, 2]
+const ftpGains = [0, 0, 0, 1, 0, 1, 0, 1, 0]
 
 # Fatigue
 const FA_INITIAL = 1000
@@ -1755,7 +1755,7 @@ const statusPrefabs = {
 	STATUS_REPEL_MISSILES: ["Deflect projectiles", 34, null, null, STATUS_REPEL_MISSILES, null, null, false, true, true],
 	STATUS_REGENERATE: ["Regenerate", 34, null, null, STATUS_REGENERATE, null, null, false, true, true],
 	
-	STATUS_TROLL_RAGE: ["Troll rage", 34, null, null, STATUS_TROLL_RAGE, null, null, false, true, true],
+	STATUS_TROLL_RAGE: ["Enrage", 34, null, null, STATUS_TROLL_RAGE, null, null, false, true, true],
 }
 
 const FE_NAME = 0
@@ -1884,9 +1884,9 @@ const BI_CR = 0
 const BI_FLOORS = 1
 const BI_CONNECT = 2
 const biomes = {
-	BIOME_DUNGEON: 		[1, 5, [BIOME_CAVERN]],
-	BIOME_CAVERN: 		[2, 5, [BIOME_TROLL_BOSS]],
-	BIOME_TROLL_BOSS:	[2, 1, []]
+	BIOME_DUNGEON: 		[1, 10, [BIOME_CAVERN]],
+	BIOME_CAVERN: 		[2, 10, [BIOME_TROLL_BOSS]],
+	BIOME_TROLL_BOSS:	[2, 1, [BIOME_DUNGEON]]
 }
 
 const ENC_MONSTERS = 0

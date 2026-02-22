@@ -110,6 +110,12 @@ func _process(delta):
 			if itemMap != null:
 				dir = pathfinder.findNextStep(itemMap, Ref.character.pos)
 		
+		# NEW  priority - navigate to chests
+		if dir == null and !GLOBAL.chests.empty():
+			var chestMap = pathfinder.dijkstraComputeToChests()
+			if chestMap != null:
+				dir = pathfinder.findNextStep(chestMap, Ref.character.pos)
+		
 		# Third priority: explore unexplored tiles
 		if dir == null:
 			dir = pathfinder.findNextStep(pathfinder.exploreMap, Ref.character.pos)
@@ -182,6 +188,7 @@ func cleanFloor():
 	GLOBAL.hiddenDoors.clear()
 	GLOBAL.lockedDoors.clear()
 	GLOBAL.testedDoors.clear()
+	#GLOBAL.testedChests.clear()
 	Ref.currentLevel.searched.clear()
 	for i in range(GLOBAL.FLOOR_SIZE_X):
 		Ref.currentLevel.searched.append([])

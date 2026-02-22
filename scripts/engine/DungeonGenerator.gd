@@ -12,7 +12,7 @@ onready var dungeon: TileMap
 export (int, "Normal, Cavern, Arena, Merchant, Debug, Troll") var biome = 0
 
 var textures = [
-	"res://sprites/walls.png",
+	"res://sprites/walls-basic.png",
 	"res://sprites/walls-cavern.png"
 ]
 

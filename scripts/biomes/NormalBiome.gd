@@ -31,7 +31,7 @@ func newFloor():
 	decorator.flagCriticalPath(criticalPath)
 	var rooms = decorator.getTreasuresCandidates()
 	decorator.flagMap()
-	# Place tresor rooms
+	# Place treasure rooms
 	var treasureThreshold = 0.215
 	var nTreasures = randf() - treasureThreshold
 	while nTreasures > 0:
