@@ -43,12 +43,14 @@ func init(charClass: int):
 		armors = []
 	if not classKit[Data.KIT_PO].empty():
 		for p in classKit[Data.KIT_PO]:
+			Identify.learn("potion", p)
 			var items = Ref.game.itemGenerator.getPotion(p)
 			potions.append_array(items)
 	else:
 		potions = []
 	if not classKit[Data.KIT_SC].empty():
 		for s in classKit[Data.KIT_SC]:
+			Identify.learn("scroll", s)
 			var items = Ref.game.itemGenerator.getScroll(s)
 			scrolls.append_array(items)
 	else:

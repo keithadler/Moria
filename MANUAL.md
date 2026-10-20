@@ -117,6 +117,12 @@ right trigger casts a spell.
   which school you are good at and which spell list you use (arcane, divine or nature).
 - A spell has a few uses until you rest.
 - Scrolls are single-use spells and potions are drunk once. Both are listed in your inventory.
+- Unknown potions and scrolls: a potion you have not tried shows as, say, a "Murky potion", and a scroll as
+  "Scroll labelled ZELGO MER". Drinking or reading one teaches you that kind for the rest of the run, and every
+  one you carry gets its real name. The flavors are reshuffled every run. Your class kit and anything a merchant
+  sells are already known. Some potions are bad (poison, clumsiness, darkness), so try new ones when you are safe.
+- Potions: healing, antidote, stoneskin, invisibility, wounds (full heal), might (double weapon damage), brilliance
+  (level 1 spells cost no use), regeneration (1 HP a turn), insight (shows traps), fire ward.
 - Throwing items (knives, axes, javelins, bombs, holy water) hit from a distance. Pick a target with the left and
   right arrow keys, Enter to throw, Esc to cancel.
 

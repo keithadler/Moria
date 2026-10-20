@@ -46,6 +46,7 @@ func runCollection(tester: Node):
 
 func runTest(tester: Node, testId: int):
 	Settings.difficulty = 1
+	Identify.reset()
 	Settings.tips = false
 	Ref.game.testFloor()
 	# Was GLOBAL.items.empty(), a query that clears nothing. The item ids restart at 0 for every
@@ -251,6 +252,26 @@ func fake_champion_floor(_testId: int):
 			m.stats.xp = 0
 			m.die()
 			hoardDropped = GLOBAL.itemsOnFloor.has(cell)
+
+func fake_drink_first_potion(_testId: int):
+	Ref.character.quaffPotion(Ref.character.inventory.potions[0])
+
+func fake_learn_scroll(_testId: int):
+	Identify.learn("scroll", 1)
+
+func fake_drink_each_potion(_testId: int):
+	for p in [Data.PO_MIGHT, Data.PO_BRILLANCE_1, Data.PO_REGENERATION, Data.PO_INVISIBILITY]:
+		Ref.character.pickItem(Ref.game.itemGenerator.getPotion(p))
+		Ref.character.quaffPotion(Ref.character.inventory.potions[0])
+
+# hp is kept in rememberedXp, the test helper that already stores one number
+func fake_regeneration(_testId: int):
+	Ref.character.stats.updateHp(Ref.character.stats.hpMax - 10)
+	rememberedXp = Ref.character.stats.hp
+	Ref.character.pickItem(Ref.game.itemGenerator.getPotion(Data.PO_REGENERATION))
+	Ref.character.quaffPotion(Ref.character.inventory.potions[0])
+	for _i in range(3):
+		StatusEngine.decreaseStatusesTime(Ref.character)
 
 func fake_wait(_testId: int):
 	pass

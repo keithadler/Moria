@@ -97,9 +97,12 @@ func castSpellCharacter(spellId: int, scrollId = null):
 				SpellEngine.breakSanctuary(Ref.character, SpellEngine.SANCT_BUFF)
 	if (spellCasted):
 		if scrollId == null:
-			Ref.character.spells.spellsUses[spellId] -= 1
+			# Brillance makes level 1 spells cost no use
+			if not (Ref.character.statuses.has(Data.STATUS_BRILLIANCE) and Data.spells[spellId][1] == 1):
+				Ref.character.spells.spellsUses[spellId] -= 1
 			Ref.character.shortcuts.refreshShortcuts(spellId)
 		else:
+			Identify.learn("scroll", GLOBAL.items[scrollId][GLOBAL.IT_BASE], true)
 			Ref.character.inventory.scrolls.erase(scrollId)
 			Ref.character.shortcuts.refreshShortcuts(GLOBAL.items[scrollId][GLOBAL.IT_STACK])
 			GLOBAL.items.erase(scrollId)

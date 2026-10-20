@@ -44,6 +44,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/Game.gd"
 }, {
+"base": "Reference",
+"class": "Identify",
+"language": "GDScript",
+"path": "res://scripts/engine/Identify.gd"
+}, {
 "base": "Node",
 "class": "ItemGenerator",
 "language": "GDScript",
@@ -107,6 +112,7 @@ _global_script_class_icons={
 "CurrentLevel": "",
 "Effect": "",
 "Game": "",
+"Identify": "",
 "ItemGenerator": "",
 "Monster": "",
 "Morgue": "",

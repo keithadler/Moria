@@ -941,6 +941,13 @@ const PO_INVISIBILITY = 3
 const PO_WOUNDS = 4
 const PO_MIGHT = 5
 const PO_BRILLANCE_1 = 6
+# Harmful and more useful potions (unknown ones are a risk, see Identify)
+const PO_POISON = 7
+const PO_CLUMSINESS = 8
+const PO_DARKNESS = 9
+const PO_REGENERATION = 10
+const PO_INSIGHT = 11
+const PO_FIRE_WARD = 12
 
 const PO_NAME = 0
 const PO_CAN_POP = 1
@@ -956,6 +963,12 @@ const potions = {
 	PO_WOUNDS: 		["Potion of cure wounds", 	true, 2, 28, 4],
 	PO_MIGHT: 		["Potion of might", 		true, 2, 29, 5],
 	PO_BRILLANCE_1: ["Potion of brillance I", 	true, 2, 30, 6],
+	PO_POISON: 		["Potion of poison", 		true, 0, 25, 7],
+	PO_CLUMSINESS: 	["Potion of clumsiness", 	true, 1, 26, 8],
+	PO_DARKNESS: 	["Potion of darkness", 		true, 1, 27, 9],
+	PO_REGENERATION:["Potion of regeneration", 	true, 1, 24, 10],
+	PO_INSIGHT: 	["Potion of insight", 		true, 1, 30, 11],
+	PO_FIRE_WARD: 	["Potion of fire ward", 	true, 2, 29, 12],
 }
 
 const potionDescriptions = {
@@ -966,6 +979,12 @@ const potionDescriptions = {
 	PO_WOUNDS : "Replenishes all you HP and cure a random injury.",
 	PO_MIGHT : "Grants [Might] (double your weapon damages) for 10 turns.",
 	PO_BRILLANCE_1 : "Grants [Brillance I] (level 1 spells costs no uses) for 3 turns.",
+	PO_POISON : "Poisons you for 8 turns. Harmful.",
+	PO_CLUMSINESS : "Grants [Break destiny]: your rolls are at their lowest for 10 turns. Harmful.",
+	PO_DARKNESS : "Blinds you for 8 turns (-1 to hit). Harmful.",
+	PO_REGENERATION : "Restores 1 HP every turn for 20 turns.",
+	PO_INSIGHT : "Reveals every trap you can see for 40 turns.",
+	PO_FIRE_WARD : "Grants [Protect from fire] for 30 turns.",
 }
  
 var potionsByRarity = {}
@@ -995,6 +1014,12 @@ const SC_REVEAL = 3
 const SC_ANIMALS = 4
 const SC_LESSER_ACQ = 5
 const SC_MIRROR_IMAGE = 6
+const SC_FIREBOLT = 7
+const SC_LIGHTNING = 8
+const SC_SLEEP = 9
+const SC_SHIELD = 10
+const SC_SANCTUARY = 11
+const SC_FIND_TRAPS = 12
 
 const scrolls = {
 	SC_MAGIC_MISSILE: 	["Scroll of magic missile", SP_MAGIC_MISSILE, 1, 0, 100],
@@ -1004,6 +1029,12 @@ const scrolls = {
 	SC_ANIMALS: 		["Scroll of conjure animals", SP_CONJURE_ANIMAL, 1, 2, 104],
 	SC_LESSER_ACQ: 		["Scroll of lesser acquirement", SP_LESSER_AQUIREMENT, 0, 3, 105],
 	SC_MIRROR_IMAGE: 	["Scroll of mirror images", SP_MIRROR_IMAGES, 1, 3, 106],
+	SC_FIREBOLT: 		["Scroll of fire bolt", SP_FIREBOLT, 1, 1, 107],
+	SC_LIGHTNING: 		["Scroll of lightning bolt", SP_LIGHT_BOLT, 1, 2, 108],
+	SC_SLEEP: 			["Scroll of sleep", SP_SLEEP, 1, 1, 109],
+	SC_SHIELD: 			["Scroll of shield", SP_SHIELD, 1, 0, 110],
+	SC_SANCTUARY: 		["Scroll of sanctuary", SP_SANCTUARY, 1, 2, 111],
+	SC_FIND_TRAPS: 		["Scroll of find traps", SP_REVEAL_TRAPS, 1, 0, 112],
 }
 
 const scrollDescriptions = {
@@ -1013,7 +1044,13 @@ const scrollDescriptions = {
 	SC_REVEAL: "All hidden doors appears on your map. Lasts %%TURNS_2.",
 	SC_ANIMALS: "Conjures 1d2+1 wolves to fight by your side. Lasts until rest.",
 	SC_LESSER_ACQ: "Creates a weapon, an armor, a scroll, a potion or golds from nothing.",
-	SC_MIRROR_IMAGE: "Creates 3 illusions of yourself around you to fool your enemies. Every attack or spell has 50 % chances to hit an illusion instead of you. Lasts until rest."
+	SC_MIRROR_IMAGE: "Creates 3 illusions of yourself around you to fool your enemies. Every attack or spell has 50 % chances to hit an illusion instead of you. Lasts until rest.",
+	SC_FIREBOLT: "Fires a bolt of fire at a target, dealing %%DMG_1.",
+	SC_LIGHTNING: "Fires a lightning bolt that hits everything in a line, dealing %%DMG_1.",
+	SC_SLEEP: "Puts a target to sleep.",
+	SC_SHIELD: "Surrounds you with a shield that absorbs damage.",
+	SC_SANCTUARY: "Creatures will not attack you until you attack, throw or cast.",
+	SC_FIND_TRAPS: "Reveals the traps you can see for a while.",
 }
  
 var scrollsByRarity = {}
@@ -1753,6 +1790,8 @@ const STATUS_PROTECT_FIRE = 121
 const STATUS_PROTECT_POISON = 122
 const STATUS_REPEL_MISSILES = 123
 const STATUS_REGENERATE = 124
+const STATUS_MIGHT = 125
+const STATUS_BRILLIANCE = 126
 
 const STATUS_WILLPOWER = 200
 const STATUS_PHYSICS = 201
@@ -1928,6 +1967,8 @@ const statusPrefabs = {
 	STATUS_PROTECT_POISON: ["Protect from poison", 35, null, null, STATUS_RESIST + DMG_POISON, null, null, false, true, true],
 	STATUS_REPEL_MISSILES: ["Deflect projectiles", 34, null, null, STATUS_REPEL_MISSILES, null, null, false, true, true],
 	STATUS_REGENERATE: ["Regenerate", 34, null, null, STATUS_REGENERATE, null, null, false, true, true],
+	STATUS_MIGHT: ["Might", 16, null, null, STATUS_MIGHT, null, null, false, true, true],
+	STATUS_BRILLIANCE: ["Brillance", 11, null, null, STATUS_BRILLIANCE, null, null, false, true, true],
 	
 	STATUS_TROLL_RAGE: ["Enrage", 34, null, null, STATUS_TROLL_RAGE, null, null, false, true, true],
 }

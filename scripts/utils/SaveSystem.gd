@@ -391,9 +391,16 @@ func saveGlobals() -> Dictionary:
 		"hiddenDoors": GLOBAL.hiddenDoors,
 		"lockedDoors": GLOBAL.lockedDoors,
 		"testedDoors": GLOBAL.testedDoors,
+		"known": GLOBAL.known,
 	}
 
 func loadGlobals(dict: Dictionary):
+	# Saves from before identification have no list, everything counts as known there
+	if dict.has("known"):
+		GLOBAL.known = dict["known"]
+	else:
+		Identify.reset()
+		Identify.learnEverything()
 	GLOBAL.itemsOnFloor.clear()
 	for pilePos in dict["itemsOnFloor"].keys():
 		var item = dict["itemsOnFloor"][pilePos]

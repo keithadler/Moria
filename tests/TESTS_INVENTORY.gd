@@ -211,6 +211,35 @@ const tests = {
 		],
 		["assert_save_keeps_armors"]
 	],
+	17: [
+		"An unknown potion shows a flavor until it is drunk",
+		Vector2(10, 10),
+		[
+			["spawn_potion", Data.PO_MIGHT, null],
+		],
+		["assert_potion_unknown", "assert_flavors_distinct", "fake_drink_first_potion", "assert_potion_known"]
+	],
+	18: [
+		"An unknown scroll shows a label, and learning renames the ones in the bag",
+		Vector2(10, 10),
+		[
+			["spawn_scroll", 1, null],
+			["spawn_scroll", 1, null],
+		],
+		["assert_scroll_unknown", "fake_learn_scroll", "assert_scroll_known"]
+	],
+	19: [
+		"The new potions do what they say",
+		Vector2(10, 10),
+		[],
+		["fake_drink_each_potion", "assert_potion_effects"]
+	],
+	20: [
+		"Regeneration heals one HP a turn and Might adds damage",
+		Vector2(10, 10),
+		[],
+		["fake_regeneration", "assert_regeneration"]
+	],
 }
 func assert_choice_mode(testId: int):
 	assert(GLOBAL.currentMode == GLOBAL.MODE_CHOICE)
@@ -290,3 +319,42 @@ func assert_save_keeps_armors(testId: int):
 	assert(Ref.character.inventory.armors.size() >= 2)
 	assert(saved["armors"] == Ref.character.inventory.armors)
 	assert(saved["rests"] == Ref.character.inventory.rests)
+
+# Was a name taken straight from the data: the player could read what every potion was before drinking it
+func assert_potion_unknown(testId: int):
+	var item = GLOBAL.items[Ref.character.inventory.potions[0]]
+	assert(item[GLOBAL.IT_NAME] != Data.potions[Data.PO_MIGHT][Data.PO_NAME])
+	assert(item[GLOBAL.IT_NAME].ends_with(" potion"))
+	assert(not Identify.isKnown("potion", Data.PO_MIGHT))
+
+func assert_potion_known(testId: int):
+	assert(Identify.isKnown("potion", Data.PO_MIGHT))
+	assert(Identify.displayName("potion", Data.PO_MIGHT) == Data.potions[Data.PO_MIGHT][Data.PO_NAME])
+
+func assert_scroll_unknown(testId: int):
+	for id in Ref.character.inventory.scrolls:
+		assert(GLOBAL.items[id][GLOBAL.IT_NAME].begins_with("Scroll labelled"))
+
+func assert_scroll_known(testId: int):
+	assert(Ref.character.inventory.scrolls.size() == 2)
+	for id in Ref.character.inventory.scrolls:
+		assert(GLOBAL.items[id][GLOBAL.IT_NAME] == Data.scrolls[1][Data.SC_NAME])
+
+# The flavors are a shuffle of the run seed: two kinds never share a flavor
+func assert_flavors_distinct(testId: int):
+	var seen = {}
+	for idx in Data.potions.keys():
+		var n = Identify.flavorName("potion", idx)
+		assert(not seen.has(n))
+		seen[n] = true
+
+func assert_potion_effects(testId: int):
+	var c = Ref.character
+	assert(c.statuses.has(Data.STATUS_MIGHT))
+	assert(c.statuses.has(Data.STATUS_BRILLIANCE))
+	assert(c.statuses.has(Data.STATUS_REGENERATE))
+	assert(c.statuses.has(Data.STATUS_INVISIBLE))
+
+func assert_regeneration(testId: int):
+	var c = Ref.character
+	assert(c.stats.hp == get_parent().rememberedXp + 3)

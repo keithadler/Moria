@@ -7,6 +7,8 @@ var startingMode = null
 var loadName = ""
 # The vaults and lairs built on this floor, see SpecialRooms
 var specialRooms: Array = []
+# The potion and scroll kinds this run has identified, see Identify
+var known = {"potion": {}, "scroll": {}}
 # A message the title screen shows once, for example when a save cannot be loaded
 var titleMessage = ""
 
@@ -132,6 +134,11 @@ func isForSell(cell: Vector2) -> bool:
 	return itemsOnFloor[cell][FLOOR_TO_SELL]
 
 func dropItemOnFloor(idx: int, cell: Vector2, toSell: bool = false, price: int = 1, renewable: bool = false):
+	if toSell:
+		if items[idx][IT_TYPE] == PO_TYPE:
+			Identify.learn("potion", items[idx][IT_BASE])
+		elif items[idx][IT_TYPE] == SC_TYPE:
+			Identify.learn("scroll", items[idx][IT_BASE])
 	if itemsOnFloor.has(cell):
 		if items[idx][IT_TYPE] == LO_TYPE or items[idx][IT_TYPE] == GO_TYPE:
 			for i in itemsOnFloor[cell][0]:

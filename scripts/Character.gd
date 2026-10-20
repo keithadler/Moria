@@ -313,6 +313,7 @@ func quaffPotion(idx):
 	inventory.potions.erase(idx)
 	Ref.ui.writeQuaffedPotion(potion[GLOBAL.IT_NAME])
 	PotionEngine.applyEffect(self, potion[GLOBAL.IT_BASE])
+	Identify.learn("potion", potion[GLOBAL.IT_BASE], true)
 	GLOBAL.items.erase(idx)
 	shortcuts.refreshShortcuts(potion[GLOBAL.IT_STACK])
 	SpellEngine.breakSanctuary(self, SpellEngine.SANCT_POTION)
