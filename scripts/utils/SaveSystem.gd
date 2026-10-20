@@ -124,6 +124,7 @@ func saveMap() -> Dictionary:
 		"searched": Ref.currentLevel.searched,
 		# Saves hold the map as arrays of the floor size, so they can only be loaded at the same size
 		"size": Vector2(GLOBAL.FLOOR_SIZE_X, GLOBAL.FLOOR_SIZE_Y),
+		"seed": Ref.game.runSeed,
 		"currentBiome": WorldHandler.currentBiome,
 		"currentFloor": WorldHandler.currentFloor,
 	}
@@ -135,6 +136,7 @@ func loadMap(dict: Dictionary):
 	arrayToTilemap(dict["shadows"], Ref.currentLevel.shadows, false)
 	arrayToTilemap(dict["under"], Ref.currentLevel.underShadows, false)
 	Ref.currentLevel.searched = dict["searched"]
+	Ref.game.runSeed = dict.get("seed", Ref.game.runSeed)
 	WorldHandler.currentBiome = dict["currentBiome"]
 	WorldHandler.currentFloor = dict["currentFloor"]
 

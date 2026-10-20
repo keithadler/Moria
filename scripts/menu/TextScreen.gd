@@ -3,6 +3,8 @@ class_name TextScreen
 
 # A scrolling text page, used for the manual. Up, Down, Page Up and Page Down scroll, Esc or Enter close.
 
+signal closed
+
 var font: DynamicFont
 var text: RichTextLabel
 var owner_node = null
@@ -45,19 +47,26 @@ func _ready():
 	footer.align = Label.ALIGN_CENTER
 	box.add_child(footer)
 
-func open(bbcode: String, owner):
+func open(bbcode: String, owner, toEnd: bool = false):
 	owner_node = owner
 	owner.set_process_input(false)
 	text.bbcode_text = bbcode
 	text.scroll_to_line(0)
 	visible = true
 	set_process_input(true)
+	if toEnd:
+		call_deferred("scrollToEnd")
+
+func scrollToEnd():
+	text.scroll_to_line(text.get_line_count())
+	text.get_v_scroll().value = text.get_v_scroll().max_value
 
 func close():
 	visible = false
 	set_process_input(false)
 	if owner_node != null:
 		owner_node.set_process_input(true)
+	emit_signal("closed")
 
 func _input(event):
 	var bar = text.get_v_scroll()

@@ -200,7 +200,8 @@ func refresh():
 				text += ":  " + ("On (numbers, flash, shake)" if Settings.effects else "Off")
 		rows[i].text = ("> " if i == index else "  ") + text
 		rows[i].modulate = Color(1, 0.85, 0.3) if i == index else Color(1, 1, 1)
-	hint.text = message if message != "" else "F11 or Alt+Enter: fullscreen"
+	var seedText = "" if fromTitle or not is_instance_valid(Ref.game) else "     Seed " + str(Ref.game.runSeed)
+	hint.text = message if message != "" else "F11 or Alt+Enter: fullscreen" + seedText
 
 func volumeBar(value: float) -> String:
 	var filled = int(round(value * 10.0))

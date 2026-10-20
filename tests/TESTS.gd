@@ -17,6 +17,9 @@ var spawnedItems: Array = []
 var rememberedThrowings: int = 0
 var rememberedXp: int = 0
 var rememberedGolds: int = 0
+var layoutA: int = 0
+var layoutB: int = 0
+var layoutC: int = 0
 var rememberedMusic: float = 0.0
 
 func runAll():
@@ -136,6 +139,31 @@ func fake_next_floor(_testId: int):
 
 func fake_remember_golds(_testId: int):
 	rememberedGolds = Ref.character.inventory.golds
+
+func layout_signature() -> int:
+	var total = 0
+	for c in Ref.currentLevel.dungeon.get_used_cells_by_id(GLOBAL.FLOOR_ID):
+		total += int(c.x) * 131 + int(c.y) * 7919 + int(c.x) * int(c.y)
+	return total
+
+# The same seed gives the same floor, another seed gives another one
+func fake_seed_floors(_testId: int):
+	WorldHandler.setLocation(2, Data.BIOME_DUNGEON)
+	Ref.game.runSeed = 1234
+	Ref.game.newFloor()
+	layoutA = layout_signature()
+	Ref.game.newFloor()
+	layoutB = layout_signature()
+	Ref.game.runSeed = 98765
+	Ref.game.newFloor()
+	layoutC = layout_signature()
+
+func fake_summary_stats(_testId: int):
+	Ref.character.floorStatsFloor = 2
+	Ref.character.kills = 5
+	Ref.character.floorKillsStart = 1
+	Ref.character.floorChests = 1
+	Ref.character.floorItems = 3
 
 func fake_wait(_testId: int):
 	pass

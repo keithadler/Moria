@@ -65,6 +65,14 @@ The game shows the real list on the **H** screen. The usual ones:
 | Esc | Options menu |
 | F11 or Alt+Enter | Fullscreen |
 | H | Controls |
+| L | Message history (scroll back through the log) |
+| F12 | Save a screenshot |
+
+## Gamepad
+
+D-pad or left stick move (hold to keep walking), A confirms, B or Start goes back and opens the menu, X picks up,
+Y opens the inventory, LB the character sheet, RB searches, Select the map. Left trigger drinks a potion and
+right trigger casts a spell.
 
 ## Exploring
 
@@ -72,7 +80,11 @@ The game shows the real list on the **H** screen. The usual ones:
 - **Hidden doors and traps** are found by searching (S), and sometimes by luck as you walk. Searching costs a turn.
 - **Chests** hold loot. Some are locked and need lockpicks.
 - **Stairs**: the game asks if you want to go to the next floor. After you do, a shadow force blocks the way back.
-  The game saves for you on every new floor.
+  The game saves for you on every new floor, and when you close the window. The next floor's title card tells
+  you what you did on the last one.
+- **Gold and lockpicks** are picked up when you walk onto them.
+- **Seeds**: every run has a seed (Esc shows it). Start the game with `--seed=12345` to play the same dungeon
+  again, or `--seed=daily` for the one everybody gets that day.
 - **Merchants** sell things for gold.
 - Floors are 10 deep in the dungeon, then 10 in the caverns, then a floor with a troll. Past the troll the dungeon
   starts again, harder.

@@ -21,6 +21,7 @@ const MODE_CHEST = 30
 const MODE_OPTIONS = 40
 const MODE_HELP = 41
 const MODE_GAMEOVER = 42
+const MODE_LOG = 43
 
 var currentMode: int = MODE_NONE
 

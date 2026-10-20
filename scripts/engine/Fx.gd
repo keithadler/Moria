@@ -20,6 +20,7 @@ var blackRect: ColorRect
 var cardBox: VBoxContainer
 var cardFloor: Label
 var cardArea: Label
+var cardSummary: Label
 var transitioning = false
 var transitionToken = 0
 
@@ -88,6 +89,12 @@ func _ready():
 	cardArea.add_font_override("font", midFont)
 	cardArea.align = Label.ALIGN_CENTER
 	cardBox.add_child(cardArea)
+	cardSummary = Label.new()
+	var smallFont = font.duplicate()
+	smallFont.size = 30
+	cardSummary.add_font_override("font", smallFont)
+	cardSummary.align = Label.ALIGN_CENTER
+	cardBox.add_child(cardSummary)
 	set_process(false)
 
 func isOn() -> bool:
@@ -218,7 +225,7 @@ func fadeOut():
 	yield(get_tree().create_timer(FADE_OUT), "timeout")
 
 # Arrive on a floor: black, then fade in while the title card shows the floor and the area
-func arrive(biome: int, floorNo: int):
+func arrive(biome: int, floorNo: int, summary: String = ""):
 	if not isOn():
 		transitioning = false
 		return
@@ -230,6 +237,8 @@ func arrive(biome: int, floorNo: int):
 	cardArea.text = texts[1]
 	cardFloor.modulate = texts[2]
 	cardArea.modulate = Color(1, 1, 1, 0.85)
+	cardSummary.text = summary
+	cardSummary.modulate = Color(1, 1, 1, 0.6)
 	blackRect.color.a = 1.0
 	tween.interpolate_property(blackRect, "color:a", 1.0, 0.0, FADE_IN, Tween.TRANS_QUAD, Tween.EASE_OUT, 0.2)
 	tween.interpolate_property(cardBox, "modulate:a", 0.0, 1.0, CARD_FADE, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.2)

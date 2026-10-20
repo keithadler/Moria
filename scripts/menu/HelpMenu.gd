@@ -23,7 +23,10 @@ const ROWS = [
 	["Save / load", ["save", "load"]],
 	["Options menu", "ui_cancel"],
 	["Fullscreen", "F11 or Alt+Enter"],
+	["Message history", "history"],
 	["This help", "help"],
+	["Gamepad", "D-pad or stick move, A ok, B or Start back / menu"],
+	["", "X pick up, Y inventory, LB sheet, RB search, Select map"],
 ]
 
 var font: DynamicFont

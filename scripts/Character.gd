@@ -15,6 +15,10 @@ onready var tween = get_node("SmoothMove")
 var currentVision: Array = []
 var charClass: int = 0
 var kills: int = 0
+var floorStatsFloor = 0
+var floorKillsStart = 0
+var floorChests = 0
+var floorItems = 0
 var hitBy: String = ""
 var killedBy: String = ""
 var statuses: Dictionary = {}
@@ -217,6 +221,8 @@ func heal(amount: int):
 
 func pickItem(items: Array, price: int = 0):
 	var item = GLOBAL.items[items[0]]
+	if item[GLOBAL.IT_TYPE] != GLOBAL.GO_TYPE and item[GLOBAL.IT_TYPE] != GLOBAL.LO_TYPE:
+		floorItems += items.size()
 	for idx in items:
 		GLOBAL.removeItemFromFloor(idx)
 		match item[GLOBAL.IT_TYPE]:
@@ -411,6 +417,7 @@ func summaryLines() -> Array:
 		"Level " + str(stats.level),
 		"Enemies slain: " + str(kills),
 		"Turns survived: " + str(GeneralEngine.turn),
+		"Seed: " + str(Ref.game.runSeed),
 		"Gold: " + str(inventory.golds),
 	]
 
@@ -425,5 +432,21 @@ func morgueEntry() -> Dictionary:
 		"turns": GeneralEngine.turn,
 		"gold": inventory.golds,
 		"killer": killedBy if killedBy != "" else "an unknown cause",
+		"seed": Ref.game.runSeed,
 		"date": "%04d-%02d-%02d %02d:%02d" % [d["year"], d["month"], d["day"], d["hour"], d["minute"]],
 	}
+
+# What the player did on the floor they are leaving, shown on the title card of the next one
+func floorSummary() -> String:
+	if floorStatsFloor <= 0:
+		return ""
+	var slain = kills - floorKillsStart
+	if slain == 0 and floorChests == 0 and floorItems == 0:
+		return ""
+	return "Floor " + str(floorStatsFloor) + ": " + str(slain) + " slain, " + str(floorChests) + " chests, " + str(floorItems) + " items"
+
+func startFloorStats():
+	floorStatsFloor = max(1, WorldHandler.currentFloor)
+	floorKillsStart = kills
+	floorChests = 0
+	floorItems = 0

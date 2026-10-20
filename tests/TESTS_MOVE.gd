@@ -322,6 +322,30 @@ const tests = {
 		[],
 		["assert_screenshot_path", "assert_no_quit_save_in_tests"]
 	],
+	37: [
+		"Gamepad bindings exist",
+		Vector2(10, 12),
+		[],
+		["assert_gamepad_bindings"]
+	],
+	38: [
+		"Message history opens and closes",
+		Vector2(10, 12),
+		[],
+		["history", "assert_log_mode", "ui_cancel", "assert_normal_mode_move"]
+	],
+	39: [
+		"Floor summary text",
+		Vector2(10, 12),
+		[],
+		["fake_summary_stats", "assert_floor_summary"]
+	],
+	40: [
+		"The same seed gives the same floor",
+		Vector2(10, 12),
+		[],
+		["fake_seed_floors", "assert_seed_floors"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -504,3 +528,24 @@ func assert_screenshot_path(testId: int):
 
 func assert_no_quit_save_in_tests(testId: int):
 	assert(not Ref.game.canSaveOnQuit())
+
+func assert_gamepad_bindings(testId: int):
+	for action in ["ui_up", "ui_down", "ui_left", "ui_right", "ui_accept", "ui_cancel", "inventory", "pickLoot", "search"]:
+		var found = false
+		for e in InputMap.get_action_list(action):
+			if e is InputEventJoypadButton or e is InputEventJoypadMotion:
+				found = true
+		assert(found)
+
+func assert_log_mode(testId: int):
+	assert(GLOBAL.currentMode == GLOBAL.MODE_LOG)
+
+func assert_floor_summary(testId: int):
+	assert(Ref.character.floorSummary() == "Floor 2: 4 slain, 1 chests, 3 items")
+	Ref.character.floorStatsFloor = 0
+	assert(Ref.character.floorSummary() == "")
+
+func assert_seed_floors(testId: int):
+	var t = get_parent()
+	assert(t.layoutA == t.layoutB)
+	assert(t.layoutA != t.layoutC)

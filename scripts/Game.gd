@@ -26,11 +26,15 @@ onready var saveSystem = get_node("Utils/SaveSystem")
 onready var optionsMenu = preload("res://scripts/menu/OptionsMenu.gd").new()
 onready var helpMenu = preload("res://scripts/menu/HelpMenu.gd").new()
 onready var gameOver = preload("res://scripts/menu/GameOverScreen.gd").new()
+onready var historyScreen = preload("res://scripts/menu/TextScreen.gd").new()
 
 var random_seed: int
 var autoexplore = false setget setAutoExplore
 var traveling = false
 var holdTime = 0.0
+# The seed of this run. Every floor is generated from it (see floorSeed), so a seed gives the same dungeon
+var runSeed = 0
+const HISTORY_LINES = 300
 # Where the map is drawn on the 1920 x 1080 screen, clicks outside it belong to the panels
 const MAP_WINDOW = Rect2(Vector2(24, 24), Vector2(1332, 684))
 
@@ -43,6 +47,7 @@ func _ready():
 	add_child(optionsMenu)
 	add_child(helpMenu)
 	add_child(gameOver)
+	add_child(historyScreen)
 	if debugMode:
 		Ref.currentLevel.fog.visible = false
 		Ref.currentLevel.shadows.visible = false
@@ -52,9 +57,11 @@ func _ready():
 	if start == 4:
 		get_tree().change_scene("res://scenes/UI/TitleScreen.tscn")
 	randomize()
-	var randomSeed = randi()
-	print("Seed: " + String(randomSeed))
-	seed(randomSeed)
+	runSeed = seedFromArguments()
+	if runSeed == 0:
+		runSeed = randi()
+	print("Seed: " + String(runSeed))
+	seed(runSeed)
 	Ref.game = self
 	set_process_input(false)
 	set_process(false)
@@ -229,6 +236,9 @@ func capTraps():
 		trap.free()
 
 func autosave():
+	# Was announcing "Game saved." even when nothing was written (tests, bots)
+	if not Settings.canWrite():
+		return
 	saveSystem.saveGame()
 	Ref.ui.write("Game saved.")
 
@@ -332,6 +342,7 @@ func merchantFloor():
 		Ref.currentLevel.levelBuffer.currentLevel = "merchant"
 
 func newFloor():
+	seed(floorSeed())
 	Ref.currentLevel.levelBuffer.flush()
 	cleanFloor()
 	Ref.currentLevel.initShadows()
@@ -362,7 +373,10 @@ func newFloor():
 	for _i in range(int(round((3 + (randi() % 4)) * GLOBAL.CONTENT_SCALE))):
 		Ref.currentLevel.dropItem()
 	Sfx.playMusicForBiome(WorldHandler.currentBiome)
-	Fx.arrive(WorldHandler.currentBiome, WorldHandler.currentFloor)
+	# The floor is built from the seed, everything after it (fights, loot rolls) is random again
+	randomize()
+	Fx.arrive(WorldHandler.currentBiome, WorldHandler.currentFloor, Ref.character.floorSummary())
+	Ref.character.startFloorStats()
 
 # Was: key repeat was ignored (is_action_pressed skips echo events), so holding an arrow key moved
 # exactly one step and a corridor meant tapping once per cell
@@ -370,6 +384,33 @@ func newFloor():
 func _notification(what):
 	if what == NOTIFICATION_WM_QUIT_REQUEST and canSaveOnQuit():
 		saveSystem.saveGame()
+
+# --seed=12345 starts a run from that seed, --seed=daily from one that is the same for everybody that day
+func seedFromArguments() -> int:
+	for argument in OS.get_cmdline_args():
+		if argument.begins_with("--seed="):
+			var value = argument.substr(7)
+			if value == "daily":
+				var d = OS.get_datetime()
+				return ("%04d-%02d-%02d" % [d["year"], d["month"], d["day"]]).hash()
+			return int(value)
+	return 0
+
+# Each floor has its own seed, so the layout, monsters and loot of a floor do not depend on what the
+# player did on the floors before. Fights and the rest of the game stay random.
+func floorSeed() -> int:
+	return runSeed + 7919 * (WorldHandler.currentBiome * 100 + WorldHandler.currentFloor)
+
+func openHistory():
+	var lines = Array(Ref.ui.diaryContent.split("\n"))
+	var tail = lines.slice(max(0, lines.size() - HISTORY_LINES), lines.size() - 1)
+	var text = "\n".join(PoolStringArray(tail))
+	GLOBAL.currentMode = GLOBAL.MODE_LOG
+	historyScreen.connect("closed", self, "onHistoryClosed", [], CONNECT_ONESHOT)
+	historyScreen.open(text, self, true)
+
+func onHistoryClosed():
+	GLOBAL.currentMode = GLOBAL.MODE_NORMAL
 
 func canSaveOnQuit() -> bool:
 	if start == 2 or Ref.character == null or not is_instance_valid(Ref.character):
@@ -464,6 +505,8 @@ func _input(event):
 		optionsMenu.open()
 	elif event.is_action_released("help"):
 		helpMenu.open()
+	elif event.is_action_released("history"):
+		openHistory()
 	elif (event.is_action_released("save")):
 		saveSystem.saveGame()
 	elif (event.is_action_released("load")):

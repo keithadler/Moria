@@ -40,4 +40,6 @@ static func line(entry: Dictionary) -> String:
 	text += "   " + str(entry.get("kills", 0)) + " slain"
 	text += "   killed by " + str(entry.get("killer", "something"))
 	text += "   " + str(entry.get("date", ""))
+	if entry.has("seed"):
+		text += "   seed " + str(entry["seed"])
 	return text
