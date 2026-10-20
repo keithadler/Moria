@@ -226,6 +226,19 @@ const tests = {
 		],
 		["assert_near_cells_valid"]
 	],
+	22: [
+		"Every sound effect and music track has a file",
+		Vector2(10, 12),
+		[],
+		["assert_sounds_exist"]
+	],
+	23: [
+		"Options menu changes the music volume",
+		Vector2(10, 12),
+		[],
+		["fake_remember_music", "ui_cancel", "assert_options_mode", "ui_down", "ui_down",
+		"ui_left", "assert_music_lowered", "fake_restore_music", "ui_cancel", "assert_normal_mode_move"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -308,3 +321,18 @@ func assert_near_cells_valid(testId: int):
 		assert(cell != Vector2(26, 10))
 		# Rows 9 to 11 are walled on both sides of the corridor, nothing beside it is visible
 		assert(cell.x == 26 or cell.y < 9 or cell.y > 11)
+
+func assert_sounds_exist(testId: int):
+	for sound in Sfx.EVENTS.values() + Sfx.DIRECT:
+		assert(Sfx.getStream(Sfx.SFX_FOLDER, sound) != null)
+	for track in Sfx.MUSIC:
+		assert(Sfx.getStream(Sfx.MUSIC_FOLDER, track) != null)
+
+func assert_options_mode(testId: int):
+	assert(GLOBAL.currentMode == GLOBAL.MODE_OPTIONS)
+
+func assert_music_lowered(testId: int):
+	assert(Settings.musicVolume < get_parent().rememberedMusic or Settings.musicVolume == 0.0)
+
+func assert_normal_mode_move(testId: int):
+	assert(GLOBAL.currentMode == GLOBAL.MODE_NORMAL)

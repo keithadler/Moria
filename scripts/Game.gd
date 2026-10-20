@@ -23,11 +23,13 @@ onready var spellHandler = get_node("Utils/SpellHandler")
 onready var throwHandler = get_node("Utils/ThrowHandler")
 onready var restHandler = get_node("Utils/RestHandler")
 onready var saveSystem = get_node("Utils/SaveSystem")
+onready var optionsMenu = preload("res://scripts/menu/OptionsMenu.gd").new()
 
 var random_seed: int
 var autoexplore = false setget setAutoExplore
 
 func _ready():
+	add_child(optionsMenu)
 	if debugMode:
 		Ref.currentLevel.fog.visible = false
 		Ref.currentLevel.shadows.visible = false
@@ -177,6 +179,7 @@ func nextFloor():
 		# Was an empty #TODO that went on to generate the same floor again
 		victory()
 		return
+	Sfx.play("descend")
 	newFloor()
 
 func victory():
@@ -276,6 +279,7 @@ func newFloor():
 		Ref.currentLevel.createChest()
 	for _i in range(3 + (randi() % 4)):
 		Ref.currentLevel.dropItem()
+	Sfx.playMusicForBiome(WorldHandler.currentBiome)
 
 func _input(event):
 	if event.is_pressed() and autoexplore:
@@ -322,6 +326,8 @@ func _input(event):
 		print("====================")
 #		Ref.character.setPosition(dungeonGenerator.newFloor())
 		nextFloor()
+	elif event.is_action_released("ui_cancel") and GLOBAL.currentMode == GLOBAL.MODE_NORMAL:
+		optionsMenu.open()
 	elif (event.is_action_released("save")):
 		saveSystem.saveGame()
 	elif (event.is_action_released("load")):

@@ -227,6 +227,7 @@ func takeHit(dmg: int, bypassProt: int = 0):
 	realDmg = StatusEngine.decreaseStatusRanks(self, realDmg, Data.STATUS_SHIELD)
 	stats.currentHp -= realDmg
 	Ref.ui.writeMonsterTakeHit(stats.entityName, realDmg)
+	Fx.hit(self, realDmg)
 	if stats.currentHp <= 0:
 		die()
 	elif StatusEngine.removeStatusType(self, Data.STATUS_SLEEP):

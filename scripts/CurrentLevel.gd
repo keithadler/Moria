@@ -336,6 +336,7 @@ func openDoor(pos):
 		GLOBAL.testedDoors.erase(pos)
 		Ref.game.pathfinder.dijkstraCompute()
 	dungeon.set_cellv(pos, GLOBAL.DOOR_ID, false, false, false, Vector2(0, 0))
+	Sfx.play("door_open")
 
 func target(pos: Vector2, isBoss: bool = false):
 	targetArrow.visible = true

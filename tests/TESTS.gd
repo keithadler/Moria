@@ -16,6 +16,7 @@ const TEST_INPUTS = 3
 var spawnedItems: Array = []
 var rememberedThrowings: int = 0
 var rememberedXp: int = 0
+var rememberedMusic: float = 0.0
 
 func runAll():
 	var collection = get_children()
@@ -92,6 +93,12 @@ func fake_remember_throwings(_testId: int):
 
 func fake_remember_xp(_testId: int):
 	rememberedXp = Ref.character.stats.xp
+
+func fake_remember_music(_testId: int):
+	rememberedMusic = Settings.musicVolume
+
+func fake_restore_music(_testId: int):
+	Settings.setMusicVolume(rememberedMusic)
 
 func fake_wait(_testId: int):
 	pass

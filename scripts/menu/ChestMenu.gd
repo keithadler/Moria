@@ -20,6 +20,7 @@ func open(id: int):
 	chestId = id
 	if !GLOBAL.chests[id][GLOBAL.CH_OPENED]:
 		animator.play("Open")
+		Sfx.play("chest_open")
 		GLOBAL.chests[id][GLOBAL.CH_OPENED] = true
 	else:
 		animator.play("Skip")

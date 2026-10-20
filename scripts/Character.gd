@@ -173,6 +173,7 @@ func takeHit(dmg: int, bypassProt: int = 0):
 	realDmg = StatusEngine.decreaseStatusRanks(self, realDmg, Data.STATUS_SHIELD)
 	stats.hp -= realDmg
 	Ref.ui.writeCharacterTakeHit(realDmg)
+	Fx.hurt(self, realDmg)
 	
 	# Check for death
 	if stats.hp <= 0:
@@ -189,6 +190,7 @@ func heal(amount: int):
 	var oldHp = stats.hp
 	stats.updateHp(stats.hp + amount)
 	Ref.ui.writeCharacterHeal(stats.hp - oldHp)
+	Fx.heal(self, stats.hp - oldHp)
 
 func pickItem(items: Array, price: int = 0):
 	var item = GLOBAL.items[items[0]]
@@ -358,6 +360,8 @@ func ignore(entity) -> bool:
 func die():
 	# Write death message
 	Ref.ui.write("You have died!")
+	Sfx.stopMusic()
+	Sfx.play("player_death")
 	# Was: always locked input and changed scene. The test harness lets the character
 	# die, so every later test ran with input off and the scene change freed Game
 	if GeneralEngine.isFaking:
