@@ -313,9 +313,12 @@ func createChest():
 			addChest(cell, 0)
 			return
 
-func placeTrap(pos: Vector2, idx: int = Data.TR_DART):
+func placeTrap(pos: Vector2, idx: int = -1):
 	if GLOBAL.trapsByPos.has(pos):
 		return
+	# Was always a spike trap. Each area has its own mix of traps (Data.trapWeights).
+	if idx < 0:
+		idx = Data.randomTrapType(WorldHandler.currentBiome)
 	var trap = trapScene.instance()
 	traps.add_child(trap)
 	trap.init(idx, pos)

@@ -1868,9 +1868,23 @@ const TR_DART = 0
 const TR_NAME = 0
 const TR_TYPE = 1
 const TR_ICON = 2
+const TR_TINT = 3
+# All traps use the spike trap sprite, tinted to tell them apart
+const TR_PIT = 1
+const TR_GAS = 2
+const TR_ALARM = 3
+const TR_SNARE = 4
+const TR_FIRE = 5
 const traps = {
-	0: ["Spike trap", TR_DART, 6],
+	TR_DART: ["Spike trap", TR_DART, 6, Vector3(1, 1, 1)],
+	TR_PIT: ["Pit", TR_PIT, 6, Vector3(0.55, 0.6, 1.0)],
+	TR_GAS: ["Poison gas trap", TR_GAS, 6, Vector3(0.5, 1.0, 0.4)],
+	TR_ALARM: ["Alarm trap", TR_ALARM, 6, Vector3(1.0, 0.9, 0.3)],
+	TR_SNARE: ["Snare", TR_SNARE, 6, Vector3(0.85, 0.65, 0.35)],
+	TR_FIRE: ["Fire trap", TR_FIRE, 6, Vector3(1.0, 0.4, 0.2)],
 }
+
+
 
 const BIOME_DUNGEON = 0
 const BIOME_CAVERN = 1
@@ -1879,6 +1893,27 @@ const BIOME_CRYPT = 3
 const BIOME_VOLCANO = 4
 const BIOME_ABYSS = 5
 const BIOME_TROLL_BOSS = 10
+
+# How likely each kind is in an area (weights), the placing code picks one with randomTrapType
+const trapWeights = {
+	BIOME_DUNGEON: {TR_DART: 40, TR_PIT: 20, TR_GAS: 15, TR_ALARM: 15, TR_SNARE: 10},
+	BIOME_CAVERN: {TR_DART: 25, TR_PIT: 30, TR_GAS: 25, TR_SNARE: 20},
+	BIOME_MINE: {TR_DART: 30, TR_PIT: 30, TR_GAS: 25, TR_SNARE: 15},
+	BIOME_CRYPT: {TR_DART: 25, TR_GAS: 25, TR_ALARM: 30, TR_SNARE: 20},
+	BIOME_VOLCANO: {TR_DART: 15, TR_FIRE: 45, TR_PIT: 20, TR_SNARE: 20},
+}
+
+static func randomTrapType(biome: int) -> int:
+	var weights = trapWeights.get(biome, trapWeights[BIOME_DUNGEON])
+	var total = 0
+	for w in weights.values():
+		total += w
+	var roll = randi() % total
+	for type in weights.keys():
+		roll -= weights[type]
+		if roll < 0:
+			return type
+	return TR_DART
 
 const BI_CR = 0
 const BI_FLOORS = 1

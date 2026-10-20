@@ -83,6 +83,8 @@ right trigger casts a spell.
 
 - Doors open when you walk into them. Some are **locked** and need a lockpick (you can fail, and picks run out).
 - **Hidden doors and traps** are found by searching (S), and sometimes by luck as you walk. Searching costs a turn.
+  Traps come in six kinds, tinted differently once revealed: spike (damage), pit (more damage), poison gas (poison),
+  alarm (wakes every monster on the floor), snare (roots you for 3 turns) and fire (fire damage). Each area has its own mix.
 - **Chests** hold loot. Some are locked and need lockpicks.
 - **Stairs**: the game asks if you want to go to the next floor. After you do, a shadow force blocks the way back.
   The game saves for you on every new floor, and when you close the window. The next floor's title card tells

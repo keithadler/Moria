@@ -19,6 +19,11 @@ var golds = 100 setget updateGolds
 
 func init(charClass: int):
 	rests = Settings.startRests()
+	# Was keeping whatever the character wore before: a new character starts with nothing equipped
+	# (in the test harness this left ids of items that no longer exist, and a status then crashed computeCA)
+	currentWeapon = Vector2(-1, -1)
+	currentArmor = Vector2(-1, -1)
+	currentTalismans = Vector2(-1, -1)
 	var classKit = Data.CLASS_KITS[charClass]
 	if classKit[Data.KIT_WP] != -1:
 		var items = Ref.game.itemGenerator.getWeapon(classKit[Data.KIT_WP])

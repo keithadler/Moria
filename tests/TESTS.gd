@@ -211,6 +211,9 @@ func flood(start: Vector2) -> Dictionary:
 func fake_debug_key(_testId: int):
 	WorldHandler.setLocation(1, Data.BIOME_DUNGEON)
 
+func fake_clear_statuses(_testId: int):
+	StatusEngine.clearStatuses(Ref.character)
+
 func fake_wait(_testId: int):
 	pass
 

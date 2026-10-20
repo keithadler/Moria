@@ -393,6 +393,20 @@ const tests = {
 		],
 		["assert_trap_killer"]
 	],
+	48: [
+		"Every trap kind does what it says",
+		Vector2(10, 12),
+		[
+			["spawn_monster", Data.MO_DUMMY, Vector2(10, 5)],
+		],
+		["assert_trap_kinds", "fake_clear_statuses"]
+	],
+	49: [
+		"Areas have their own mix of traps",
+		Vector2(10, 12),
+		[],
+		["assert_trap_mix"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -673,3 +687,36 @@ func assert_trap_killer(testId: int):
 	assert(Ref.character.killedBy == "Spike trap")
 	Ref.character.stats.hp = Ref.character.stats.hpMax
 	Ref.character.killedBy = ""
+
+func trigger_trap(type: int, cell: Vector2):
+	Ref.currentLevel.placeTrap(cell, type)
+	TrapEngine.trigger(GLOBAL.getTrapByPos(cell), Ref.character)
+
+func assert_trap_kinds(testId: int):
+	var hp = Ref.character.stats.hpMax
+	for type in [Data.TR_DART, Data.TR_PIT, Data.TR_FIRE]:
+		Ref.character.stats.hp = hp
+		trigger_trap(type, Vector2(12 + type, 14))
+		assert(Ref.character.stats.hp < hp)
+	trigger_trap(Data.TR_GAS, Vector2(20, 14))
+	assert(Ref.character.statuses.has(Data.STATUS_POISON))
+	trigger_trap(Data.TR_SNARE, Vector2(21, 14))
+	assert(Ref.character.statuses.has(Data.STATUS_IMMOBILE))
+	var monster = GLOBAL.getMonsterByPos(Vector2(10, 5))
+	assert(monster.status == "sleep")
+	trigger_trap(Data.TR_ALARM, Vector2(22, 14))
+	assert(monster.status == "awake")
+	Ref.character.stats.hp = hp
+
+func assert_trap_mix(testId: int):
+	var seen = {}
+	for _i in range(200):
+		seen[Data.randomTrapType(Data.BIOME_DUNGEON)] = true
+		assert(Data.randomTrapType(Data.BIOME_CAVERN) != Data.TR_ALARM)
+		assert(Data.randomTrapType(Data.BIOME_VOLCANO) != Data.TR_ALARM)
+	assert(seen.size() >= 4)
+	var fire = 0
+	for _i in range(200):
+		if Data.randomTrapType(Data.BIOME_VOLCANO) == Data.TR_FIRE:
+			fire += 1
+	assert(fire > 40)
