@@ -84,6 +84,9 @@ func fake_low_dice(_testId: int):
 func fake_high_dice(_testId: int):
 	GeneralEngine.fakedValue = 6
 
+func fake_clean_floor(_testId: int):
+	Ref.game.cleanFloor()
+
 func fake_last_printed(_testId: int):
 	Ref.ui.lastPrinted = ""
 
@@ -173,6 +176,22 @@ func spawn_golds(pos: Vector2, count: int):
 
 func spawn_monster(idx: int, pos: Vector2):
 	Ref.currentLevel.spawnMonster(idx, pos)
+
+func spawn_ally(idx: int, pos: Vector2):
+	Ref.currentLevel.spawnMonster(idx, pos, true)
+
+func aura_cells(center: Vector2) -> Array:
+	var cells = []
+	for i in range(-2, 3):
+		for j in range(-2, 3):
+			cells.append(center + Vector2(i, j))
+	return cells
+
+func spawn_allied_fire_aura(pos: Vector2):
+	Aura.create(aura_cells(pos), Aura.FIRE_AURA, 5, true)
+
+func spawn_hostile_fire_aura(pos: Vector2):
+	Aura.create(aura_cells(pos), Aura.FIRE_AURA, 5, false)
 
 func spawn_trap(idx: int, pos: Vector2):
 	Ref.currentLevel.placeTrap(pos, idx)

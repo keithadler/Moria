@@ -197,6 +197,10 @@ func cleanFloor():
 	for m in Ref.currentLevel.monsters.get_children():
 		GLOBAL.monstersByPosition.erase(m.pos)
 		m.free()
+	# Auras anchored to the map (clouds) don't follow the character to the next floor
+	for a in Ref.currentLevel.auras.get_children():
+		if a.relativeTo == null:
+			a.free()
 	for n in Ref.currentLevel.npcs.get_children():
 		n.free()
 	for c in Ref.currentLevel.chests.get_children():
@@ -214,6 +218,10 @@ func cleanFloor():
 func testFloor():
 	Ref.currentLevel.levelBuffer.flush()
 	cleanFloor()
+	# Allies follow the character between floors, a fresh test floor starts without
+	for a in Ref.currentLevel.allies.get_children():
+		GLOBAL.monstersByPosition.erase(a.pos)
+		a.free()
 	dungeonGenerator.simpleFloor()
 	Ref.currentLevel.initShadows()
 	Ref.currentLevel.initSecrets()
@@ -249,6 +257,7 @@ func newFloor():
 		var cell = Ref.character.getRandomCloseCell()
 		if cell == null:
 			a.die()
+			continue
 		a.setPosition(cell)
 #	for i in range(9):
 #		Ref.currentLevel.spawnMonster(i)
