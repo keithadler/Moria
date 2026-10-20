@@ -15,6 +15,8 @@ const MODE_INVENTORY = 20
 const MODE_SPELL = 21
 const MODE_CHEST = 30
 const MODE_OPTIONS = 40
+const MODE_HELP = 41
+const MODE_GAMEOVER = 42
 
 var currentMode: int = MODE_NONE
 

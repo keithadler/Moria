@@ -42,7 +42,9 @@ func runCollection(tester: Node):
 
 func runTest(tester: Node, testId: int):
 	Ref.game.testFloor()
-	GLOBAL.items.empty()
+	# Was GLOBAL.items.empty(), a query that clears nothing. The item ids restart at 0 for every
+	# test, so items left by earlier tests collided with the new ones
+	GLOBAL.items.clear()
 	Ref.ui.lastPrinted = ""
 	Ref.game.inventoryMenu.currentTab = 0
 	Ref.game.itemGenerator.id = -1
@@ -99,6 +101,15 @@ func fake_remember_music(_testId: int):
 
 func fake_restore_music(_testId: int):
 	Settings.setMusicVolume(rememberedMusic)
+
+func fake_travel(_testId: int):
+	Ref.game.travelTo(Vector2(10, 8))
+
+func fake_low_hp(_testId: int):
+	Ref.character.stats.hp = 2
+
+func fake_full_hp(_testId: int):
+	Ref.character.stats.hp = Ref.character.stats.hpMax
 
 func fake_wait(_testId: int):
 	pass

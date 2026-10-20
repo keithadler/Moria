@@ -13,6 +13,10 @@ var tween: Tween
 var levelBase = null
 var shaking = false
 var strengthNow = 1.0
+var lowHealth = false
+var warnBars = []
+var warnLabel: Label
+var warnTime = 0.0
 
 func _ready():
 	layer = 60
@@ -27,6 +31,35 @@ func _ready():
 	add_child(flashRect)
 	tween = Tween.new()
 	add_child(tween)
+	# A calm pulsing red frame and a short label while health is low
+	for anchor in [[0, 0, 1, 0, 0, 14], [0, 1, 1, 1, -14, 0], [0, 0, 0, 1, 0, 14], [1, 0, 1, 1, -14, 0]]:
+		var bar = ColorRect.new()
+		bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		bar.color = Color(0.85, 0.1, 0.1, 0.0)
+		bar.anchor_left = anchor[0]
+		bar.anchor_top = anchor[1]
+		bar.anchor_right = anchor[2]
+		bar.anchor_bottom = anchor[3]
+		if anchor[1] == anchor[3]:
+			bar.margin_top = anchor[4]
+			bar.margin_bottom = anchor[5]
+		else:
+			bar.margin_left = anchor[4]
+			bar.margin_right = anchor[5]
+		add_child(bar)
+		warnBars.append(bar)
+	warnLabel = Label.new()
+	warnLabel.add_font_override("font", font)
+	warnLabel.text = "LOW HEALTH"
+	warnLabel.modulate = Color(1, 0.35, 0.35, 0.0)
+	warnLabel.anchor_left = 0.5
+	warnLabel.anchor_right = 0.5
+	warnLabel.margin_left = -120
+	warnLabel.margin_right = 120
+	warnLabel.margin_top = 12
+	warnLabel.align = Label.ALIGN_CENTER
+	add_child(warnLabel)
+	set_process(false)
 
 func isOn() -> bool:
 	return Settings.effects and not GeneralEngine.isFaking
@@ -98,3 +131,33 @@ func shakeStep(amount: float):
 func shakeDone():
 	Ref.currentLevel.position = levelBase
 	shaking = false
+
+# Called whenever the player's hit points change (Stats.updateHp)
+func refreshHealth():
+	if Ref.character == null or Ref.character.stats == null:
+		return
+	var low = Settings.effects and Ref.character.stats.hp > 0 and Ref.character.stats.hpPercent() < 0.3
+	setWarning(low)
+
+func setWarning(on: bool):
+	if on == lowHealth:
+		return
+	lowHealth = on
+	set_process(on)
+	if on:
+		Sfx.play("low_hp")
+		warnTime = 0.0
+	else:
+		for bar in warnBars:
+			bar.color.a = 0.0
+		warnLabel.modulate.a = 0.0
+
+func clearWarning():
+	setWarning(false)
+
+func _process(delta):
+	warnTime += delta
+	var pulse = 0.5 + 0.5 * sin(warnTime * 2.6)
+	for bar in warnBars:
+		bar.color.a = 0.18 + 0.32 * pulse
+	warnLabel.modulate.a = 0.45 + 0.5 * pulse

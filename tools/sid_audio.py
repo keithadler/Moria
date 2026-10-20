@@ -146,6 +146,13 @@ def sfx_player_death():
     return [(render_voice(v1, 90), False), (render_voice(v2, 90), False), (render_voice(v3, 90), False)], None, -9
 
 
+def sfx_low_hp():
+    # Two soft falling notes, a nudge and not an alarm
+    i = Inst("tri", (2, 6, 6, 7))
+    v1 = [ev(0, 6, N("A4"), i), ev(8, 10, N("E4"), i)]
+    return [(render_voice(v1, 32), False)], None, -15
+
+
 def sfx_ui_move():
     return [(render_voice([ev(0, 1, N("A5"), Inst("pulse", (0, 2, 0, 2), pw=0.5))], 4), False)], None, -17
 

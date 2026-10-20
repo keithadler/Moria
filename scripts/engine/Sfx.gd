@@ -30,7 +30,7 @@ const EVENTS = {
 }
 
 # Played directly, they have no diary line
-const DIRECT = ["door_open", "chest_open", "player_death", "descend", "ui_move", "ui_accept", "ui_back"]
+const DIRECT = ["door_open", "chest_open", "player_death", "descend", "ui_move", "ui_accept", "ui_back", "low_hp"]
 
 const MUSIC = ["dungeon", "cavern", "boss"]
 
@@ -39,6 +39,10 @@ const MIN_GAP_MS = 70          # the same sound is not retriggered faster than t
 const FADE = 1.2
 const SFX_FOLDER = "res://sounds/sfx/"
 const MUSIC_FOLDER = "res://sounds/music/"
+# Players can drop their own tracks here without rebuilding the game, see sounds/music/README.md
+const USER_MUSIC_FOLDER = "user://music/"
+const MUSIC_FORMATS = ["ogg", "mp3"]
+const MAX_VARIANTS = 9
 
 var cache = {}
 var voices = []
@@ -100,7 +104,7 @@ func play(sound: String):
 func playMusic(track: String):
 	if GeneralEngine.isFaking or track == currentMusic:
 		return
-	var stream = getStream(MUSIC_FOLDER, track)
+	var stream = getMusicStream(track)
 	if stream == null:
 		return
 	stream.loop = true
@@ -140,3 +144,53 @@ func getStream(folder: String, sound: String):
 		var path = folder + sound + ".ogg"
 		cache[key] = load(path) if ResourceLoader.exists(path) else null
 	return cache[key]
+
+# A track is "dungeon", "cavern" or "boss". The file can be dungeon.ogg or dungeon.mp3, and extra
+# versions dungeon_2.ogg ... dungeon_9.ogg are picked at random, a new one on each floor.
+# Tracks in user://music win over the ones shipped in res://sounds/music.
+func getMusicStream(track: String):
+	var found = userMusicFiles(track)
+	if found.empty():
+		for variant in musicVariants(track):
+			for format in MUSIC_FORMATS:
+				var path = MUSIC_FOLDER + variant + "." + format
+				if ResourceLoader.exists(path):
+					found.append(path)
+	if found.empty():
+		return null
+	var path = found[randi() % found.size()]
+	if path.begins_with("user://"):
+		return loadUserStream(path)
+	if not cache.has(path):
+		cache[path] = load(path)
+	return cache[path]
+
+func musicVariants(track: String) -> Array:
+	var names = [track]
+	for i in range(2, MAX_VARIANTS + 1):
+		names.append(track + "_" + str(i))
+	return names
+
+func userMusicFiles(track: String) -> Array:
+	var result = []
+	var file = File.new()
+	for variant in musicVariants(track):
+		for format in MUSIC_FORMATS:
+			var path = USER_MUSIC_FOLDER + variant + "." + format
+			if file.file_exists(path):
+				result.append(path)
+	return result
+
+func loadUserStream(path: String):
+	var file = File.new()
+	if file.open(path, File.READ) != OK:
+		return null
+	var bytes = file.get_buffer(file.get_len())
+	file.close()
+	var stream
+	if path.ends_with(".mp3"):
+		stream = AudioStreamMP3.new()
+	else:
+		stream = AudioStreamOGGVorbis.new()
+	stream.data = bytes
+	return stream

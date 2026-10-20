@@ -24,12 +24,17 @@ onready var throwHandler = get_node("Utils/ThrowHandler")
 onready var restHandler = get_node("Utils/RestHandler")
 onready var saveSystem = get_node("Utils/SaveSystem")
 onready var optionsMenu = preload("res://scripts/menu/OptionsMenu.gd").new()
+onready var helpMenu = preload("res://scripts/menu/HelpMenu.gd").new()
+onready var gameOver = preload("res://scripts/menu/GameOverScreen.gd").new()
 
 var random_seed: int
 var autoexplore = false setget setAutoExplore
+var traveling = false
 
 func _ready():
 	add_child(optionsMenu)
+	add_child(helpMenu)
+	add_child(gameOver)
 	if debugMode:
 		Ref.currentLevel.fog.visible = false
 		Ref.currentLevel.shadows.visible = false
@@ -181,6 +186,42 @@ func nextFloor():
 		return
 	Sfx.play("descend")
 	newFloor()
+	autosave()
+
+# Saved after every new floor, so closing the game never costs more than the current floor
+func autosave():
+	saveSystem.saveGame()
+	Ref.ui.write("Game saved.")
+
+# Walk to a clicked cell that is in view. It stops when an enemy comes into view, when
+# something blocks the way or when any key is pressed.
+func travelTo(cell: Vector2):
+	if traveling or Ref.currentLevel.fog.get_cellv(cell) != 0:
+		return
+	if not GLOBAL.targets.empty():
+		Ref.ui.write("You cannot walk there with enemies in sight.")
+		return
+	var path = pathfinder.a_star(Ref.character.pos, [cell], 60, true)
+	if path == null or path.size() < 2:
+		return
+	traveling = true
+	for i in range(1, path.size()):
+		if not traveling or GLOBAL.currentMode != GLOBAL.MODE_NORMAL or not GLOBAL.targets.empty():
+			break
+		var step = path[i]
+		var direction = step - Ref.character.pos
+		if abs(direction.x) + abs(direction.y) != 1:
+			break
+		var hp = Ref.character.stats.hp
+		Ref.character.moveAsync(direction)
+		yield(get_tree().create_timer(0.07), "timeout")
+		if Ref.character.pos != step and Ref.currentLevel.isCellFree(step)[0]:
+			# A door was opened by the first try, walk through it
+			Ref.character.moveAsync(direction)
+			yield(get_tree().create_timer(0.07), "timeout")
+		if Ref.character.pos != step or Ref.character.stats.hp < hp:
+			break
+	traveling = false
 
 func victory():
 	Ref.ui.write(Ref.ui.color("You have reached the end of the dungeon. You win!", "yellow"))
@@ -282,6 +323,12 @@ func newFloor():
 	Sfx.playMusicForBiome(WorldHandler.currentBiome)
 
 func _input(event):
+	if event.is_pressed():
+		traveling = false
+	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
+		if GLOBAL.currentMode == GLOBAL.MODE_NORMAL:
+			travelTo(Ref.currentLevel.dungeon.world_to_map(Ref.currentLevel.dungeon.get_local_mouse_position()))
+		return
 	if event.is_pressed() and autoexplore:
 		setAutoExplore(false)
 	elif (event.is_action_pressed("autoexplore")):
@@ -328,6 +375,8 @@ func _input(event):
 		nextFloor()
 	elif event.is_action_released("ui_cancel") and GLOBAL.currentMode == GLOBAL.MODE_NORMAL:
 		optionsMenu.open()
+	elif event.is_action_released("help"):
+		helpMenu.open()
 	elif (event.is_action_released("save")):
 		saveSystem.saveGame()
 	elif (event.is_action_released("load")):

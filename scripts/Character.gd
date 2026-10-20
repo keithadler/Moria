@@ -14,6 +14,7 @@ onready var tween = get_node("SmoothMove")
 
 var currentVision: Array = []
 var charClass: int = 0
+var kills: int = 0
 var statuses: Dictionary = {}
 var enchants: Dictionary = {}
 var pos = Vector2(0, 0)
@@ -362,14 +363,28 @@ func die():
 	Ref.ui.write("You have died!")
 	Sfx.stopMusic()
 	Sfx.play("player_death")
+	Fx.clearWarning()
 	# Was: always locked input and changed scene. The test harness lets the character
 	# die, so every later test ran with input off and the scene change freed Game
 	if GeneralEngine.isFaking:
 		return
 	# Disable input
 	Ref.game.set_process_input(false)
-	# Brief pause so player can see the death message
-	yield(get_tree().create_timer(4.0), "timeout")
-	
-	# Return to title screen
-	get_tree().change_scene("res://scenes/UI/TitleScreen.tscn")
+	# Brief pause so the death message and sound can land, then show how the run went.
+	# (Was a 4 second wait and an abrupt jump to the title screen.)
+	yield(get_tree().create_timer(1.5), "timeout")
+	Ref.game.gameOver.open(summaryLines())
+
+func summaryLines() -> Array:
+	var title = stats.charName
+	if Data.classes.has(charClass):
+		title += " the " + Data.classes[charClass][0]
+	return [
+		title,
+		"",
+		"Reached floor " + str(max(1, WorldHandler.currentFloor)),
+		"Level " + str(stats.level),
+		"Enemies slain: " + str(kills),
+		"Turns survived: " + str(GeneralEngine.turn),
+		"Gold: " + str(inventory.golds),
+	]

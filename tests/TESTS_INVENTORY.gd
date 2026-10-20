@@ -202,6 +202,15 @@ const tests = {
 			"assert_normal_mode", "assert_throwing_used"
 		]
 	],
+	16: [
+		"The save stores the armor in the bag",
+		Vector2(10, 10),
+		[
+			["spawn_armor", 0, null],
+			["spawn_armor", 1, null],
+		],
+		["assert_save_keeps_armors"]
+	],
 }
 func assert_choice_mode(testId: int):
 	assert(GLOBAL.currentMode == GLOBAL.MODE_CHOICE)
@@ -274,3 +283,10 @@ func assert_stackable_in_item_list(testId:int, id: int):
 # Throwing a knife used to abort on the Array effect, the item was never consumed
 func assert_throwing_used(testId: int):
 	assert(Ref.character.inventory.throwings.size() < get_parent().rememberedThrowings)
+
+# Saving used to store the rest count under "armors", so the armor in the bag was lost on every load
+func assert_save_keeps_armors(testId: int):
+	var saved = Ref.game.saveSystem.saveCharacter()["inventory"]
+	assert(Ref.character.inventory.armors.size() >= 2)
+	assert(saved["armors"] == Ref.character.inventory.armors)
+	assert(saved["rests"] == Ref.character.inventory.rests)

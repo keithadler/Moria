@@ -70,6 +70,7 @@ func updateHp(newValue: int):
 	newValue = min(newValue, hpMax)
 	hp = newValue
 	Ref.ui.updateStat(Data.CHAR_HP, newValue)
+	Fx.refreshHealth()
 
 func computeCA():
 	var items = [

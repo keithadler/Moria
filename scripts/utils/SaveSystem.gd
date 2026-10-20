@@ -6,12 +6,15 @@ onready var chestScene = preload("res://scenes/Chest.tscn")
 onready var trapScene = preload("res://scenes/Trap.tscn")
 onready var npcScene = preload("res://scenes/Npc.tscn")
 
-var filePath = "res://usr/"
+# Was "res://usr/": the res:// folder is read-only in an exported game, so saving only worked
+# when running from the editor. Saves now go to the user data folder.
+var filePath = "user://saves/"
+var oldFilePath = "res://usr/"
 
 func createFolder():
 	var directory = Directory.new()
 	if not directory.dir_exists(filePath):
-		directory.make_dir(filePath)
+		directory.make_dir_recursive(filePath)
 
 func saveGame():
 	createFolder()
@@ -40,9 +43,14 @@ func loadGame(charName: String):
 		GLOBAL.monstersByPosition.erase(a.pos)
 		a.free()
 	var file = File.new()
-	if not file.file_exists(filePath + charName + ".sav"):
-		return
-	file.open(filePath + Ref.character.stats.charName + ".sav", File.READ)
+	var path = filePath + charName + ".sav"
+	if not file.file_exists(path):
+		# Saves made by older versions were written next to the project
+		path = oldFilePath + charName + ".sav"
+		if not file.file_exists(path):
+			return
+	# Was reading Ref.character.stats.charName and ignoring the charName argument
+	file.open(path, File.READ)
 	loadItemGenerator(file.get_var(true))
 	loadStatusEngine(file.get_var(true))
 	loadItems(file.get_var(true))
@@ -111,7 +119,8 @@ func saveCharacter() -> Dictionary:
 			"currentArmor": Ref.character.inventory.currentArmor,
 			"currentTalismans": Ref.character.inventory.currentTalismans,
 			"weapons": Ref.character.inventory.weapons,
-			"armors": Ref.character.inventory.rests,
+			# Was saving the rests count here, so the armor in the bag was lost on every save
+			"armors": Ref.character.inventory.armors,
 			"potions": Ref.character.inventory.potions,
 			"scrolls": Ref.character.inventory.scrolls,
 			"throwings": Ref.character.inventory.throwings,
@@ -154,7 +163,8 @@ func loadCharacter(dict: Dictionary):
 	Ref.character.inventory.currentArmor = dict["inventory"]["currentArmor"]
 	Ref.character.inventory.currentTalismans = dict["inventory"]["currentTalismans"]
 	Ref.character.inventory.weapons = dict["inventory"]["weapons"]
-	Ref.character.inventory.rests = dict["inventory"]["armors"]
+	# Was assigning the armors entry to rests, the armor list itself was never loaded
+	Ref.character.inventory.armors = dict["inventory"]["armors"]
 	Ref.character.inventory.potions = dict["inventory"]["potions"]
 	Ref.character.inventory.scrolls = dict["inventory"]["scrolls"]
 	Ref.character.inventory.throwings = dict["inventory"]["throwings"]

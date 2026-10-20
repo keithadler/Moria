@@ -3,14 +3,15 @@ extends CanvasLayer
 # Options / pause menu, opened with Esc while exploring. It builds its own controls, so there is
 # no scene file. Up and Down choose, Left and Right change a value, Enter activates, Esc closes.
 
-const ITEMS = ["Resume", "Fullscreen", "Music volume", "Sound effects", "Screen effects", "Save game", "Quit to title"]
+const ITEMS = ["Resume", "Fullscreen", "Music volume", "Sound effects", "Screen effects", "Controls", "Save game", "Quit to title"]
 const RESUME = 0
 const FULLSCREEN = 1
 const MUSIC = 2
 const SFX = 3
 const EFFECTS = 4
-const SAVE = 5
-const QUIT = 6
+const CONTROLS = 5
+const SAVE = 6
+const QUIT = 7
 const STEP = 0.1
 
 # Bigger than the in-game text, the menu is read at a glance
@@ -129,6 +130,10 @@ func activate():
 		FULLSCREEN:
 			Sfx.play("ui_accept")
 			change(1)
+		CONTROLS:
+			Sfx.play("ui_accept")
+			close()
+			Ref.game.helpMenu.open()
 		SAVE:
 			Sfx.play("ui_accept")
 			Ref.game.saveSystem.saveGame()
@@ -143,6 +148,7 @@ func activate():
 				refresh()
 				return
 			Sfx.play("ui_accept")
+			Fx.clearWarning()
 			close()
 			get_tree().change_scene("res://scenes/UI/TitleScreen.tscn")
 		_:

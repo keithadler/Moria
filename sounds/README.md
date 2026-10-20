@@ -17,7 +17,7 @@ It needs python3 with numpy, and `sox` for the OGG encoding. A render takes abou
 
 | Folder | Content |
 |---|---|
-| `sfx/` | 22 short effects, mapped to the game's diary events in `scripts/engine/Sfx.gd` |
+| `sfx/` | 23 short effects, mapped to the game's diary events in `scripts/engine/Sfx.gd` |
 | `music/` | `dungeon` (D minor), `cavern` (A minor) and `boss` (E minor): slow, soft and without drums, so they can run for a long time. They loop, the biome picks one |
 
 Volumes are set in the options menu (Esc) and kept in `user://settings.cfg`.

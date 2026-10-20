@@ -239,6 +239,31 @@ const tests = {
 		["fake_remember_music", "ui_cancel", "assert_options_mode", "ui_down", "ui_down",
 		"ui_left", "assert_music_lowered", "fake_restore_music", "ui_cancel", "assert_normal_mode_move"]
 	],
+	24: [
+		"Help screen opens and closes",
+		Vector2(10, 12),
+		[],
+		["help", "assert_help_mode", "ui_cancel", "assert_normal_mode_move"]
+	],
+	25: [
+		"Game over summary",
+		Vector2(10, 12),
+		[],
+		["assert_summary_lines"]
+	],
+	26: [
+		"Low health warning",
+		Vector2(10, 12),
+		[],
+		["fake_low_hp", "assert_low_health", "fake_full_hp", "assert_not_low_health"]
+	],
+	27: [
+		"Click to travel",
+		Vector2(10, 12),
+		[],
+		["fake_travel", "fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait",
+		"fake_wait", "fake_wait", "fake_wait", "fake_wait", "assert_traveled"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -326,7 +351,7 @@ func assert_sounds_exist(testId: int):
 	for sound in Sfx.EVENTS.values() + Sfx.DIRECT:
 		assert(Sfx.getStream(Sfx.SFX_FOLDER, sound) != null)
 	for track in Sfx.MUSIC:
-		assert(Sfx.getStream(Sfx.MUSIC_FOLDER, track) != null)
+		assert(Sfx.getMusicStream(track) != null)
 
 func assert_options_mode(testId: int):
 	assert(GLOBAL.currentMode == GLOBAL.MODE_OPTIONS)
@@ -336,3 +361,20 @@ func assert_music_lowered(testId: int):
 
 func assert_normal_mode_move(testId: int):
 	assert(GLOBAL.currentMode == GLOBAL.MODE_NORMAL)
+
+func assert_help_mode(testId: int):
+	assert(GLOBAL.currentMode == GLOBAL.MODE_HELP)
+
+func assert_summary_lines(testId: int):
+	var lines = Ref.character.summaryLines()
+	assert(lines.size() >= 5)
+	assert("floor" in lines[2])
+
+func assert_low_health(testId: int):
+	assert(Fx.lowHealth)
+
+func assert_not_low_health(testId: int):
+	assert(not Fx.lowHealth)
+
+func assert_traveled(testId: int):
+	assert(Ref.character.pos == Vector2(10, 8))

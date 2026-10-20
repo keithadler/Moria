@@ -242,6 +242,8 @@ func heal(amount: int):
 func die():
 	# Killing a summon must not give experience, only killing an enemy does
 	var wasAlly = status == "help"
+	if not wasAlly:
+		Ref.character.kills += 1
 	status = "dead"
 	Ref.ui.writeMonsterDie(stats.entityName)
 	StatusEngine.clearStatuses(self)
