@@ -14,6 +14,7 @@ const TEST_INIT = 2
 const TEST_INPUTS = 3
 
 var spawnedItems: Array = []
+var rememberedThrowings: int = 0
 
 func runAll():
 	var collection = get_children()
@@ -28,6 +29,7 @@ func runAll():
 	get_tree().quit()
 
 func runCollection(tester: Node):
+	# Was Time.get_unix_time_from_system(), a Godot 4 API that does not exist in Godot 3
 	var time_start = OS.get_ticks_msec() / 1000.0
 	for testId in tester.tests.keys():
 		runTest(tester, testId)
@@ -83,6 +85,12 @@ func fake_low_dice(_testId: int):
 
 func fake_high_dice(_testId: int):
 	GeneralEngine.fakedValue = 6
+
+func fake_remember_throwings(_testId: int):
+	rememberedThrowings = Ref.character.inventory.throwings.size()
+
+func fake_wait(_testId: int):
+	pass
 
 func fake_clean_floor(_testId: int):
 	Ref.game.cleanFloor()

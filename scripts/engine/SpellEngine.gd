@@ -614,6 +614,7 @@ func poisonCloud(caster, entity, rank: int):
 		if not Ref.currentLevel.canTarget(entity.pos, cell).empty():
 			playEffect(cell, 3, 5)
 			auraCells.append(cell)
+	# Was `caster is Character` only: a cloud cast by an allied monster counted as hostile
 	if rank < 2:
 		Aura.create(auraCells, Aura.POISON_CLOUD_I, turns, caster is Character or caster.status == "help")
 	else:

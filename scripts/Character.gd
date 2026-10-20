@@ -358,7 +358,8 @@ func ignore(entity) -> bool:
 func die():
 	# Write death message
 	Ref.ui.write("You have died!")
-	# The test harness resets the character itself, never leave the floor
+	# Was: always locked input and changed scene. The test harness lets the character
+	# die, so every later test ran with input off and the scene change freed Game
 	if GeneralEngine.isFaking:
 		return
 	# Disable input

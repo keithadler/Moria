@@ -197,7 +197,8 @@ func cleanFloor():
 	for m in Ref.currentLevel.monsters.get_children():
 		GLOBAL.monstersByPosition.erase(m.pos)
 		m.free()
-	# Auras anchored to the map (clouds) don't follow the character to the next floor
+	# Was: never cleared, so a poison cloud kept hurting on the next floor.
+	# Auras tied to a caster (relativeTo) follow the character and stay.
 	for a in Ref.currentLevel.auras.get_children():
 		if a.relativeTo == null:
 			a.free()
@@ -218,7 +219,8 @@ func cleanFloor():
 func testFloor():
 	Ref.currentLevel.levelBuffer.flush()
 	cleanFloor()
-	# Allies follow the character between floors, a fresh test floor starts without
+	# Was: allies survived testFloor() (they follow the character between floors),
+	# so a test inherited the allies of the previous one
 	for a in Ref.currentLevel.allies.get_children():
 		GLOBAL.monstersByPosition.erase(a.pos)
 		a.free()
@@ -257,6 +259,7 @@ func newFloor():
 		var cell = Ref.character.getRandomCloseCell()
 		if cell == null:
 			a.die()
+			# Was missing: the dead ally went on to setPosition(null)
 			continue
 		a.setPosition(cell)
 #	for i in range(9):

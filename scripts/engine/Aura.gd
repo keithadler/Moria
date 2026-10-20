@@ -54,8 +54,10 @@ func update():
 func trigger(entity):
 	if entity == relativeTo:
 		return
+	# Was: an allied aura hurt allied monsters and a hostile aura hurt every monster
+	# (both branches were #TODO). Allied auras now only hurt enemies and hostile
+	# auras only hurt the player and allies.
 	var entityIsAllied = entity is Character or entity.status == "help"
-	# Allied auras only hurt enemies, hostile auras only hurt the player's side
 	if isAllied == entityIsAllied:
 		return
 	match type:
