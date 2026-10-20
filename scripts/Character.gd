@@ -356,10 +356,13 @@ func ignore(entity) -> bool:
 	return false
 
 func die():
+	# Write death message
+	Ref.ui.write("You have died!")
+	# The test harness resets the character itself, never leave the floor
+	if GeneralEngine.isFaking:
+		return
 	# Disable input
 	Ref.game.set_process_input(false)
-	# Write death message
-	Ref.ui.write("You have died!")	
 	# Brief pause so player can see the death message
 	yield(get_tree().create_timer(4.0), "timeout")
 	
