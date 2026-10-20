@@ -345,6 +345,7 @@ func rest():
 func refreshMapPosition():
 	tween.interpolate_property(self, "position", position, 9 * pos, 0.1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	tween.start()
+	Ref.currentLevel.centerOn(pos, false)
 
 func getRandomCloseCell():
 	if currentVision.empty():

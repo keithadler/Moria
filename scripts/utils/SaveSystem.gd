@@ -39,7 +39,33 @@ func saveGame():
 	file.store_var(saveUI(), true)
 	file.close()
 
-func loadGame(charName: String):
+# Maps were 37 x 19 before the floors got bigger, saves without a size are from then
+const LEGACY_SIZE = Vector2(37, 19)
+
+func isCompatible(path: String) -> bool:
+	var file = File.new()
+	if file.open(path, File.READ) != OK:
+		return false
+	for _i in range(5):
+		file.get_var(true)
+	var map = file.get_var(true)
+	file.close()
+	return sizeOf(map) == Vector2(GLOBAL.FLOOR_SIZE_X, GLOBAL.FLOOR_SIZE_Y)
+
+func sizeOf(map) -> Vector2:
+	if map is Dictionary and map.has("size"):
+		return map["size"]
+	return LEGACY_SIZE
+
+# Returns false when there is nothing to load or the save is from a version with smaller maps
+func loadGame(charName: String) -> bool:
+	var checkFile = File.new()
+	var checkPath = filePath + charName + ".sav"
+	if not checkFile.file_exists(checkPath):
+		checkPath = oldFilePath + charName + ".sav"
+	if checkFile.file_exists(checkPath) and not isCompatible(checkPath):
+		Ref.ui.write("This save was made with smaller maps and cannot be loaded.")
+		return false
 	Ref.game.cleanFloor()
 	for a in Ref.currentLevel.allies.get_children():
 		GLOBAL.monstersByPosition.erase(a.pos)
@@ -50,7 +76,7 @@ func loadGame(charName: String):
 		# Saves made by older versions were written next to the project
 		path = oldFilePath + charName + ".sav"
 		if not file.file_exists(path):
-			return
+			return false
 	# Was reading Ref.character.stats.charName and ignoring the charName argument
 	file.open(path, File.READ)
 	loadItemGenerator(file.get_var(true))
@@ -68,6 +94,7 @@ func loadGame(charName: String):
 	loadEngine(file.get_var(true))
 	loadUI(file.get_var(true))
 	file.close()
+	return true
 
 func saveItemGenerator() -> Dictionary:
 	return {
@@ -95,6 +122,8 @@ func saveMap() -> Dictionary:
 		"shadows": tileMapToArray(Ref.currentLevel.shadows),
 		"under": tileMapToArray(Ref.currentLevel.underShadows),
 		"searched": Ref.currentLevel.searched,
+		# Saves hold the map as arrays of the floor size, so they can only be loaded at the same size
+		"size": Vector2(GLOBAL.FLOOR_SIZE_X, GLOBAL.FLOOR_SIZE_Y),
 		"currentBiome": WorldHandler.currentBiome,
 		"currentFloor": WorldHandler.currentFloor,
 	}

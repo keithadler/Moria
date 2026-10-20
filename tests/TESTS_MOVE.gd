@@ -296,6 +296,18 @@ const tests = {
 		[],
 		["assert_card_texts"]
 	],
+	33: [
+		"Camera stays inside the map",
+		Vector2(10, 12),
+		[],
+		["assert_camera_limits"]
+	],
+	34: [
+		"Saves know the map size they were made with",
+		Vector2(10, 12),
+		[],
+		["assert_save_size"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -438,7 +450,7 @@ func assert_killer_in_summary(testId: int):
 	Ref.character.killedBy = ""
 
 func assert_traps_capped(testId: int):
-	var cap = 5 + int(WorldHandler.currentFloor / 3)
+	var cap = Ref.game.trapCap()
 	assert(Ref.currentLevel.traps.get_child_count() == cap)
 	assert(GLOBAL.trapsByPos.size() == cap)
 
@@ -451,3 +463,19 @@ func assert_card_texts(testId: int):
 	assert(Fx.cardTexts(Data.BIOME_CAVERN, 3)[1] == "The Caverns")
 	assert(Fx.cardTexts(Data.BIOME_DUNGEON, 7)[1] == "The Dungeon")
 	assert(Fx.cardTexts(Data.BIOME_TROLL_BOSS, 1)[0] == "THE TROLL")
+
+func assert_camera_limits(testId: int):
+	var level = Ref.currentLevel
+	level.centerOn(Vector2(1, 1), true)
+	assert(level.cameraOffset == Vector2(0, 0))
+	level.centerOn(Vector2(GLOBAL.FLOOR_SIZE_X - 2, GLOBAL.FLOOR_SIZE_Y - 2), true)
+	assert(level.cameraOffset == Vector2((GLOBAL.FLOOR_SIZE_X - GLOBAL.MAP_VIEW_COLS) * 9, (GLOBAL.FLOOR_SIZE_Y - GLOBAL.MAP_VIEW_ROWS) * 9))
+	# The middle of the map: the character is in the middle of the window
+	level.centerOn(Vector2(GLOBAL.FLOOR_SIZE_X / 2, GLOBAL.FLOOR_SIZE_Y / 2), true)
+	assert(level.cameraOffset.x > 0 and level.cameraOffset.y > 0)
+	level.centerOn(Ref.character.pos, true)
+
+func assert_save_size(testId: int):
+	var saves = Ref.game.saveSystem
+	assert(saves.sizeOf({}) == Vector2(37, 19))
+	assert(saves.sizeOf({"size": Vector2(55, 27)}) == Vector2(55, 27))

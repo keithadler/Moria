@@ -5,6 +5,8 @@ onready var lootScene = preload("res://scenes/Loot.tscn")
 var startingMode = null
 # The save chosen with Load game on the title screen
 var loadName = ""
+# A message the title screen shows once, for example when a save cannot be loaded
+var titleMessage = ""
 
 # Game modes
 const MODE_NONE = 0
@@ -23,8 +25,15 @@ const MODE_GAMEOVER = 42
 var currentMode: int = MODE_NONE
 
 # Dungeon
-const FLOOR_SIZE_X = 37
-const FLOOR_SIZE_Y = 19
+# Was 37 x 19, which is exactly what the screen shows. A floor is now 55 x 27 and the camera follows
+# the character through a window of MAP_VIEW_COLS x MAP_VIEW_ROWS cells (see CurrentLevel.centerOn).
+const FLOOR_SIZE_X = 55
+const FLOOR_SIZE_Y = 27
+# Monsters, loot, chests and traps grow with the map (the area is 2.1 times bigger, a bit less content
+# than that, the floors are meant to be more spacious)
+const CONTENT_SCALE = 1.7
+const MAP_VIEW_COLS = 37
+const MAP_VIEW_ROWS = 19
 const FULLNESS_THRESHOLD = 0.44
 const DOOR_REDUCTION_RATIO = 0.65
 const HIDDEN_DOORS_RATIO = 0.16

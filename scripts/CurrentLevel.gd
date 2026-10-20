@@ -33,6 +33,37 @@ var specialEntries: Array = [null, null]
 var specialCells: Array = []
 var isBossRomm: bool = false
 
+# The map is bigger than the part of the screen it is drawn in. The camera scrolls it so the
+# character stays in view, the shake effect adds a small offset on top.
+const BASE_POSITION = Vector2(6, 6)
+var cameraOffset = Vector2.ZERO
+var shakeOffset = Vector2.ZERO
+var cameraTween: Tween
+
+func applyPosition():
+	position = BASE_POSITION - cameraOffset + shakeOffset
+
+func setCamera(offset: Vector2):
+	cameraOffset = offset.round()
+	applyPosition()
+
+# Put the camera on a cell. Not instant: a short smooth scroll, used while walking.
+func centerOn(cell: Vector2, instant: bool = true):
+	var view = Vector2(GLOBAL.MAP_VIEW_COLS, GLOBAL.MAP_VIEW_ROWS) * 9
+	var map = Vector2(GLOBAL.FLOOR_SIZE_X, GLOBAL.FLOOR_SIZE_Y) * 9
+	var target = cell * 9 + Vector2(4.5, 4.5) - view / 2
+	target.x = clamp(target.x, 0, max(0, map.x - view.x))
+	target.y = clamp(target.y, 0, max(0, map.y - view.y))
+	if cameraTween == null:
+		cameraTween = Tween.new()
+		add_child(cameraTween)
+	cameraTween.remove_all()
+	if instant:
+		setCamera(target)
+		return
+	cameraTween.interpolate_method(self, "setCamera", cameraOffset, target, 0.1)
+	cameraTween.start()
+
 func _ready():
 	Ref.currentLevel = self
 

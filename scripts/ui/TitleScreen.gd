@@ -35,6 +35,9 @@ func _ready():
 	add_child(messageLabel)
 	setChoice(0)
 	Sfx.playMusic("dungeon")
+	if GLOBAL.titleMessage != "":
+		showMessage(GLOBAL.titleMessage)
+		GLOBAL.titleMessage = ""
 	set_process_input(true)
 
 func _input(event):

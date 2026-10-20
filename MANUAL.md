@@ -33,7 +33,8 @@ Each class starts with its own kit of weapon, armor, potions and a few other ite
 
 ## The screen
 
-- **The map** in the middle. You only see what is near you and in line of sight.
+- **The map** in the middle. You only see what is near you and in line of sight. Floors are bigger than the
+  screen, the view scrolls with you.
 - **The log** at the bottom left tells you what happens, turn by turn.
 - **The side panel** on the right: level and experience, **HP** (health), **Stam** (stamina), **CA** (armor class,
   how hard you are to hit), **Prot** (damage taken off every hit), **Dmg** and **Hit** (your weapon's damage dice and your attack roll), **Lock**

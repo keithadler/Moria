@@ -31,6 +31,8 @@ var random_seed: int
 var autoexplore = false setget setAutoExplore
 var traveling = false
 var holdTime = 0.0
+# Where the map is drawn on the 1920 x 1080 screen, clicks outside it belong to the panels
+const MAP_WINDOW = Rect2(Vector2(24, 24), Vector2(1332, 684))
 
 # Hold an arrow key to keep walking: it starts after a short delay, then steps at a steady pace
 const HOLD_DELAY = 0.3
@@ -85,7 +87,11 @@ func _ready():
 			# and started a new fighter instead
 			chooseClassMenu.close()
 			Ref.character.init(Data.CL_FIGHTER)
-			saveSystem.loadGame(GLOBAL.loadName)
+			if not saveSystem.loadGame(GLOBAL.loadName):
+				GLOBAL.titleMessage = "That save cannot be loaded (made with smaller maps)."
+				get_tree().change_scene("res://scenes/UI/TitleScreen.tscn")
+				return
+			Ref.currentLevel.centerOn(Ref.character.pos, true)
 			Ref.currentLevel.refresh_view()
 			MasterInput.setMaster(self)
 			GLOBAL.currentMode = GLOBAL.MODE_NORMAL
@@ -209,8 +215,11 @@ func nextFloor():
 # Saved after every new floor, so closing the game never costs more than the current floor
 # Was uncapped: a cavern floor could get 31 traps on about 300 cells. Now 5 on the first floors, one more
 # every three floors, the surplus is removed at random.
+func trapCap() -> int:
+	return int((5 + int(WorldHandler.currentFloor / 3)) * GLOBAL.CONTENT_SCALE)
+
 func capTraps():
-	var cap = 5 + int(WorldHandler.currentFloor / 3)
+	var cap = trapCap()
 	var traps = Ref.currentLevel.traps.get_children()
 	traps.shuffle()
 	while traps.size() > cap:
@@ -338,6 +347,7 @@ func newFloor():
 	Ref.currentLevel.initSecrets()
 	Ref.character.spawnPos = spawnPos
 	Ref.currentLevel.placeCharacter(spawnPos)
+	Ref.currentLevel.centerOn(spawnPos, true)
 	for a in Ref.currentLevel.allies.get_children():
 		var cell = Ref.character.getRandomCloseCell()
 		if cell == null:
@@ -347,9 +357,9 @@ func newFloor():
 		a.setPosition(cell)
 #	for i in range(9):
 #		Ref.currentLevel.spawnMonster(i)
-	for _i in range(max(0, randi() % 6 - 2)):
+	for _i in range(int(round(max(0, randi() % 6 - 2) * GLOBAL.CONTENT_SCALE))):
 		Ref.currentLevel.createChest()
-	for _i in range(3 + (randi() % 4)):
+	for _i in range(int(round((3 + (randi() % 4)) * GLOBAL.CONTENT_SCALE))):
 		Ref.currentLevel.dropItem()
 	Sfx.playMusicForBiome(WorldHandler.currentBiome)
 	Fx.arrive(WorldHandler.currentBiome, WorldHandler.currentFloor)
@@ -393,7 +403,7 @@ func _input(event):
 	if event.is_pressed():
 		traveling = false
 	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
-		if GLOBAL.currentMode == GLOBAL.MODE_NORMAL:
+		if GLOBAL.currentMode == GLOBAL.MODE_NORMAL and MAP_WINDOW.has_point(get_viewport().get_mouse_position()):
 			travelTo(Ref.currentLevel.dungeon.world_to_map(Ref.currentLevel.dungeon.get_local_mouse_position()))
 		return
 	if event.is_pressed() and autoexplore:

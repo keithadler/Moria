@@ -45,6 +45,12 @@ Saves and settings are in Godot's user data folder, not in the project, so they 
 `saves/<name>.sav` is the save (the game also saves when you take the stairs), `morgue.json` is the record of finished runs (title screen: Morgue), `settings.cfg` has fullscreen, the
 volumes and the screen effects switch. Put your own songs in `music/` in the same folder, see `sounds/music/README.md`.
 
+## Floor size
+
+Floors are 55 x 27 cells (`GLOBAL.FLOOR_SIZE_X/Y`), the screen shows 37 x 19 of them and the camera follows the
+character. Monsters, loot, chests and traps scale with the area (`GLOBAL.CONTENT_SCALE`). Saves made with the old
+37 x 19 floors cannot be loaded, the game says so instead of failing.
+
 ## Music and sound
 
 The sound effects and the fallback music are made with a software model of the Commodore 64's SID chip

@@ -10,7 +10,6 @@ const LIFETIME = 0.8
 var font: DynamicFont
 var flashRect: ColorRect
 var tween: Tween
-var levelBase = null
 var shaking = false
 var strengthNow = 1.0
 var lowHealth = false
@@ -149,17 +148,18 @@ func shake(strength: float, duration: float):
 		return
 	shaking = true
 	strengthNow = strength
-	if levelBase == null:
-		levelBase = Ref.currentLevel.position
 	tween.interpolate_method(self, "shakeStep", 1.0, 0.0, duration)
 	tween.interpolate_callback(self, duration, "shakeDone")
 	tween.start()
 
+# Was setting the level position itself from a remembered base, which would fight the scrolling camera
 func shakeStep(amount: float):
-	Ref.currentLevel.position = levelBase + Vector2(rand_range(-1, 1), rand_range(-1, 1)) * strengthNow * amount
+	Ref.currentLevel.shakeOffset = Vector2(rand_range(-1, 1), rand_range(-1, 1)) * strengthNow * amount
+	Ref.currentLevel.applyPosition()
 
 func shakeDone():
-	Ref.currentLevel.position = levelBase
+	Ref.currentLevel.shakeOffset = Vector2.ZERO
+	Ref.currentLevel.applyPosition()
 	shaking = false
 
 # Called whenever the player's hit points change (Stats.updateHp)
