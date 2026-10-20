@@ -5,6 +5,23 @@ Turn based, one hit point total, a new dungeon every run, played with the keyboa
 
 New here? Read [MANUAL.md](MANUAL.md). In the game, press **H** for the controls.
 
+## Screenshots
+
+| | |
+|---|---|
+| ![Title screen](docs/screenshots/01_title.jpg) | ![Floor card](docs/screenshots/02_floor_card.jpg) |
+| Title screen: New game, Load game, Options, Morgue, Manual, Exit | Taking the stairs: the floor title card |
+| ![Exploring](docs/screenshots/03_exploring.jpg) | ![Map overview](docs/screenshots/04_map.jpg) |
+| Exploring, with the combat log | The map of the whole floor (Tab) |
+| ![Fight](docs/screenshots/05_fight.jpg) | ![Options](docs/screenshots/06_options.jpg) |
+| Hit and damage numbers, red flash when hurt | Options menu (Esc) |
+| ![Controls](docs/screenshots/07_controls.jpg) | ![Manual](docs/screenshots/08_manual.jpg) |
+| Controls (H) | The manual, readable from the title screen |
+
+The screenshots were taken with stand-in art for the files that are missing from the repository (see Known issue
+below): monsters are not drawn as sprites in them, and the font and some of the wall tiles are placeholders. The
+title screen, the room tiles, the panels and the effects are the real ones.
+
 ## Run it
 
 - Needs **Godot 3.6** (tested with 3.6.3). It is a Godot 3 project, Godot 4 will not open it correctly.
