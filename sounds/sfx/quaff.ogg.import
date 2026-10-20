@@ -11,5 +11,5 @@ dest_files=[ "res://.import/quaff.ogg-e27b47e334a133b1ae478def40295f51.oggstr" ]
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0

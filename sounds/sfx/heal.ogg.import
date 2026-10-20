@@ -11,5 +11,5 @@ dest_files=[ "res://.import/heal.ogg-994a094271c6a33241bebce4ccf7b8ed.oggstr" ]
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0

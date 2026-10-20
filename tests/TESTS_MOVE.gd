@@ -350,6 +350,8 @@ func assert_near_cells_valid(testId: int):
 func assert_sounds_exist(testId: int):
 	for sound in Sfx.EVENTS.values() + Sfx.DIRECT:
 		assert(Sfx.getStream(Sfx.SFX_FOLDER, sound) != null)
+		# A looping effect plays forever once it is triggered
+		assert(not Sfx.getStream(Sfx.SFX_FOLDER, sound).loop)
 	for track in Sfx.MUSIC:
 		assert(Sfx.getMusicStream(track) != null)
 

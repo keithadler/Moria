@@ -11,5 +11,5 @@ dest_files=[ "res://.import/lockpick_fail.ogg-c8b9d1780ee91c12c41a3ad04b2734ee.o
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0

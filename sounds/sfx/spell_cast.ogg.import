@@ -11,5 +11,5 @@ dest_files=[ "res://.import/spell_cast.ogg-e9b484259885c2d1bdd9ade0ca80304e.oggs
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0

@@ -145,6 +145,10 @@ func getStream(folder: String, sound: String):
 	if not cache.has(key):
 		var path = folder + sound + ".ogg"
 		cache[key] = load(path) if ResourceLoader.exists(path) else null
+		# Godot imports OGG files with looping ON. Was missing: every sound effect repeated
+		# forever once it played, whatever the import settings say
+		if cache[key] != null and folder == SFX_FOLDER:
+			cache[key].loop = false
 	return cache[key]
 
 # A track is "dungeon", "cavern" or "boss". The file can be dungeon.ogg or dungeon.mp3, and extra
