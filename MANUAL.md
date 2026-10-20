@@ -1,0 +1,102 @@
+# Moria: player manual
+
+You are an adventurer going down through a dungeon that is generated again for every run. You explore, fight,
+loot, and keep going until you die or reach the end. There is no going back up.
+
+## Starting
+
+1. Choose a class (arrow keys, Enter).
+2. Type a name.
+3. Choose your first feats and spells if your class has any.
+
+| Class | Starts with | Good at |
+|---|---|---|
+| Fighter | 10 HP | Combat, armor, physics |
+| Paladin | 10 HP | Combat, armor, willpower, divine spells |
+| Ranger | 10 HP | Combat, physics, perception, nature spells |
+| Thief | 8 HP | Combat, perception, thievery |
+| Bard | 8 HP | Enchantment, willpower, thievery |
+| Cleric | 8 HP | Evocation, willpower, divine spells |
+| Druid | 8 HP | Divination, abjuration, perception, nature spells |
+| Mage | 6 HP | Evocation, willpower |
+
+Each class starts with its own kit of weapon, armor, potions and a few other items.
+
+## The screen
+
+- **The map** in the middle. You only see what is near you and in line of sight.
+- **The log** at the bottom left tells you what happens, turn by turn.
+- **The side panel** on the right: level and experience, **HP** (health), **Stam** (stamina), **CA** (armor class,
+  how hard you are to hit), **Prot** (damage taken off every hit), **Dmg** and **Hit** (your weapon's damage dice and your attack roll), **Lock**
+  (lockpicks), **Gold**, and your resistances.
+- A red frame and the words LOW HEALTH appear when you are under 30% health.
+
+## Controls
+
+The game shows the real list on the **H** screen. The usual ones:
+
+| Key | Does |
+|---|---|
+| Arrow keys | Move, walk into an enemy to attack it |
+| Left click | Walk to a visible cell (stops if an enemy appears) |
+| S | Search for hidden doors and traps around you |
+| P | Pick up loot under you |
+| I | Inventory (equip, wear, drop) |
+| K | Character sheet (spend skill points and feats) |
+| M / C | Spell list / cast a spell |
+| A | Drink a potion |
+| R | Read a scroll |
+| T | Throw a knife, axe, bomb... |
+| D | Drop an item |
+| Z | Rest |
+| O | Auto-explore (any key stops it) |
+| Q | Give an item a quick slot, then press 1 to 0 to use it |
+| F1 / F5 | Save / load |
+| Esc | Options menu |
+| F11 or Alt+Enter | Fullscreen |
+| H | Controls |
+
+## Exploring
+
+- Doors open when you walk into them. Some are **locked** and need a lockpick (you can fail, and picks run out).
+- **Hidden doors and traps** are found by searching (S), and sometimes by luck as you walk. Searching costs a turn.
+- **Chests** hold loot. Some are locked and need lockpicks.
+- **Stairs**: the game asks if you want to go to the next floor. After you do, a shadow force blocks the way back.
+  The game saves for you on every new floor.
+- **Merchants** sell things for gold.
+- Floors are 10 deep in the dungeon, then 10 in the caverns, then a floor with a troll. Past the troll the dungeon
+  starts again, harder.
+
+## Fighting
+
+- Monsters are asleep until they come into your view, then they wake up and come for you.
+- Armor class (CA) decides if you get hit, Prot reduces the damage that gets through. A hit always does at least 1.
+- Fighting, casting and searching spend stamina (Stam).
+- Monsters will also attack the creatures you summon, not only you.
+- Killing monsters gives experience. A level up gives **skill points** and **feat points**: open the character
+  sheet (K) to spend them.
+
+## Magic, scrolls and potions
+
+- Spells come in schools: Evocation, Enchantment, Divination, Abjuration and Conjuration. Your class decides
+  which school you are good at and which spell list you use (arcane, divine or nature).
+- A spell has a few uses until you rest.
+- Scrolls are single-use spells and potions are drunk once. Both are listed in your inventory.
+- Throwing items (knives, axes, javelins, bombs, holy water) hit from a distance. Pick a target with the left and
+  right arrow keys, Enter to throw, Esc to cancel.
+
+## Resting
+
+You start with **2 rests**. Resting (Z) restores your health, stamina and spell uses and clears statuses, but it
+sends your summoned allies away, and you cannot rest while hostile creatures are on the floor.
+
+## Death
+
+When your health reaches zero the game shows how far you got (floor, level, enemies slain, turns, gold) and returns
+to the title screen. Your last save is still in the save folder: start a new game with the same name and press F5
+to load it.
+
+## Options (Esc)
+
+Fullscreen, music volume, sound effects volume, screen effects (damage numbers, hit flash, screen shake, low health
+frame: turn them off if you prefer calm), controls, save, and quit to title (asks twice).
