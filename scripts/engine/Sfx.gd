@@ -30,7 +30,7 @@ const EVENTS = {
 }
 
 # Played directly, they have no diary line
-const DIRECT = ["door_open", "chest_open", "player_death", "descend", "ui_move", "ui_accept", "ui_back", "low_hp"]
+const DIRECT = ["door_open", "chest_open", "player_death", "descend", "ui_move", "ui_accept", "ui_back", "low_hp", "bump"]
 
 const MUSIC = ["dungeon", "cavern", "boss"]
 

@@ -37,7 +37,7 @@ The game shows the real list on the **H** screen. The usual ones:
 
 | Key | Does |
 |---|---|
-| Arrow keys | Move, walk into an enemy to attack it |
+| Arrow keys | Move one step, walk into an enemy to attack it. **Hold** a key to keep walking (it stops at walls, doors, items and when an enemy is in view) |
 | Left click | Walk to a visible cell (stops if an enemy appears) |
 | S | Search for hidden doors and traps around you |
 | P | Pick up loot under you |

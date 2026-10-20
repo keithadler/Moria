@@ -264,6 +264,14 @@ const tests = {
 		["fake_travel", "fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait",
 		"fake_wait", "fake_wait", "fake_wait", "fake_wait", "assert_traveled"]
 	],
+	28: [
+		"Holding an arrow key keeps walking",
+		Vector2(6, 8),
+		[],
+		["fake_hold_right", "fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait",
+		"fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait",
+		"fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_release_right", "assert_walked_far"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -380,3 +388,8 @@ func assert_not_low_health(testId: int):
 
 func assert_traveled(testId: int):
 	assert(Ref.character.pos == Vector2(10, 8))
+
+# One tap is one step, holding the key walks on
+func assert_walked_far(testId: int):
+	assert(Ref.character.pos.x >= 10)
+	assert(Ref.character.pos.y == 8)

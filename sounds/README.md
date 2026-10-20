@@ -17,7 +17,7 @@ It needs python3 with numpy, and `sox` for the OGG encoding. A render takes abou
 
 | Folder | Content |
 |---|---|
-| `sfx/` | 23 short effects, mapped to the game's diary events in `scripts/engine/Sfx.gd` |
+| `sfx/` | 24 short effects, mapped to the game's diary events in `scripts/engine/Sfx.gd` |
 | `music/` | The three songs the game plays, `dungeon`, `cavern` and `boss` (Suno, modern glitch / artcore synth). They loop, the biome picks one. See `music/README.md` to replace them |
 | `music/sid/` | The SID-style tracks from the tool, slow and soft, played for any biome that has no song in `music/` |
 

@@ -30,8 +30,14 @@ onready var gameOver = preload("res://scripts/menu/GameOverScreen.gd").new()
 var random_seed: int
 var autoexplore = false setget setAutoExplore
 var traveling = false
+var holdTime = 0.0
+
+# Hold an arrow key to keep walking: it starts after a short delay, then steps at a steady pace
+const HOLD_DELAY = 0.3
+const HOLD_INTERVAL = 0.1
 
 func _ready():
+	set_physics_process(true)
 	add_child(optionsMenu)
 	add_child(helpMenu)
 	add_child(gameOver)
@@ -321,6 +327,37 @@ func newFloor():
 	for _i in range(3 + (randi() % 4)):
 		Ref.currentLevel.dropItem()
 	Sfx.playMusicForBiome(WorldHandler.currentBiome)
+
+# Was: key repeat was ignored (is_action_pressed skips echo events), so holding an arrow key moved
+# exactly one step and a corridor meant tapping once per cell
+func _physics_process(delta):
+	if GLOBAL.currentMode != GLOBAL.MODE_NORMAL or traveling or autoexplore or Ref.character == null:
+		holdTime = 0.0
+		return
+	var direction = heldDirection()
+	if direction == Vector2.ZERO:
+		holdTime = 0.0
+		return
+	holdTime += delta
+	if holdTime < HOLD_DELAY:
+		return
+	holdTime = HOLD_DELAY - HOLD_INTERVAL
+	# Only walk on through empty cells with no enemy in view. A wall, a door, a monster or an item
+	# you would walk onto stops it, tap the key for those.
+	if not GLOBAL.targets.empty() or not Ref.currentLevel.isCellFree(Ref.character.pos + direction)[0]:
+		return
+	Ref.character.moveAsync(direction)
+
+func heldDirection() -> Vector2:
+	if Input.is_action_pressed("ui_up"):
+		return Vector2(0, -1)
+	if Input.is_action_pressed("ui_down"):
+		return Vector2(0, 1)
+	if Input.is_action_pressed("ui_left"):
+		return Vector2(-1, 0)
+	if Input.is_action_pressed("ui_right"):
+		return Vector2(1, 0)
+	return Vector2.ZERO
 
 func _input(event):
 	if event.is_pressed():

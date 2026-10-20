@@ -106,10 +106,23 @@ func fake_travel(_testId: int):
 	Ref.game.travelTo(Vector2(10, 8))
 
 func fake_low_hp(_testId: int):
+	Settings.effects = true
 	Ref.character.stats.hp = 2
 
 func fake_full_hp(_testId: int):
 	Ref.character.stats.hp = Ref.character.stats.hpMax
+
+func fake_hold_right(_testId: int):
+	var a = InputEventAction.new()
+	a.action = "ui_right"
+	a.pressed = true
+	Input.parse_input_event(a)
+
+func fake_release_right(_testId: int):
+	var a = InputEventAction.new()
+	a.action = "ui_right"
+	a.pressed = false
+	Input.parse_input_event(a)
 
 func fake_wait(_testId: int):
 	pass

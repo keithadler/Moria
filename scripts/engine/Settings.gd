@@ -32,7 +32,15 @@ func loadSettings():
 	musicVolume = clamp(float(file.get_value("audio", "music", musicVolume)), 0.0, 1.0)
 	sfxVolume = clamp(float(file.get_value("audio", "sfx", sfxVolume)), 0.0, 1.0)
 
+# Tests and bots run with MORIA_NO_SAVE=1 (and the harness fakes dice), so they never write the
+# settings or the saves of a real player. Was: a bot that wandered through the options menu saved
+# its choices into the real settings file.
+func canWrite() -> bool:
+	return not OS.has_environment("MORIA_NO_SAVE") and not GeneralEngine.isFaking
+
 func saveSettings():
+	if not canWrite():
+		return
 	var file = ConfigFile.new()
 	file.set_value("display", "fullscreen", fullscreen)
 	file.set_value("display", "effects", effects)

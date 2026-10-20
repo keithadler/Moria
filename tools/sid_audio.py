@@ -153,6 +153,11 @@ def sfx_low_hp():
     return [(render_voice(v1, 32), False)], None, -15
 
 
+def sfx_bump():
+    # A very quiet dry tick for walking into a wall, not a thud
+    return [(render_voice([ev(0, 1, N("D6"), Inst("pulse", (0, 2, 0, 2), pw=0.5))], 4), False)], None, -24, 300
+
+
 def sfx_ui_move():
     return [(render_voice([ev(0, 1, N("A5"), Inst("pulse", (0, 2, 0, 2), pw=0.5))], 4), False)], None, -17
 

@@ -17,6 +17,8 @@ func createFolder():
 		directory.make_dir_recursive(filePath)
 
 func saveGame():
+	if not Settings.canWrite():
+		return
 	createFolder()
 	var file = File.new()
 	file.open(filePath + Ref.character.stats.charName + ".sav", File.WRITE)

@@ -18,7 +18,8 @@ The tests are part of the game: they play it with faked input and check what hap
 1. Open `scenes/Game.tscn` and set the `Game` node's **Start** to `Tests` (and **Tests** to `All`, `Move` or `Inventory`).
 2. Run the project. It prints each test and quits when done. A failed check shows as `Assertion failed`.
 
-Headless, for CI: `godot --path . --no-window` after setting Start to `Tests` (do not commit that change).
+Headless, for CI: `MORIA_NO_SAVE=1 godot --path . --no-window` after setting Start to `Tests` (do not commit that change).
+`MORIA_NO_SAVE=1` keeps tests and bots from writing your real settings and saves.
 
 ## Folders
 

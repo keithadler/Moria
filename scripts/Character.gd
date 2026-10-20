@@ -68,6 +68,9 @@ func moveAsync(movement):
 		move(movement)
 		return
 	match cellState[1]:
+		"unknown", "OOB":
+			# Was silent: walking into a wall looked like the game had ignored the key
+			Sfx.play("bump")
 		"door": 
 			if GLOBAL.lockedDoors.has(pos + movement):
 				GLOBAL.testDoor(pos + movement)
