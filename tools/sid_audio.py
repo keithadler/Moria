@@ -333,7 +333,16 @@ BOSS = dict(
     cutoff=(1000, 300), res=2, filter_cycles=2, gains=(0.7, 0.8, 0.35),
 )
 
-TRACKS = {"dungeon": DUNGEON, "cavern": CAVERN, "boss": BOSS}
+# The newer areas reuse the melodic ideas above with other timbres and tempos (placeholders until they get
+# songs of their own, see sounds/music/README.md)
+CRYPT = dict(CAVERN, speed=12, lead=Inst("tri", (5, 10, 7, 9), vib=(0.2, 11, 18)),
+             arp=Inst("pulse", (6, 10, 3, 10), pw=0.3, arp_rate=8), cutoff=(600, 150), res=4, gains=(0.65, 0.8, 0.28))
+MINE = dict(DUNGEON, speed=12, lead=Inst("pulse", (3, 9, 6, 8), pw=0.3, vib=(0.1, 9, 20)),
+            bass=Inst("tri", (4, 9, 8, 8)), cutoff=(700, 200), res=3, gains=(0.6, 0.8, 0.3))
+VOLCANO = dict(BOSS, speed=11, lead=Inst("saw", (3, 9, 5, 8), vib=(0.15, 7, 14)),
+               bass=Inst("tri", (3, 9, 9, 8)), cutoff=(900, 250), res=3, gains=(0.55, 0.85, 0.3))
+
+TRACKS = {"dungeon": DUNGEON, "cavern": CAVERN, "boss": BOSS, "crypt": CRYPT, "mine": MINE, "volcano": VOLCANO}
 
 
 def main(out):

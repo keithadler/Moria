@@ -19,7 +19,7 @@ static func built() -> Array:
 
 static func generate():
 	GLOBAL.specialRooms = []
-	if WorldHandler.currentBiome != Data.BIOME_DUNGEON and WorldHandler.currentBiome != Data.BIOME_CAVERN:
+	if WorldHandler.currentBiome == Data.BIOME_TROLL_BOSS:
 		return
 	if randf() < 0.7:
 		addVault()

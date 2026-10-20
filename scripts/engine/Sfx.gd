@@ -32,7 +32,7 @@ const EVENTS = {
 # Played directly, they have no diary line
 const DIRECT = ["door_open", "chest_open", "player_death", "descend", "ui_move", "ui_accept", "ui_back", "low_hp", "bump"]
 
-const MUSIC = ["dungeon", "cavern", "boss"]
+const MUSIC = ["dungeon", "cavern", "boss", "crypt", "mine", "volcano"]
 
 const VOICES = 6
 const MIN_GAP_MS = 70          # the same sound is not retriggered faster than this
@@ -137,6 +137,12 @@ func playMusicForBiome(biome: int):
 			playMusic("cavern")
 		Data.BIOME_TROLL_BOSS:
 			playMusic("boss")
+		Data.BIOME_CRYPT:
+			playMusic("crypt")
+		Data.BIOME_MINE:
+			playMusic("mine")
+		Data.BIOME_VOLCANO:
+			playMusic("volcano")
 		_:
 			playMusic("dungeon")
 

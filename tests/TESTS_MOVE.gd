@@ -407,6 +407,24 @@ const tests = {
 		[],
 		["assert_trap_mix"]
 	],
+	50: [
+		"Monster, encounter and area data are consistent",
+		Vector2(10, 12),
+		[],
+		["assert_world_data"]
+	],
+	51: [
+		"Every area builds floors with its own monsters",
+		Vector2(10, 12),
+		[],
+		["fake_build_areas", "assert_areas_built"]
+	],
+	52: [
+		"A champion waits on the last floor and drops a hoard",
+		Vector2(10, 12),
+		[],
+		["fake_champion_floor", "assert_champion_hoard"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -720,3 +738,47 @@ func assert_trap_mix(testId: int):
 		if Data.randomTrapType(Data.BIOME_VOLCANO) == Data.TR_FIRE:
 			fire += 1
 	assert(fire > 40)
+
+func assert_world_data(testId: int):
+	# every monster in every encounter exists and has all of its fields
+	for biome in Data.encounters.keys():
+		assert(Data.biomes.has(biome))
+		for encounter in Data.encounters[biome]:
+			for group in encounter[Data.ENC_MONSTERS]:
+				assert(Data.monsters.has(group[Data.ENC_MO_TYPE]))
+				assert(group[Data.ENC_MO_MIN] >= 1 and group[Data.ENC_MO_MAX] >= group[Data.ENC_MO_MIN])
+	for type in Data.monsters.keys():
+		assert(Data.monsters[type].size() == 14)
+		assert(Data.monsters[type][Data.MO_HP] > 0)
+	for type in Data.monsterTints.keys():
+		assert(Data.monsters.has(type))
+	for type in Data.championTypes:
+		assert(Data.monsters.has(type) and Data.monsters[type][Data.MO_HP] >= 28)
+	# every area of the chain has monsters (except the troll's) and a champion (except the troll's)
+	for biome in Data.biomes.keys():
+		if biome != Data.BIOME_TROLL_BOSS:
+			assert(Data.encounters.has(biome) and Data.areaChampions.has(biome))
+		for next in Data.biomes[biome][Data.BI_CONNECT]:
+			assert(Data.biomes.has(next))
+	# the chain goes round: six areas and back to the dungeon
+	var biome = Data.BIOME_DUNGEON
+	var seen = []
+	for _i in range(6):
+		seen.append(biome)
+		biome = Data.biomes[biome][Data.BI_CONNECT][0]
+	assert(biome == Data.BIOME_DUNGEON and seen.size() == 6)
+	for a in range(seen.size()):
+		for b in range(a + 1, seen.size()):
+			assert(seen[a] != seen[b])
+
+func assert_areas_built(testId: int):
+	var built = get_parent().areasBuilt
+	for biome in built.keys():
+		assert(built[biome]["monsters"] > 0)
+	assert(built[Data.BIOME_DUNGEON]["tint"] == Color(1, 1, 1))
+	assert(built[Data.BIOME_VOLCANO]["tint"] != Color(1, 1, 1))
+	Ref.currentLevel.dungeon.modulate = Color(1, 1, 1)
+
+func assert_champion_hoard(testId: int):
+	var t = get_parent()
+	assert(t.championFound and t.hoardDropped and not t.champOnFirstFloor)

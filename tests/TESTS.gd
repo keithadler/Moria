@@ -214,6 +214,44 @@ func fake_debug_key(_testId: int):
 func fake_clear_statuses(_testId: int):
 	StatusEngine.clearStatuses(Ref.character)
 
+var areasBuilt = {}
+func fake_build_areas(_testId: int):
+	for biome in [Data.BIOME_DUNGEON, Data.BIOME_CAVERN, Data.BIOME_CRYPT, Data.BIOME_MINE, Data.BIOME_VOLCANO]:
+		WorldHandler.setLocation(2, biome)
+		Ref.game.runSeed = 321
+		Ref.game.newFloor()
+		var types = {}
+		for m in Ref.currentLevel.monsters.get_children():
+			types[m.type] = true
+		areasBuilt[biome] = {"monsters": Ref.currentLevel.monsters.get_child_count(), "types": types, "tint": Ref.currentLevel.dungeon.modulate}
+		# only monsters of the area's pool (plus special-room draws from the same pool)
+		var allowed = {}
+		for encounter in Data.encounters[biome]:
+			for group in encounter[Data.ENC_MONSTERS]:
+				allowed[group[Data.ENC_MO_TYPE]] = true
+		for type in types.keys():
+			assert(allowed.has(type))
+
+var championFound = false
+var hoardDropped = false
+var champOnFirstFloor = false
+func fake_champion_floor(_testId: int):
+	WorldHandler.setLocation(1, Data.BIOME_CRYPT)
+	Ref.game.newFloor()
+	for m in Ref.currentLevel.monsters.get_children():
+		if Data.championTypes.has(m.type):
+			champOnFirstFloor = true
+	WorldHandler.setLocation(Data.biomes[Data.BIOME_CRYPT][Data.BI_FLOORS], Data.BIOME_CRYPT)
+	Ref.game.newFloor()
+	for m in Ref.currentLevel.monsters.get_children():
+		if m.type == Data.areaChampions[Data.BIOME_CRYPT]:
+			championFound = true
+			var cell = m.pos
+			# 150 XP would level the character up and open a press-Enter prompt that takes the input
+			m.stats.xp = 0
+			m.die()
+			hoardDropped = GLOBAL.itemsOnFloor.has(cell)
+
 func fake_wait(_testId: int):
 	pass
 

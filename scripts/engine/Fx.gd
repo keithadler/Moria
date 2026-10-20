@@ -229,6 +229,12 @@ func cardTexts(biome: int, floorNo: int) -> Array:
 	match biome:
 		Data.BIOME_CAVERN:
 			return ["FLOOR " + str(floorNo), "The Caverns", Color(0.55, 0.85, 1.0)]
+		Data.BIOME_CRYPT:
+			return ["FLOOR " + str(floorNo), "The Crypt", Color(0.7, 0.75, 1.0)]
+		Data.BIOME_MINE:
+			return ["FLOOR " + str(floorNo), "The Mine", Color(1.0, 0.8, 0.5)]
+		Data.BIOME_VOLCANO:
+			return ["FLOOR " + str(floorNo), "The Volcano", Color(1.0, 0.5, 0.35)]
 		Data.BIOME_TROLL_BOSS:
 			return ["THE TROLL", "Do not turn your back", Color(1.0, 0.35, 0.3)]
 	return ["FLOOR " + str(floorNo), "The Dungeon", Color(1.0, 0.85, 0.4)]

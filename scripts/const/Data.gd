@@ -332,6 +332,25 @@ const MO_GOBLIN = 5
 const MO_SPIDER = 6
 const MO_SHAMAN_GOBLIN = 7
 const MO_ZOMBIE = 8
+# More monsters. They reuse the sprites of the originals, tinted (see monsterTints).
+const MO_HOBGOBLIN = 9
+const MO_GOBLIN_ARCHER = 10
+const MO_ORC = 11
+const MO_SKELETON_WARRIOR = 12
+const MO_WIGHT = 13
+const MO_GHOUL = 14
+const MO_GIANT_SPIDER = 15
+const MO_COBRA = 16
+const MO_VAMPIRE_BAT = 17
+const MO_BLOOD_LEECH = 18
+const MO_FIRE_IMP = 19
+const MO_MAGMA_OOZE = 20
+# Champions: the guardian at the end of each area, a hoard drops when one dies
+const MO_CH_BONE_LORD = 30
+const MO_CH_WARCHIEF = 31
+const MO_CH_BROOD_MOTHER = 32
+const MO_CH_PLAGUE_KING = 33
+const MO_CH_MAGMA_LORD = 34
 const MO_BO_TROLL = 500
 const MO_BO_LICH = 501
 const MO_BO_SPIDER_QUEEN = 502
@@ -444,6 +463,137 @@ const monsters = {
 			[SP_ZOMBIE_SCREAM, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
 		]
 	],
+	# MORE MONSTERS
+	MO_HOBGOBLIN: [
+		"Hobgoblin", 6, 0, Vector3(1, 3, 0),
+		4, 0, 318, 6, true,
+		1, 0, 0, 6,
+		[]
+	],
+	MO_GOBLIN_ARCHER: [
+		"Goblin archer", 5, 0, Vector3(1, 3, 0),
+		3, 0, 318, 6, true,
+		1, 0, 0, 5,
+		[
+			[0, ACT_THROW, null, 4],
+		]
+	],
+	MO_ORC: [
+		"Orc", 8, 0, Vector3(1, 4, 0),
+		5, 1, 318, 10, true,
+		1, 0, 0, 8,
+		[]
+	],
+	MO_SKELETON_WARRIOR: [
+		"Skeleton warrior", 8, 0, Vector3(1, 4, 0),
+		5, 1, 62, 10, true,
+		1, 0, 0, 7,
+		[]
+	],
+	MO_WIGHT: [
+		"Wight", 10, 0, Vector3(1, 4, 0),
+		5, 2, 62, 16, true,
+		2, 1, 0, 10,
+		[
+			[SP_ZOMBIE_SCREAM, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
+		]
+	],
+	MO_GHOUL: [
+		"Ghoul", 9, 0, Vector3(1, 4, 0),
+		4, 1, 285, 12, true,
+		1, 0, 0, 9,
+		[
+			[SP_ZOMBIE_SCREAM, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
+		]
+	],
+	MO_GIANT_SPIDER: [
+		"Giant spider", 9, 0, Vector3(1, 4, 0),
+		5, 1, 179, 14, true,
+		1, 0, 0, 10,
+		[
+			[SP_SPIDER_BITE, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
+		]
+	],
+	MO_COBRA: [
+		"Cobra", 6, 0, Vector3(1, 3, 0),
+		4, 0, 330, 8, true,
+		1, 0, 0, 6,
+		[
+			[SP_SNAKE_CONSTRICT, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
+		]
+	],
+	MO_VAMPIRE_BAT: [
+		"Vampire bat", 5, 0, Vector3(1, 3, 0),
+		4, 0, 157, 9, true,
+		1, 0, 0, 7,
+		[
+			[SP_LEECH_BITE, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
+		]
+	],
+	MO_BLOOD_LEECH: [
+		"Blood leech", 7, 0, Vector3(1, 2, 0),
+		3, 0, 158, 9, true,
+		1, 0, 0, 8,
+		[
+			[SP_LEECH_BITE, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
+		]
+	],
+	MO_FIRE_IMP: [
+		"Fire imp", 6, 1, Vector3(1, 4, 0),
+		5, 0, 157, 12, true,
+		2, 1, 0, 9,
+		[
+			[SP_FIREBOLT, ACT_SPELL, ACT_SUBTYPE_SPELL, 3],
+		]
+	],
+	MO_MAGMA_OOZE: [
+		"Magma ooze", 10, 0, Vector3(1, 4, 0),
+		3, 1, 158, 14, true,
+		1, 0, 0, 10,
+		[]
+	],
+	# CHAMPIONS
+	MO_CH_BONE_LORD: [
+		"Bone Lord", 30, 2, Vector3(1, 6, 1),
+		6, 2, 62, 150, true,
+		3, 2, 1, 20,
+		[
+			[SP_ZOMBIE_SCREAM, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED],
+			[SP_FIREBOLT, ACT_SPELL, ACT_SUBTYPE_SPELL, 4],
+		]
+	],
+	MO_CH_WARCHIEF: [
+		"Goblin warchief", 28, 2, Vector3(1, 6, 1),
+		6, 2, 318, 150, true,
+		1, 0, 0, 20,
+		[
+			[0, ACT_THROW, null, 6],
+		]
+	],
+	MO_CH_BROOD_MOTHER: [
+		"Brood mother", 28, 2, Vector3(1, 6, 0),
+		5, 2, 179, 150, true,
+		1, 0, 0, 20,
+		[
+			[SP_SPIDER_BITE, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
+		]
+	],
+	MO_CH_PLAGUE_KING: [
+		"Plague king", 34, 1, Vector3(1, 6, 0),
+		5, 3, 285, 160, true,
+		2, 1, 0, 22,
+		[
+			[SP_ZOMBIE_SCREAM, ACT_ABILITY, ACT_SUBTYPE_ABILITY, ACT_COUNT_UNILIMITED]
+		]
+	],
+	MO_CH_MAGMA_LORD: [
+		"Magma lord", 36, 2, Vector3(1, 6, 2),
+		5, 3, 158, 170, true,
+		2, 1, 0, 24,
+		[
+			[SP_FIREBOLT, ACT_SPELL, ACT_SUBTYPE_SPELL, 5],
+		]
+	],
 	# BOSSES
 	MO_BO_TROLL: [
 		#Name HP Hit Dmg
@@ -514,6 +664,30 @@ const monsters = {
 		[]
 	],
 }
+
+# Variants share the sprite of the monster they look like, a tint tells them apart (r, g, b)
+const monsterTints = {
+	MO_HOBGOBLIN: Vector3(0.9, 0.7, 0.45),
+	MO_GOBLIN_ARCHER: Vector3(0.6, 0.95, 0.6),
+	MO_ORC: Vector3(0.45, 0.85, 0.5),
+	MO_SKELETON_WARRIOR: Vector3(0.7, 0.8, 1.0),
+	MO_WIGHT: Vector3(0.75, 0.5, 1.0),
+	MO_GHOUL: Vector3(0.6, 1.0, 0.6),
+	MO_GIANT_SPIDER: Vector3(0.85, 0.45, 0.45),
+	MO_COBRA: Vector3(0.95, 0.9, 0.4),
+	MO_VAMPIRE_BAT: Vector3(0.9, 0.35, 0.55),
+	MO_BLOOD_LEECH: Vector3(1.0, 0.4, 0.4),
+	MO_FIRE_IMP: Vector3(1.0, 0.55, 0.2),
+	MO_MAGMA_OOZE: Vector3(1.0, 0.4, 0.15),
+	MO_CH_BONE_LORD: Vector3(0.6, 0.4, 1.0),
+	MO_CH_WARCHIEF: Vector3(1.0, 0.35, 0.35),
+	MO_CH_BROOD_MOTHER: Vector3(0.4, 0.95, 0.4),
+	MO_CH_PLAGUE_KING: Vector3(0.75, 1.0, 0.3),
+	MO_CH_MAGMA_LORD: Vector3(1.0, 0.3, 0.05),
+}
+
+# The guardian waiting on the last floor of an area
+const championTypes = [MO_CH_BONE_LORD, MO_CH_WARCHIEF, MO_CH_BROOD_MOTHER, MO_CH_PLAGUE_KING, MO_CH_MAGMA_LORD]
 
 const TAG_EVIL = 0
 const TAG_UNDEAD = 1
@@ -1918,10 +2092,31 @@ static func randomTrapType(biome: int) -> int:
 const BI_CR = 0
 const BI_FLOORS = 1
 const BI_CONNECT = 2
+# [difficulty, floors, what comes next]. Dungeon, Caverns, the troll, then the Crypt, the Mine and the Volcano,
+# and round again one step harder (see WorldHandler.getNextLocation).
 const biomes = {
 	BIOME_DUNGEON: 		[1, 10, [BIOME_CAVERN]],
 	BIOME_CAVERN: 		[2, 10, [BIOME_TROLL_BOSS]],
-	BIOME_TROLL_BOSS:	[2, 1, [BIOME_DUNGEON]]
+	BIOME_TROLL_BOSS:	[2, 1, [BIOME_CRYPT]],
+	BIOME_CRYPT: 		[3, 8, [BIOME_MINE]],
+	BIOME_MINE: 		[4, 8, [BIOME_VOLCANO]],
+	BIOME_VOLCANO: 		[5, 8, [BIOME_DUNGEON]],
+}
+
+# The tint of the floor and wall tiles of an area (r, g, b), the dungeon and the caverns keep their own tiles
+const areaTints = {
+	BIOME_CRYPT: Vector3(0.72, 0.8, 1.0),
+	BIOME_MINE: Vector3(1.0, 0.86, 0.68),
+	BIOME_VOLCANO: Vector3(1.0, 0.62, 0.5),
+}
+
+# Who waits on the last floor of an area
+const areaChampions = {
+	BIOME_DUNGEON: MO_CH_WARCHIEF,
+	BIOME_CAVERN: MO_CH_BROOD_MOTHER,
+	BIOME_CRYPT: MO_CH_BONE_LORD,
+	BIOME_MINE: MO_CH_PLAGUE_KING,
+	BIOME_VOLCANO: MO_CH_MAGMA_LORD,
 }
 
 const ENC_MONSTERS = 0
@@ -1930,6 +2125,7 @@ const ENC_MO_MIN = 1
 const ENC_MO_MAX = 2
 const ENC_IS_LOW = 1
 const ENC_IS_RARE = 2
+# [[[monster, min, max], ...], easy, rare]. A group has between min and max - 1 of a monster.
 const encounters = {
 	BIOME_DUNGEON: [
 		[[[MO_GIANT_BAT, 1, 1]], true, false],
@@ -1942,18 +2138,51 @@ const encounters = {
 		[[[MO_GIANT_LEECH, 2, 4]], false, false],
 		[[[MO_GOBLIN, 1, 1]], false, false],
 		[[[MO_SPIDER, 1, 1]], false, false],
+		[[[MO_HOBGOBLIN, 1, 3]], false, false],
+		[[[MO_GOBLIN_ARCHER, 2, 4]], false, false],
+		[[[MO_SKELETON_WARRIOR, 1, 2]], false, true],
 	],
 	BIOME_CAVERN: [
 		[[[MO_GIANT_BAT, 1, 1]], true, false],
-		[[[MO_GIANT_BAT, 2, 2]], true, true],
 		[[[MO_GIANT_SNAKE, 1, 1]], true, false],
-		[[[MO_LESSER_SKELETON, 1, 1]], true, false],
-		[[[MO_GOBLIN, 1, 1]], true, true],
-		[[[MO_LESSER_SKELETON, 2, 2]], false, false],
-		[[[MO_GIANT_SNAKE, 3, 3]], false, true],
+		[[[MO_SPIDER, 1, 1]], true, true],
+		[[[MO_GIANT_BAT, 2, 4]], false, false],
+		[[[MO_COBRA, 1, 3]], false, false],
 		[[[MO_GIANT_LEECH, 2, 4]], false, false],
-		[[[MO_GOBLIN, 1, 1]], false, false],
-		[[[MO_SPIDER, 1, 1]], false, false],
+		[[[MO_VAMPIRE_BAT, 2, 4]], false, false],
+		[[[MO_BLOOD_LEECH, 2, 4]], false, true],
+		[[[MO_GIANT_SPIDER, 1, 2]], false, false],
+		[[[MO_SPIDER, 2, 4]], false, false],
+		[[[MO_ORC, 1, 2]], false, true],
+	],
+	BIOME_CRYPT: [
+		[[[MO_LESSER_SKELETON, 2, 4]], true, false],
+		[[[MO_SKELETON, 1, 2]], true, false],
+		[[[MO_ZOMBIE, 1, 3]], true, true],
+		[[[MO_SKELETON_WARRIOR, 1, 3]], false, false],
+		[[[MO_GHOUL, 1, 3]], false, false],
+		[[[MO_WIGHT, 1, 2]], false, true],
+		[[[MO_ZOMBIE, 2, 4], [MO_GHOUL, 1, 2]], false, true],
+		[[[MO_LESSER_SKELETON, 3, 5]], false, false],
+	],
+	BIOME_MINE: [
+		[[[MO_GOBLIN, 2, 4]], true, false],
+		[[[MO_HOBGOBLIN, 1, 3]], true, false],
+		[[[MO_GOBLIN_ARCHER, 2, 4]], false, false],
+		[[[MO_ORC, 1, 3]], false, false],
+		[[[MO_HOBGOBLIN, 2, 4], [MO_GOBLIN_ARCHER, 1, 3]], false, true],
+		[[[MO_SPIDER, 1, 3]], false, false],
+		[[[MO_GIANT_SPIDER, 1, 2]], false, true],
+		[[[MO_ORC, 2, 4]], false, true],
+	],
+	BIOME_VOLCANO: [
+		[[[MO_FIRE_IMP, 1, 3]], true, false],
+		[[[MO_VAMPIRE_BAT, 2, 4]], true, false],
+		[[[MO_MAGMA_OOZE, 1, 3]], false, false],
+		[[[MO_BLOOD_LEECH, 2, 4]], false, false],
+		[[[MO_ORC, 1, 3]], false, false],
+		[[[MO_FIRE_IMP, 2, 4], [MO_MAGMA_OOZE, 1, 2]], false, true],
+		[[[MO_ORC, 2, 4], [MO_FIRE_IMP, 1, 2]], false, true],
 	],
 }
 

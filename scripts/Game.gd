@@ -226,6 +226,19 @@ func nextFloor():
 # Saved after every new floor, so closing the game never costs more than the current floor
 # Was uncapped: a cavern floor could get 31 traps on about 300 cells. Now 5 on the first floors, one more
 # every three floors, the surplus is removed at random.
+# The last floor of an area has a guardian, asleep and far from where you arrive
+func spawnChampion(spawnPos: Vector2):
+	var biome = WorldHandler.currentBiome
+	if not Data.areaChampions.has(biome) or WorldHandler.currentFloor != Data.biomes[biome][Data.BI_FLOORS]:
+		return
+	var cell = Ref.currentLevel.getRandomFreeCell()
+	for _i in range(120):
+		cell = Ref.currentLevel.getRandomFreeCell()
+		if Utils.dist(cell, spawnPos) >= 18:
+			break
+	Ref.currentLevel.spawnMonster(Data.areaChampions[biome], cell)
+	Tips.show("champion", "A guardian waits on the last floor of every area. It is much tougher than anything before it, and it leaves a hoard.")
+
 func trapCap() -> int:
 	return int((5 + int(WorldHandler.currentFloor / 3)) * GLOBAL.CONTENT_SCALE)
 
@@ -355,13 +368,16 @@ func newFloor():
 	Ref.currentLevel.initShadows()
 	var spawnPos: Vector2
 	match WorldHandler.currentBiome:
-		Data.BIOME_DUNGEON:
+		Data.BIOME_DUNGEON, Data.BIOME_CRYPT:
 			spawnPos = dungeonGenerator.dungeonFloor()
-		Data.BIOME_CAVERN:
+		Data.BIOME_CAVERN, Data.BIOME_MINE, Data.BIOME_VOLCANO:
 			spawnPos = dungeonGenerator.cavernFloor()
 		_:
 			spawnPos = dungeonGenerator.newFloor()
+	var tint = Data.areaTints.get(WorldHandler.currentBiome, Vector3(1, 1, 1))
+	Ref.currentLevel.dungeon.modulate = Color(tint.x, tint.y, tint.z)
 	SpecialRooms.generate()
+	spawnChampion(spawnPos)
 	capTraps()
 	Ref.currentLevel.initSecrets()
 	Ref.character.spawnPos = spawnPos

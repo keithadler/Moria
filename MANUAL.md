@@ -96,8 +96,11 @@ right trigger casts a spell.
   chest and better loot. Sometimes a trap waits outside the door.
 - **Lairs** are rooms with an ordinary door and a sleeping crowd of monsters guarding a chest and loot, with a trap at the door.
 - **Merchants** sell things for gold.
-- Floors are 10 deep in the dungeon, then 10 in the caverns, then a floor with a troll. Past the troll the dungeon
-  starts again, harder.
+- A trip goes through six areas: the Dungeon (10 floors), the Caverns (10), the Troll (1), the Crypt (8, undead), the Mine
+  (8, goblins and orcs, spiders) and the Volcano (8, fire imps and magma oozes), then the Dungeon starts again, harder.
+  Every area has its own monsters, tint and trap mix.
+- The last floor of each area has a **champion**: a guardian that is far tougher than anything before it. It sleeps
+  far from where you arrive, and it leaves a hoard of good loot when it falls.
 
 ## Fighting
 

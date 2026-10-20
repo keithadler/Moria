@@ -28,6 +28,9 @@ func spawn(monsterType: int, cell: Vector2, fromSave: bool = false):
 	type = monsterType
 	isBoss = Data.hasTag(self, Data.TAG_BOSS)
 	bodySprite.frame = Data.monsters[monsterType][Data.MO_SPRITE]
+	if Data.monsterTints.has(monsterType):
+		var tint = Data.monsterTints[monsterType]
+		bodySprite.modulate = Color(tint.x, tint.y, tint.z)
 	setPosition(cell)
 	if not fromSave:
 		stats.init(type)
@@ -260,7 +263,16 @@ func die():
 	if GLOBAL.monstersByPosition.has(pos):
 		GLOBAL.monstersByPosition.erase(pos)
 	GLOBAL.targets.erase(get_instance_id())
+	if not wasAlly and Data.championTypes.has(type):
+		dropHoard()
 	queue_free()
+
+# A champion leaves three piles of the better loot where it fell
+func dropHoard():
+	Ref.ui.write(Ref.ui.color("The " + stats.entityName + " falls and leaves a hoard behind!", "yellow"))
+	for _i in range(3):
+		Ref.currentLevel.addLoot(pos, true)
+	Sfx.play("discover")
 
 func awake():
 	if status == "sleep":
