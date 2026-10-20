@@ -7,8 +7,11 @@ loot, and keep going until you die or reach the end. There is no going back up.
 
 - **New game** starts a run.
 - **Load game** continues a saved game. With several saves it shows a list, newest first.
-- **Options** has fullscreen, the volumes and the screen effects switch.
-- **Morgue** lists your finished runs: character, floor, level, enemies slain, what killed you and when.
+- **Options** has fullscreen, the volumes, the screen effects switch, the **difficulty** (easy: monsters 25% weaker and 3
+  rests, normal, hard: monsters 35% tougher and 1 rest) and the **tips** switch (one-time hints in the log).
+- **Morgue** lists your finished runs: character, floor, level, enemies slain, what killed you and when. At the top
+  are your totals and the **unlocks**: reach floor 3 for 40 more starting gold, open 8 chests for 3 more lockpicks,
+  slay 50 monsters to start with a healing potion, reach floor 10 for one more rest. Unlocks help every new run.
 - **Manual** is this manual.
 - **Exit** closes the game.
 

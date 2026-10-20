@@ -92,6 +92,9 @@ func rollsavingThrow(caster, entity, malus: int = 0) -> bool:
 	return saved
 
 func applyEffect(caster, entity, spellId: int, fromCharacter: bool, rank: int, savingCap: int, direction: Vector2 = Vector2(0, 0)):
+	# Was only recorded for melee hits, so a death by a bite or a spell said "an unknown cause"
+	if caster is Monster and entity is Character:
+		entity.hitBy = caster.stats.entityName
 	if spellId >= 200:
 		abilities.applyEffect(caster, entity, spellId, fromCharacter, rank, savingCap, direction)
 		return

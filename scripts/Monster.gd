@@ -31,6 +31,9 @@ func spawn(monsterType: int, cell: Vector2, fromSave: bool = false):
 	setPosition(cell)
 	if not fromSave:
 		stats.init(type)
+		# Difficulty scales the health of monsters spawned from now on
+		stats.hpMax = max(1, int(round(stats.hpMax * Settings.monsterHpFactor())))
+		stats.currentHp = stats.hpMax
 		actions.init(type)
 	if Data.monsterTags.has(monsterType):
 		tags = Data.monsterTags[monsterType]
@@ -246,6 +249,7 @@ func die():
 	var wasAlly = status == "help"
 	if not wasAlly:
 		Ref.character.kills += 1
+		Progress.add("kills")
 	status = "dead"
 	Ref.ui.writeMonsterDie(stats.entityName)
 	StatusEngine.clearStatuses(self)

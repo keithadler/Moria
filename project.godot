@@ -84,6 +84,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/menu/TextScreen.gd"
 }, {
+"base": "Reference",
+"class": "Tips",
+"language": "GDScript",
+"path": "res://scripts/engine/Tips.gd"
+}, {
 "base": "Node2D",
 "class": "Trap",
 "language": "GDScript",
@@ -110,6 +115,7 @@ _global_script_class_icons={
 "SpecialRooms": "",
 "SpellDescription": "",
 "TextScreen": "",
+"Tips": "",
 "Trap": "",
 "Ui": ""
 }
@@ -136,6 +142,7 @@ TrapEngine="*res://scenes/engine/TrapEngine.tscn"
 StatusEngine="*res://scenes/engine/StatusEngine.tscn"
 EnchantEngine="*res://scenes/engine/EnchantEngine.tscn"
 Settings="*res://scripts/engine/Settings.gd"
+Progress="*res://scripts/engine/Progress.gd"
 Sfx="*res://scripts/engine/Sfx.gd"
 Fx="*res://scripts/engine/Fx.gd"
 Tests="*res://tests/TESTS.tscn"

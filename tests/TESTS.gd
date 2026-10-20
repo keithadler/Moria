@@ -45,6 +45,8 @@ func runCollection(tester: Node):
 	emit_signal("done")
 
 func runTest(tester: Node, testId: int):
+	Settings.difficulty = 1
+	Settings.tips = false
 	Ref.game.testFloor()
 	# Was GLOBAL.items.empty(), a query that clears nothing. The item ids restart at 0 for every
 	# test, so items left by earlier tests collided with the new ones
@@ -152,8 +154,11 @@ func fake_seed_floors(_testId: int):
 	Ref.game.runSeed = 1234
 	Ref.game.newFloor()
 	layoutA = layout_signature()
+	# Whatever the balance left behind by the floor before, the same seed gives the same floor
+	WorldHandler.diffCR = 7.5
 	Ref.game.newFloor()
 	layoutB = layout_signature()
+	WorldHandler.diffCR = -6.0
 	Ref.game.runSeed = 98765
 	Ref.game.newFloor()
 	layoutC = layout_signature()

@@ -122,12 +122,13 @@ func startLoading(saveName: String):
 	enterDoor()
 
 func showMorgue():
-	var lines = []
+	var lines = Progress.summaryLines()
+	var any = false
 	for entry in Morgue.entries():
 		lines.append(Morgue.line(entry))
-	if lines.empty():
-		showMessage("The morgue is empty. Nobody has died yet.")
-		return
+		any = true
+	if not any:
+		lines.append("Nobody has died yet.")
 	listScreen.open("THE MORGUE", lines, false, "Up / Down: scroll      Esc: back", self)
 
 func showManual():

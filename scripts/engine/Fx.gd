@@ -201,6 +201,7 @@ func setWarning(on: bool):
 	set_process(on)
 	if on:
 		Sfx.play("low_hp")
+		Tips.show("low_hp", "Drink a potion (A) or rest (Z) before the next fight. Resting needs a floor with no monsters.")
 		warnTime = 0.0
 	else:
 		for bar in warnBars:

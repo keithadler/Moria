@@ -8,7 +8,7 @@ const GAME_ITEMS = [["resume", "Resume"], ["fullscreen", "Fullscreen"], ["music"
 	["sfx", "Sound effects"], ["effects", "Screen effects"], ["controls", "Controls"], ["save", "Save game"],
 	["quit", "Quit to title"]]
 const TITLE_ITEMS = [["back", "Back"], ["fullscreen", "Fullscreen"], ["music", "Music volume"],
-	["sfx", "Sound effects"], ["effects", "Screen effects"]]
+	["sfx", "Sound effects"], ["effects", "Screen effects"], ["difficulty", "Difficulty"], ["tips", "Tips"]]
 const STEP = 0.1
 
 signal closed
@@ -148,6 +148,10 @@ func change(direction: int):
 			Sfx.play("pickup")
 		"effects":
 			Settings.setEffects(not Settings.effects)
+		"difficulty":
+			Settings.setDifficulty(Settings.difficulty + direction)
+		"tips":
+			Settings.setTips(not Settings.tips)
 		_:
 			return
 	refresh()
@@ -198,6 +202,10 @@ func refresh():
 				text += ":  " + volumeBar(Settings.sfxVolume)
 			"effects":
 				text += ":  " + ("On (numbers, flash, shake)" if Settings.effects else "Off")
+			"difficulty":
+				text += ":  " + Settings.DIFFICULTY_NAMES[Settings.difficulty] + ["  (monsters 25% weaker, 3 rests)", "", "  (monsters 35% tougher, 1 rest)"][Settings.difficulty]
+			"tips":
+				text += ":  " + ("On (one-time hints in the log)" if Settings.tips else "Off")
 		rows[i].text = ("> " if i == index else "  ") + text
 		rows[i].modulate = Color(1, 0.85, 0.3) if i == index else Color(1, 1, 1)
 	var seedText = "" if fromTitle or not is_instance_valid(Ref.game) else "     Seed " + str(Ref.game.runSeed)

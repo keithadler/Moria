@@ -99,6 +99,8 @@ func refresh_view():
 						break
 					if vision[0] and not Ref.character.currentVision.has(p):
 						Ref.character.currentVision.append(p)
+	if not GLOBAL.targets.empty():
+		Tips.show("enemy", "Walk into an enemy to attack it. T throws, C casts, and a corridor keeps them coming one at a time.")
 	for m in monsters.get_children():
 		if fog.get_cellv(m.pos) == 0:
 			m.bodySprite.visible = true

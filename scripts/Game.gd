@@ -202,6 +202,7 @@ func startGame():
 			WorldHandler.setLocation(1, Data.BIOME_DUNGEON)
 #			WorldHandler.setLocation(1, Data.BIOME_TROLL_BOSS)
 			WorldHandler.currentCR = 2
+			Progress.applyToNewCharacter()
 			newFloor()
 	Ref.currentLevel.refresh_view()
 	MasterInput.setMaster(self)
@@ -346,6 +347,9 @@ func merchantFloor():
 
 func newFloor():
 	seed(floorSeed())
+	# The encounter balance (diffCR) used to carry over from the floor before, which changed how many random
+	# numbers a floor used and so the floor itself. A floor now depends on its seed alone.
+	WorldHandler.diffCR = 0.0
 	Ref.currentLevel.levelBuffer.flush()
 	cleanFloor()
 	Ref.currentLevel.initShadows()
@@ -379,6 +383,9 @@ func newFloor():
 	Sfx.playMusicForBiome(WorldHandler.currentBiome)
 	# The floor is built from the seed, everything after it (fights, loot rolls) is random again
 	randomize()
+	Progress.best("best_floor", WorldHandler.currentFloor)
+	if WorldHandler.currentFloor == 1 and WorldHandler.currentBiome == Data.BIOME_DUNGEON:
+		Tips.show("start", "Press H for the controls and Tab for the map. S searches for secret doors, O explores for you.")
 	Fx.arrive(WorldHandler.currentBiome, WorldHandler.currentFloor, Ref.character.floorSummary())
 	Ref.character.startFloorStats()
 

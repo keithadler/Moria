@@ -8,6 +8,12 @@ const WINDOW_SIZE = Vector2(1280, 720)
 
 var fullscreen: bool = false
 var effects: bool = true
+var tips: bool = true
+# 0 easy, 1 normal, 2 hard: monster health and the number of rests a new character starts with
+var difficulty: int = 1
+const DIFFICULTY_NAMES = ["Easy", "Normal", "Hard"]
+const MONSTER_HP = [0.75, 1.0, 1.35]
+const START_RESTS = [3, 2, 1]
 var musicVolume: float = 0.4
 var sfxVolume: float = 0.8
 
@@ -32,6 +38,8 @@ func loadSettings():
 		return
 	fullscreen = bool(file.get_value("display", "fullscreen", fullscreen))
 	effects = bool(file.get_value("display", "effects", effects))
+	tips = bool(file.get_value("game", "tips", tips))
+	difficulty = int(clamp(int(file.get_value("game", "difficulty", difficulty)), 0, 2))
 	musicVolume = clamp(float(file.get_value("audio", "music", musicVolume)), 0.0, 1.0)
 	sfxVolume = clamp(float(file.get_value("audio", "sfx", sfxVolume)), 0.0, 1.0)
 
@@ -47,6 +55,8 @@ func saveSettings():
 	var file = ConfigFile.new()
 	file.set_value("display", "fullscreen", fullscreen)
 	file.set_value("display", "effects", effects)
+	file.set_value("game", "tips", tips)
+	file.set_value("game", "difficulty", difficulty)
 	file.set_value("audio", "music", musicVolume)
 	file.set_value("audio", "sfx", sfxVolume)
 	file.save(PATH)
@@ -59,6 +69,20 @@ func setFullscreen(value: bool):
 func setEffects(value: bool):
 	effects = value
 	saveSettings()
+
+func setTips(value: bool):
+	tips = value
+	saveSettings()
+
+func setDifficulty(value: int):
+	difficulty = int(posmod(value, 3))
+	saveSettings()
+
+func monsterHpFactor() -> float:
+	return MONSTER_HP[difficulty]
+
+func startRests() -> int:
+	return START_RESTS[difficulty]
 
 func setMusicVolume(value: float):
 	musicVolume = clamp(value, 0.0, 1.0)

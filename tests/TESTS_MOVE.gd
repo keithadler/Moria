@@ -373,6 +373,26 @@ const tests = {
 		[],
 		["fake_debug_key", "debug_new_floor", "fake_wait", "fake_wait", "assert_floor_unchanged", "assert_question_mark_is_help"]
 	],
+	45: [
+		"Difficulty scales monster health",
+		Vector2(10, 12),
+		[],
+		["assert_difficulty_scaling"]
+	],
+	46: [
+		"Unlocks, tips and starting bonuses",
+		Vector2(10, 12),
+		[],
+		["assert_progress"]
+	],
+	47: [
+		"A trap is named as the killer",
+		Vector2(10, 12),
+		[
+			["spawn_trap", 0, Vector2(10, 12)],
+		],
+		["assert_trap_killer"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -605,3 +625,51 @@ func assert_question_mark_is_help(testId: int):
 		if e is InputEventKey and e.scancode == KEY_SLASH and e.shift:
 			found = true
 	assert(found)
+
+func assert_difficulty_scaling(testId: int):
+	Settings.difficulty = 1
+	var normal = Ref.currentLevel.spawnMonster(Data.MO_GOBLIN, Vector2(12, 5))
+	assert(normal.stats.hpMax == 4)
+	Settings.difficulty = 0
+	var easy = Ref.currentLevel.spawnMonster(Data.MO_GOBLIN, Vector2(13, 5))
+	assert(easy.stats.hpMax == 3)
+	Settings.difficulty = 2
+	var hard = Ref.currentLevel.spawnMonster(Data.MO_GOBLIN, Vector2(14, 5))
+	assert(hard.stats.hpMax == 5 and hard.stats.currentHp == 5)
+	assert(Settings.startRests() == 1)
+	Settings.setDifficulty(3)
+	assert(Settings.difficulty == 0)
+	Settings.difficulty = 1
+
+func assert_progress(testId: int):
+	Progress.data = {"tips": [], "stats": {}, "unlocked": []}
+	assert(not Progress.isUnlocked("potion"))
+	Progress.add("kills", 50)
+	assert(Progress.isUnlocked("potion"))
+	Progress.best("best_floor", 3)
+	assert(Progress.isUnlocked("coin"))
+	Progress.best("best_floor", 2)
+	assert(Progress.stat("best_floor") == 3)
+	Settings.tips = true
+	assert(Tips.shouldShow("t1"))
+	Progress.markSeen("t1")
+	assert(not Tips.shouldShow("t1"))
+	Settings.tips = false
+	assert(not Tips.shouldShow("t2"))
+	# Starting bonuses
+	Progress.data["unlocked"] = ["coin", "picks", "rest"]
+	var golds = Ref.character.inventory.golds
+	var picks = Ref.character.inventory.lockpicks
+	var rests = Ref.character.inventory.rests
+	Progress.applyToNewCharacter()
+	assert(Ref.character.inventory.golds == golds + 40)
+	assert(Ref.character.inventory.lockpicks == picks + 3)
+	assert(Ref.character.inventory.rests == rests + 1)
+	Progress.data = {"tips": [], "stats": {}, "unlocked": []}
+
+func assert_trap_killer(testId: int):
+	Ref.character.stats.hp = 1
+	TrapEngine.trigger(GLOBAL.getTrapByPos(Vector2(10, 12)), Ref.character)
+	assert(Ref.character.killedBy == "Spike trap")
+	Ref.character.stats.hp = Ref.character.stats.hpMax
+	Ref.character.killedBy = ""

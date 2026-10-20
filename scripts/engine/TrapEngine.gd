@@ -1,6 +1,8 @@
 extends Node
 
 func trigger(trap: Trap, entity):
+	if entity is Character:
+		entity.hitBy = trap.trapName
 	Ref.ui.writeTriggerTrap(trap.trapName)
 	match trap.type:
 		Data.TR_DART:

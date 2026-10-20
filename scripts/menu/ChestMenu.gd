@@ -21,6 +21,7 @@ func open(id: int):
 	if !GLOBAL.chests[id][GLOBAL.CH_OPENED]:
 		animator.play("Open")
 		Ref.character.floorChests += 1
+		Progress.add("chests")
 		Sfx.play("chest_open")
 		GLOBAL.chests[id][GLOBAL.CH_OPENED] = true
 	else:

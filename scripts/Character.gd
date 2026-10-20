@@ -60,7 +60,10 @@ func move(movement):
 	GeneralEngine.newTurn()
 	refreshMapPosition()
 	autoPickup()
-	Ref.ui.write(Ref.currentLevel.getLootMessage(pos))
+	var lootMessage = Ref.currentLevel.getLootMessage(pos)
+	Ref.ui.write(lootMessage)
+	if lootMessage != null:
+		Tips.show("loot", "P picks things up. Gold and lockpicks are taken for you when you walk over them.")
 	if GLOBAL.trapsByPos.has(pos):
 		var trap = GLOBAL.getTrapByPos(pos)
 		if trap.hidden:
@@ -94,6 +97,7 @@ func moveAsync(movement):
 			Sfx.play("bump")
 		"door": 
 			if GLOBAL.lockedDoors.has(pos + movement):
+				Tips.show("locked_door", "A locked door needs a lockpick. You can also look for another way round.")
 				GLOBAL.testDoor(pos + movement)
 				if inventory.lockpicks == 0:
 					Ref.ui.noLockpicksDoor()
@@ -121,6 +125,7 @@ func moveAsync(movement):
 			cellState[2].speak()
 			GeneralEngine.newTurn()
 		"pass": 
+			Tips.show("stairs", "Taking the stairs saves the game, and there is no way back up.")
 			Ref.ui.askToChangeFloor()
 			Ref.ui.askForYesNo(Ref.game)
 			var coroutineReturn = yield(Ref.ui, "coroutine_signal")
@@ -128,6 +133,7 @@ func moveAsync(movement):
 				StatusEngine.removeFloorStatuses(self)
 				Ref.game.nextFloor()
 		"chest": 
+			Tips.show("chest", "Chests may be locked. Lockpicks open them, and what is inside is worth it.")
 			var lock = GLOBAL.chests[cellState[2]][GLOBAL.CH_LOCKED]
 			if lock == 0:
 				Ref.ui.askToOpenChest()
@@ -401,6 +407,7 @@ func die():
 	Ref.game.set_process_input(false)
 	# Brief pause so the death message and sound can land, then show how the run went.
 	# (Was a 4 second wait and an abrupt jump to the title screen.)
+	Progress.add("deaths")
 	Morgue.record(morgueEntry())
 	yield(get_tree().create_timer(1.5), "timeout")
 	Ref.game.gameOver.open(summaryLines())
