@@ -87,6 +87,9 @@ right trigger casts a spell.
 - **Gold and lockpicks** are picked up when you walk onto them.
 - **Seeds**: every run has a seed (Esc shows it). Start the game with `--seed=12345` to play the same dungeon
   again, or `--seed=daily` for the one everybody gets that day.
+- **Vaults** are small sealed rooms behind a hidden or a locked door (search along dead ends and long walls), with a locked
+  chest and better loot. Sometimes a trap waits outside the door.
+- **Lairs** are rooms with an ordinary door and a sleeping crowd of monsters guarding a chest and loot, with a trap at the door.
 - **Merchants** sell things for gold.
 - Floors are 10 deep in the dungeon, then 10 in the caverns, then a floor with a troll. Past the troll the dungeon
   starts again, harder.

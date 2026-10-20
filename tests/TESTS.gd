@@ -165,6 +165,44 @@ func fake_summary_stats(_testId: int):
 	Ref.character.floorChests = 1
 	Ref.character.floorItems = 3
 
+var specialSeen = {"vault": 0, "lair": 0}
+var specialProblems = 0
+
+# Build floors until both a vault and a lair showed up (or give up after 60) and check each room
+func fake_special_rooms(_testId: int):
+	WorldHandler.setLocation(3, Data.BIOME_DUNGEON)
+	for i in range(60):
+		Ref.game.runSeed = 4000 + i * 11
+		Ref.game.newFloor()
+		var seen = flood(Ref.character.pos)
+		for room in SpecialRooms.built():
+			specialSeen[room["kind"]] += 1
+			if not seen.has(room["outside"]) or not seen.has(room["door"]):
+				specialProblems += 1
+			if room["kind"] == "lair" and room["monsters"] < 3:
+				specialProblems += 1
+			if room["kind"] == "vault" and Ref.currentLevel.chests.get_child_count() == 0:
+				specialProblems += 1
+		if specialSeen["vault"] >= 3 and specialSeen["lair"] >= 2:
+			break
+
+# Cells reachable from a start, doors count as open and so do hidden doors
+func flood(start: Vector2) -> Dictionary:
+	var seen = {start: 0}
+	var queue = [start]
+	while not queue.empty():
+		var c = queue.pop_front()
+		for d in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
+			var n = c + d
+			if seen.has(n):
+				continue
+			var id = Ref.currentLevel.dungeon.get_cellv(n)
+			if id == -1 or (id == GLOBAL.WALL_ID and not GLOBAL.hiddenDoors.has(n)):
+				continue
+			seen[n] = seen[c] + 1
+			queue.append(n)
+	return seen
+
 func fake_wait(_testId: int):
 	pass
 

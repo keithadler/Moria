@@ -361,6 +361,12 @@ const tests = {
 		],
 		["assert_cell_info"]
 	],
+	43: [
+		"Vaults and lairs are built, reachable and filled",
+		Vector2(10, 12),
+		[],
+		["fake_special_rooms", "assert_special_rooms"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -577,3 +583,9 @@ func assert_cell_info(testId: int):
 	assert("Dummy" in monster and "HP" in monster)
 	assert(CellInfo.describe(Vector2(11, 12), false) != "")
 	assert(CellInfo.describe(Vector2(-3, 4), false) == "")
+
+func assert_special_rooms(testId: int):
+	var t = get_parent()
+	assert(t.specialSeen["vault"] >= 1)
+	assert(t.specialSeen["lair"] >= 1)
+	assert(t.specialProblems == 0)

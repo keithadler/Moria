@@ -357,6 +357,7 @@ func newFloor():
 			spawnPos = dungeonGenerator.cavernFloor()
 		_:
 			spawnPos = dungeonGenerator.newFloor()
+	SpecialRooms.generate()
 	capTraps()
 	Ref.currentLevel.initSecrets()
 	Ref.character.spawnPos = spawnPos

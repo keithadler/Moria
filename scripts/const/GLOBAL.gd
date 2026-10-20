@@ -5,6 +5,8 @@ onready var lootScene = preload("res://scenes/Loot.tscn")
 var startingMode = null
 # The save chosen with Load game on the title screen
 var loadName = ""
+# The vaults and lairs built on this floor, see SpecialRooms
+var specialRooms: Array = []
 # A message the title screen shows once, for example when a save cannot be loaded
 var titleMessage = ""
 
