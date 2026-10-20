@@ -20,7 +20,9 @@ func createEncounters() -> float:
 #	print("Start")
 	exclusions = []
 	var encounterPool = Data.encounters[WorldHandler.currentBiome]
-	var nb = 3 + (randi() % 4)
+	# Was a flat 3 to 6 groups on every floor, so floor 10 had barely more monsters than floor 1.
+	# One more group every three floors, up to three more.
+	var nb = 3 + (randi() % 4) + min(3, int(WorldHandler.currentFloor / 3))
 	for _i in range(nb):
 		var encounter = chooseEncounter(encounterPool)
 #		print("Choose encounter: " + String(encounterPool.find(encounter)))

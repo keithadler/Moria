@@ -278,6 +278,12 @@ const tests = {
 		[],
 		["assert_manual_conversion", "assert_morgue_line", "assert_save_date", "assert_killer_in_summary"]
 	],
+	30: [
+		"Traps are capped per floor",
+		Vector2(10, 12),
+		[],
+		["fake_many_traps", "assert_traps_capped"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -418,3 +424,8 @@ func assert_killer_in_summary(testId: int):
 	Ref.character.killedBy = "Goblin"
 	assert("Killed by Goblin" in Ref.character.summaryLines())
 	Ref.character.killedBy = ""
+
+func assert_traps_capped(testId: int):
+	var cap = 5 + int(WorldHandler.currentFloor / 3)
+	assert(Ref.currentLevel.traps.get_child_count() == cap)
+	assert(GLOBAL.trapsByPos.size() == cap)

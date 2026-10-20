@@ -124,6 +124,11 @@ func fake_release_right(_testId: int):
 	a.pressed = false
 	Input.parse_input_event(a)
 
+func fake_many_traps(_testId: int):
+	for i in range(20):
+		Ref.currentLevel.placeTrap(Vector2(5 + i, 6))
+	Ref.game.capTraps()
+
 func fake_wait(_testId: int):
 	pass
 

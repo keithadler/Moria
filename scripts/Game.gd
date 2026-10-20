@@ -203,6 +203,18 @@ func nextFloor():
 	autosave()
 
 # Saved after every new floor, so closing the game never costs more than the current floor
+# Was uncapped: a cavern floor could get 31 traps on about 300 cells. Now 5 on the first floors, one more
+# every three floors, the surplus is removed at random.
+func capTraps():
+	var cap = 5 + int(WorldHandler.currentFloor / 3)
+	var traps = Ref.currentLevel.traps.get_children()
+	traps.shuffle()
+	while traps.size() > cap:
+		var trap = traps.pop_back()
+		GLOBAL.trapsByPos.erase(trap.pos)
+		Ref.currentLevel.get_node("Debug/Traps").set_cellv(trap.pos, -1)
+		trap.free()
+
 func autosave():
 	saveSystem.saveGame()
 	Ref.ui.write("Game saved.")
@@ -318,6 +330,7 @@ func newFloor():
 			spawnPos = dungeonGenerator.cavernFloor()
 		_:
 			spawnPos = dungeonGenerator.newFloor()
+	capTraps()
 	Ref.currentLevel.initSecrets()
 	Ref.character.spawnPos = spawnPos
 	Ref.currentLevel.placeCharacter(spawnPos)
