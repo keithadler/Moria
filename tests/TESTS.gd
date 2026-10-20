@@ -15,6 +15,7 @@ const TEST_INPUTS = 3
 
 var spawnedItems: Array = []
 var rememberedThrowings: int = 0
+var rememberedXp: int = 0
 
 func runAll():
 	var collection = get_children()
@@ -88,6 +89,9 @@ func fake_high_dice(_testId: int):
 
 func fake_remember_throwings(_testId: int):
 	rememberedThrowings = Ref.character.inventory.throwings.size()
+
+func fake_remember_xp(_testId: int):
+	rememberedXp = Ref.character.stats.xp
 
 func fake_wait(_testId: int):
 	pass

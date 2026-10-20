@@ -174,9 +174,17 @@ func startGame():
 
 func nextFloor():
 	if !WorldHandler.getNextLocation():
-		#TODO add a final screen
-		pass
+		# Was an empty #TODO that went on to generate the same floor again
+		victory()
+		return
 	newFloor()
+
+func victory():
+	Ref.ui.write(Ref.ui.color("You have reached the end of the dungeon. You win!", "yellow"))
+	set_process_input(false)
+	Ref.ui.askForContinue(self)
+	yield(Ref.ui, "coroutine_signal")
+	get_tree().change_scene("res://scenes/UI/TitleScreen.tscn")
 
 func cleanFloor():
 	#DEBUG

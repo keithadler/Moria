@@ -207,6 +207,25 @@ const tests = {
 		],
 		["fake_clean_floor", "assert_no_map_auras"]
 	],
+	20: [
+		"Enemy attacks a summon",
+		Vector2(10, 12),
+		[
+			["spawn_monster", Data.MO_DUMMY, Vector2(10, 5)],
+			["spawn_ally", Data.MO_DUMMY, Vector2(10, 6)],
+			["fake_dice", 6],
+		],
+		["fake_remember_xp", "search", "search", "search", "search",
+		"assert_ally_hurt", "assert_xp_unchanged"]
+	],
+	21: [
+		"Group members spawn on free cells they can see",
+		Vector2(10, 12),
+		[
+			["spawn_monster", Data.MO_DUMMY, Vector2(26, 10)],
+		],
+		["assert_near_cells_valid"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -274,3 +293,18 @@ func assert_character_unhurt(testId: int):
 
 func assert_no_map_auras(testId: int):
 	assert(Ref.currentLevel.auras.get_child_count() == 0)
+
+func assert_xp_unchanged(testId: int):
+	assert(Ref.character.stats.xp == get_parent().rememberedXp)
+
+# Around (26, 10) the test floor has walls on both sides and a monster on the center cell.
+# Run a few times: the cells are picked at random
+func assert_near_cells_valid(testId: int):
+	var handler = Ref.game.dungeonGenerator.encounterHandler
+	for _i in range(100):
+		var cell = handler.getNearFreeCell(Vector2(26, 10))
+		if cell == null:
+			continue
+		assert(cell != Vector2(26, 10))
+		# Rows 9 to 11 are walled on both sides of the corridor, nothing beside it is visible
+		assert(cell.x == 26 or cell.y < 9 or cell.y > 11)

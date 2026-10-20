@@ -546,7 +546,8 @@ func flameskin(caster, rank: int):
 	var turns = getTurns(Data.SP_FLAMESKIN, rank)
 	var auraSt = applySpellStatus(caster, Data.STATUS_FIRE_AURA, 0, turns)
 	var targetedCells = getAuraCells(3)
-	Aura.create(targetedCells, Aura.FIRE_AURA, turns+20, true, caster, auraSt)
+	# Was a hard-coded `true`: a monster casting it got an aura that hurt the player's side
+	Aura.create(targetedCells, Aura.FIRE_AURA, turns+20, caster is Character or caster.status == "help", caster, auraSt)
 
 func freedomMovement(caster, rank: int):
 	playEffect(caster.pos, Effect.BUFF, 5, 0.6)
@@ -631,7 +632,8 @@ func spiritGuardians(caster, rank: int):
 	var turns = getTurns(Data.SP_GUADRIAN_SPIRITS, rank)
 	var auraSt = applySpellStatus(caster, Data.STATUS_SPIRIT_GUARD, 0, turns)
 	var targetedCells = getAuraCells(2)
-	Aura.create(targetedCells, Aura.SPIRIT_GUARDIANS, turns, true, caster, auraSt)
+	# Was a hard-coded `true`, see flameskin
+	Aura.create(targetedCells, Aura.SPIRIT_GUARDIANS, turns, caster is Character or caster.status == "help", caster, auraSt)
 
 func fireball(caster, entity):
 	var targetedCells = getArea(entity, 3)
