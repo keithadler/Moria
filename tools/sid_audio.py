@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Renders every sound effect and music track of the game with the SID model in sidsynth.py.
 
-    python3 tools/sid_audio.py sounds        # writes sounds/sfx/*.ogg and sounds/music/*.ogg
+    python3 tools/sid_audio.py sounds        # writes sounds/sfx/*.ogg and sounds/music/sid/*.ogg
 """
 import os
 import sys
@@ -333,7 +333,8 @@ TRACKS = {"dungeon": DUNGEON, "cavern": CAVERN, "boss": BOSS}
 
 def main(out):
     os.makedirs(os.path.join(out, "sfx"), exist_ok=True)
-    os.makedirs(os.path.join(out, "music"), exist_ok=True)
+    # The SID tracks are the built-in fallback, songs placed in music/ itself take their place
+    os.makedirs(os.path.join(out, "music", "sid"), exist_ok=True)
     tmp = os.path.join(out, "_tmp.wav")
     for name, fn in SFX.items():
         result = fn()
@@ -346,7 +347,7 @@ def main(out):
     for name, t in TRACKS.items():
         x = render_track(t)
         sid.write_wav(tmp, x)
-        sid.to_ogg(tmp, os.path.join(out, "music", name + ".ogg"), quality=3)
+        sid.to_ogg(tmp, os.path.join(out, "music", "sid", name + ".ogg"), quality=3)
         print("music", name, "%.1fs" % (len(x) / sid.SR))
     os.remove(tmp)
 

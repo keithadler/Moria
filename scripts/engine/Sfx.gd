@@ -39,6 +39,8 @@ const MIN_GAP_MS = 70          # the same sound is not retriggered faster than t
 const FADE = 1.2
 const SFX_FOLDER = "res://sounds/sfx/"
 const MUSIC_FOLDER = "res://sounds/music/"
+# The built-in SID tracks, used when there is no file of that name in the folder above
+const MUSIC_FALLBACK_FOLDER = "res://sounds/music/sid/"
 # Players can drop their own tracks here without rebuilding the game, see sounds/music/README.md
 const USER_MUSIC_FOLDER = "user://music/"
 const MUSIC_FORMATS = ["ogg", "mp3"]
@@ -150,10 +152,12 @@ func getStream(folder: String, sound: String):
 # Tracks in user://music win over the ones shipped in res://sounds/music.
 func getMusicStream(track: String):
 	var found = userMusicFiles(track)
-	if found.empty():
+	for folder in [MUSIC_FOLDER, MUSIC_FALLBACK_FOLDER]:
+		if not found.empty():
+			break
 		for variant in musicVariants(track):
 			for format in MUSIC_FORMATS:
-				var path = MUSIC_FOLDER + variant + "." + format
+				var path = folder + variant + "." + format
 				if ResourceLoader.exists(path):
 					found.append(path)
 	if found.empty():

@@ -1,7 +1,7 @@
 # Where to put your own music
 
-The game plays one track per biome. Right now they are the SID-style tracks from `tools/sid_audio.py`.
-To use your own music (for example songs made with Suno), put files here, in this folder:
+The game plays one track per biome. Right now they are three songs made with Suno from the prompts in
+`SUNO_PROMPTS.md` (modern glitch / artcore synth). To use other music, put files here, in this folder:
 
 | Biome | File name |
 |---|---|
@@ -9,7 +9,8 @@ To use your own music (for example songs made with Suno), put files here, in thi
 | Cavern | `cavern.ogg` or `cavern.mp3` |
 | Troll boss | `boss.ogg` or `boss.mp3` |
 
-- A file with the same name replaces the SID track. Godot imports it the next time you open the project.
+- A file with the same name replaces the song that is there. Godot imports it the next time you open the project.
+- If a biome has no file here, the built-in SID track from `sid/` plays (`python3 tools/sid_audio.py sounds` makes them).
 - Want several songs per biome? Add `dungeon_2.ogg`, `dungeon_3.ogg` ... up to `_9`. One is picked at random
   every time you reach a new floor of that biome.
 - The track loops by itself, so end it on a bar line or a quiet moment. OGG loops without a gap, MP3 has a
