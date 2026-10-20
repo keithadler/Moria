@@ -22,6 +22,7 @@ const MODE_OPTIONS = 40
 const MODE_HELP = 41
 const MODE_GAMEOVER = 42
 const MODE_LOG = 43
+const MODE_MAP = 44
 
 var currentMode: int = MODE_NONE
 

@@ -23,6 +23,7 @@ const ROWS = [
 	["Save / load", ["save", "load"]],
 	["Options menu", "ui_cancel"],
 	["Fullscreen", "F11 or Alt+Enter"],
+	["Map of the floor", "overview"],
 	["Message history", "history"],
 	["This help", "help"],
 	["Gamepad", "D-pad or stick move, A ok, B or Start back / menu"],
@@ -34,7 +35,7 @@ var isOpen = false
 
 func _ready():
 	font = preload("res://fonts/normalFont.tres").duplicate()
-	font.size = 30
+	font.size = 28
 	layer = 100
 	set_process_input(false)
 	visible = false

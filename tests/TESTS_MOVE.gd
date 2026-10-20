@@ -346,6 +346,21 @@ const tests = {
 		[],
 		["fake_seed_floors", "assert_seed_floors"]
 	],
+	41: [
+		"Map overview opens, closes and knows the explored cells",
+		Vector2(10, 12),
+		[],
+		["overview", "assert_map_mode", "ui_cancel", "assert_normal_mode_move", "assert_explored_cells"]
+	],
+	42: [
+		"Hover tooltip describes a monster and loot",
+		Vector2(10, 12),
+		[
+			["spawn_monster", Data.MO_DUMMY, Vector2(10, 9)],
+			["spawn_golds", Vector2(11, 12), 7],
+		],
+		["assert_cell_info"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -549,3 +564,16 @@ func assert_seed_floors(testId: int):
 	var t = get_parent()
 	assert(t.layoutA == t.layoutB)
 	assert(t.layoutA != t.layoutC)
+
+func assert_map_mode(testId: int):
+	assert(GLOBAL.currentMode == GLOBAL.MODE_MAP)
+
+func assert_explored_cells(testId: int):
+	Ref.currentLevel.refresh_view()
+	assert(Ref.game.mapOverview.canvas.exploredCells().size() > 10)
+
+func assert_cell_info(testId: int):
+	var monster = CellInfo.describe(Vector2(10, 9), false)
+	assert("Dummy" in monster and "HP" in monster)
+	assert(CellInfo.describe(Vector2(11, 12), false) != "")
+	assert(CellInfo.describe(Vector2(-3, 4), false) == "")

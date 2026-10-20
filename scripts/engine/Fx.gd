@@ -21,6 +21,8 @@ var cardBox: VBoxContainer
 var cardFloor: Label
 var cardArea: Label
 var cardSummary: Label
+var tipPanel: PanelContainer
+var tipLabel: Label
 var transitioning = false
 var transitionToken = 0
 
@@ -95,6 +97,22 @@ func _ready():
 	cardSummary.add_font_override("font", smallFont)
 	cardSummary.align = Label.ALIGN_CENTER
 	cardBox.add_child(cardSummary)
+	tipPanel = PanelContainer.new()
+	var tipStyle = StyleBoxFlat.new()
+	tipStyle.bg_color = Color(0.04, 0.04, 0.07, 0.92)
+	tipStyle.border_color = Color(1, 1, 1, 0.7)
+	tipStyle.set_border_width_all(2)
+	for margin in [MARGIN_LEFT, MARGIN_RIGHT, MARGIN_TOP, MARGIN_BOTTOM]:
+		tipStyle.set_default_margin(margin, 8)
+	tipPanel.add_stylebox_override("panel", tipStyle)
+	tipPanel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tipPanel.visible = false
+	tipLabel = Label.new()
+	var tipFont = font.duplicate()
+	tipFont.size = 28
+	tipLabel.add_font_override("font", tipFont)
+	tipPanel.add_child(tipLabel)
+	add_child(tipPanel)
 	set_process(false)
 
 func isOn() -> bool:
@@ -249,3 +267,17 @@ func arrive(biome: int, floorNo: int, summary: String = ""):
 	# A newer transition owns the flag, an older timer must not clear it early
 	if token == transitionToken:
 		transitioning = false
+
+# ---------------------------------------------------------------- hover tooltip
+
+func showTip(text: String, mouse: Vector2):
+	if text == "":
+		hideTip()
+		return
+	tipLabel.text = text
+	tipPanel.rect_size = Vector2.ZERO
+	tipPanel.rect_position = mouse + Vector2(24, 24)
+	tipPanel.visible = true
+
+func hideTip():
+	tipPanel.visible = false

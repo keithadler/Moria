@@ -27,11 +27,13 @@ onready var optionsMenu = preload("res://scripts/menu/OptionsMenu.gd").new()
 onready var helpMenu = preload("res://scripts/menu/HelpMenu.gd").new()
 onready var gameOver = preload("res://scripts/menu/GameOverScreen.gd").new()
 onready var historyScreen = preload("res://scripts/menu/TextScreen.gd").new()
+onready var mapOverview = preload("res://scripts/menu/MapOverview.gd").new()
 
 var random_seed: int
 var autoexplore = false setget setAutoExplore
 var traveling = false
 var holdTime = 0.0
+var hoverCell = Vector2(-1, -1)
 # The seed of this run. Every floor is generated from it (see floorSeed), so a seed gives the same dungeon
 var runSeed = 0
 const HISTORY_LINES = 300
@@ -48,6 +50,7 @@ func _ready():
 	add_child(helpMenu)
 	add_child(gameOver)
 	add_child(historyScreen)
+	add_child(mapOverview)
 	if debugMode:
 		Ref.currentLevel.fog.visible = false
 		Ref.currentLevel.shadows.visible = false
@@ -401,6 +404,17 @@ func seedFromArguments() -> int:
 func floorSeed() -> int:
 	return runSeed + 7919 * (WorldHandler.currentBiome * 100 + WorldHandler.currentFloor)
 
+# A tooltip for what the mouse points at (monster, loot, chest, door...)
+func updateHover():
+	var mouse = get_viewport().get_mouse_position()
+	if GLOBAL.currentMode != GLOBAL.MODE_NORMAL or Fx.transitioning or not MAP_WINDOW.has_point(mouse):
+		Fx.hideTip()
+		hoverCell = Vector2(-1, -1)
+		return
+	var cell = Ref.currentLevel.dungeon.world_to_map(Ref.currentLevel.dungeon.get_local_mouse_position())
+	hoverCell = cell
+	Fx.showTip(CellInfo.describe(cell), mouse)
+
 func openHistory():
 	var lines = Array(Ref.ui.diaryContent.split("\n"))
 	var tail = lines.slice(max(0, lines.size() - HISTORY_LINES), lines.size() - 1)
@@ -453,6 +467,9 @@ func _input(event):
 		return
 	if event.is_pressed():
 		traveling = false
+	if event is InputEventMouseMotion:
+		updateHover()
+		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
 		if GLOBAL.currentMode == GLOBAL.MODE_NORMAL and MAP_WINDOW.has_point(get_viewport().get_mouse_position()):
 			travelTo(Ref.currentLevel.dungeon.world_to_map(Ref.currentLevel.dungeon.get_local_mouse_position()))
@@ -507,6 +524,8 @@ func _input(event):
 		helpMenu.open()
 	elif event.is_action_released("history"):
 		openHistory()
+	elif event.is_action_released("overview"):
+		mapOverview.open()
 	elif (event.is_action_released("save")):
 		saveSystem.saveGame()
 	elif (event.is_action_released("load")):

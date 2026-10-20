@@ -65,7 +65,9 @@ The game shows the real list on the **H** screen. The usual ones:
 | Esc | Options menu |
 | F11 or Alt+Enter | Fullscreen |
 | H | Controls |
+| Tab | Map of the whole floor as far as you have explored it |
 | L | Message history (scroll back through the log) |
+| Mouse over | A tooltip for monsters, loot, chests and doors you can see |
 | F12 | Save a screenshot |
 
 ## Gamepad

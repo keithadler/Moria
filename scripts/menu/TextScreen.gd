@@ -58,8 +58,9 @@ func open(bbcode: String, owner, toEnd: bool = false):
 		call_deferred("scrollToEnd")
 
 func scrollToEnd():
-	text.scroll_to_line(text.get_line_count())
-	text.get_v_scroll().value = text.get_v_scroll().max_value
+	# Was scroll_to_line(get_line_count()), one past the last line (an engine error)
+	var bar = text.get_v_scroll()
+	bar.value = bar.max_value
 
 func close():
 	visible = false
