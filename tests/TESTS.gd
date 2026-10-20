@@ -129,6 +129,10 @@ func fake_many_traps(_testId: int):
 		Ref.currentLevel.placeTrap(Vector2(5 + i, 6))
 	Ref.game.capTraps()
 
+func fake_next_floor(_testId: int):
+	WorldHandler.setLocation(1, Data.BIOME_DUNGEON)
+	Ref.game.nextFloor()
+
 func fake_wait(_testId: int):
 	pass
 

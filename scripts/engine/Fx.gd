@@ -17,6 +17,12 @@ var lowHealth = false
 var warnBars = []
 var warnLabel: Label
 var warnTime = 0.0
+var blackRect: ColorRect
+var cardBox: VBoxContainer
+var cardFloor: Label
+var cardArea: Label
+var transitioning = false
+var transitionToken = 0
 
 func _ready():
 	layer = 60
@@ -59,6 +65,30 @@ func _ready():
 	warnLabel.margin_top = 12
 	warnLabel.align = Label.ALIGN_CENTER
 	add_child(warnLabel)
+	# Level transitions: a black cover and a title card, above the map and below the menus
+	blackRect = ColorRect.new()
+	blackRect.set_anchors_and_margins_preset(Control.PRESET_WIDE)
+	blackRect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	blackRect.color = Color(0, 0, 0, 0)
+	add_child(blackRect)
+	cardBox = VBoxContainer.new()
+	cardBox.set_anchors_and_margins_preset(Control.PRESET_WIDE)
+	cardBox.alignment = BoxContainer.ALIGN_CENTER
+	cardBox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cardBox.modulate = Color(1, 1, 1, 0)
+	add_child(cardBox)
+	cardFloor = Label.new()
+	var bigFont = font.duplicate()
+	bigFont.size = 96
+	cardFloor.add_font_override("font", bigFont)
+	cardFloor.align = Label.ALIGN_CENTER
+	cardBox.add_child(cardFloor)
+	cardArea = Label.new()
+	var midFont = font.duplicate()
+	midFont.size = 46
+	cardArea.add_font_override("font", midFont)
+	cardArea.align = Label.ALIGN_CENTER
+	cardBox.add_child(cardArea)
 	set_process(false)
 
 func isOn() -> bool:
@@ -161,3 +191,52 @@ func _process(delta):
 	for bar in warnBars:
 		bar.color.a = 0.18 + 0.32 * pulse
 	warnLabel.modulate.a = 0.45 + 0.5 * pulse
+
+# ---------------------------------------------------------------- level transitions
+
+const FADE_OUT = 0.45
+const FADE_IN = 0.9
+const CARD_FADE = 0.45
+const CARD_HOLD = 1.3
+
+func cardTexts(biome: int, floorNo: int) -> Array:
+	match biome:
+		Data.BIOME_CAVERN:
+			return ["FLOOR " + str(floorNo), "The Caverns", Color(0.55, 0.85, 1.0)]
+		Data.BIOME_TROLL_BOSS:
+			return ["THE TROLL", "Do not turn your back", Color(1.0, 0.35, 0.3)]
+	return ["FLOOR " + str(floorNo), "The Dungeon", Color(1.0, 0.85, 0.4)]
+
+# Fade the screen to black. Yield on the result, it returns at once when effects are off.
+func fadeOut():
+	if not isOn():
+		return
+	transitioning = true
+	transitionToken += 1
+	tween.interpolate_property(blackRect, "color:a", blackRect.color.a, 1.0, FADE_OUT)
+	tween.start()
+	yield(get_tree().create_timer(FADE_OUT), "timeout")
+
+# Arrive on a floor: black, then fade in while the title card shows the floor and the area
+func arrive(biome: int, floorNo: int):
+	if not isOn():
+		transitioning = false
+		return
+	transitioning = true
+	transitionToken += 1
+	var token = transitionToken
+	var texts = cardTexts(biome, max(1, floorNo))
+	cardFloor.text = texts[0]
+	cardArea.text = texts[1]
+	cardFloor.modulate = texts[2]
+	cardArea.modulate = Color(1, 1, 1, 0.85)
+	blackRect.color.a = 1.0
+	tween.interpolate_property(blackRect, "color:a", 1.0, 0.0, FADE_IN, Tween.TRANS_QUAD, Tween.EASE_OUT, 0.2)
+	tween.interpolate_property(cardBox, "modulate:a", 0.0, 1.0, CARD_FADE, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.2)
+	tween.interpolate_property(cardBox, "modulate:a", 1.0, 0.0, CARD_FADE, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.2 + CARD_FADE + CARD_HOLD)
+	tween.start()
+	# The game takes input again once the screen is mostly visible, the card keeps fading on its own
+	yield(get_tree().create_timer(0.55), "timeout")
+	# A newer transition owns the flag, an older timer must not clear it early
+	if token == transitionToken:
+		transitioning = false

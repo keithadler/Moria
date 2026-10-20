@@ -199,6 +199,10 @@ func nextFloor():
 		victory()
 		return
 	Sfx.play("descend")
+	# Fade to black, build the next floor while it is black, then fade in (see Fx.arrive)
+	var fading = Fx.fadeOut()
+	if fading is GDScriptFunctionState:
+		yield(fading, "completed")
 	newFloor()
 	autosave()
 
@@ -348,11 +352,12 @@ func newFloor():
 	for _i in range(3 + (randi() % 4)):
 		Ref.currentLevel.dropItem()
 	Sfx.playMusicForBiome(WorldHandler.currentBiome)
+	Fx.arrive(WorldHandler.currentBiome, WorldHandler.currentFloor)
 
 # Was: key repeat was ignored (is_action_pressed skips echo events), so holding an arrow key moved
 # exactly one step and a corridor meant tapping once per cell
 func _physics_process(delta):
-	if GLOBAL.currentMode != GLOBAL.MODE_NORMAL or traveling or autoexplore or Ref.character == null:
+	if GLOBAL.currentMode != GLOBAL.MODE_NORMAL or traveling or autoexplore or Ref.character == null or Fx.transitioning:
 		holdTime = 0.0
 		return
 	var direction = heldDirection()
@@ -381,6 +386,10 @@ func heldDirection() -> Vector2:
 	return Vector2.ZERO
 
 func _input(event):
+	# No moves while the screen fades between floors
+	if Fx.transitioning and event.is_pressed():
+		get_tree().set_input_as_handled()
+		return
 	if event.is_pressed():
 		traveling = false
 	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:

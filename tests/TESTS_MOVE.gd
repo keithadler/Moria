@@ -284,6 +284,18 @@ const tests = {
 		[],
 		["fake_many_traps", "assert_traps_capped"]
 	],
+	31: [
+		"Taking the stairs moves to the next floor",
+		Vector2(10, 12),
+		[],
+		["fake_next_floor", "assert_next_floor"]
+	],
+	32: [
+		"Floor card texts",
+		Vector2(10, 12),
+		[],
+		["assert_card_texts"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -429,3 +441,13 @@ func assert_traps_capped(testId: int):
 	var cap = 5 + int(WorldHandler.currentFloor / 3)
 	assert(Ref.currentLevel.traps.get_child_count() == cap)
 	assert(GLOBAL.trapsByPos.size() == cap)
+
+func assert_next_floor(testId: int):
+	assert(WorldHandler.currentFloor == 2)
+	assert(not Fx.transitioning)
+
+func assert_card_texts(testId: int):
+	assert(Fx.cardTexts(Data.BIOME_CAVERN, 3)[0] == "FLOOR 3")
+	assert(Fx.cardTexts(Data.BIOME_CAVERN, 3)[1] == "The Caverns")
+	assert(Fx.cardTexts(Data.BIOME_DUNGEON, 7)[1] == "The Dungeon")
+	assert(Fx.cardTexts(Data.BIOME_TROLL_BOSS, 1)[0] == "THE TROLL")
