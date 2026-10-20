@@ -9,23 +9,23 @@ New here? Read [MANUAL.md](MANUAL.md). In the game, press **H** for the controls
 
 - Needs **Godot 3.6** (tested with 3.6.3). It is a Godot 3 project, Godot 4 will not open it correctly.
 - Open `project.godot` in Godot and press F5, or run `godot --path .` from this folder.
-- The game starts in a window. **F11** or **Alt+Enter** switches to fullscreen, **Esc** opens the options menu.
+- The game starts on the title screen (New game, Load game, Options, Morgue, Manual, Exit) and in a window. **F11** or **Alt+Enter** switches to fullscreen, **Esc** opens the options menu.
 
 ## Tests
 
 The tests are part of the game: they play it with faked input and check what happened.
 
 1. Open `scenes/Game.tscn` and set the `Game` node's **Start** to `Tests` (and **Tests** to `All`, `Move` or `Inventory`).
-2. Run the project. It prints each test and quits when done. A failed check shows as `Assertion failed`.
+2. Run that scene (`Run Current Scene`, F6, with `Game.tscn` open). It prints each test and quits when done. A failed check shows as `Assertion failed`.
 
-Headless, for CI: `MORIA_NO_SAVE=1 godot --path . --no-window` after setting Start to `Tests` (do not commit that change).
+Headless, for CI: `MORIA_NO_SAVE=1 godot --path . --no-window scenes/Game.tscn` after setting Start to `Tests` (do not commit that change).
 `MORIA_NO_SAVE=1` keeps tests and bots from writing your real settings and saves.
 
 ## Folders
 
 | Folder | What is in it |
 |---|---|
-| `scripts/` | All the code. `engine/` the rules (spells, auras, items, sound, settings, effects), `menu/` and `ui/` the screens, `utils/` helpers and the save system |
+| `scripts/` | All the code. `engine/` the rules (spells, auras, items, sound, settings, effects), `menu/` and `ui/` the screens (the title screen is `ui/TitleScreen.gd`), `utils/` helpers, the save system and the morgue |
 | `scenes/` | Godot scenes |
 | `data/` | Classes and monsters as CSV |
 | `tests/` | The test harness and the tests |
@@ -42,7 +42,7 @@ Saves and settings are in Godot's user data folder, not in the project, so they 
 | Windows | `%APPDATA%\Godot\app_userdata\Moria\` |
 | Linux | `~/.local/share/godot/app_userdata/Moria/` |
 
-`saves/<name>.sav` is the save (the game also saves when you take the stairs), `settings.cfg` has fullscreen, the
+`saves/<name>.sav` is the save (the game also saves when you take the stairs), `morgue.json` is the record of finished runs (title screen: Morgue), `settings.cfg` has fullscreen, the
 volumes and the screen effects switch. Put your own songs in `music/` in the same folder, see `sounds/music/README.md`.
 
 ## Music and sound

@@ -3,6 +3,8 @@ extends Node
 onready var lootScene = preload("res://scenes/Loot.tscn")
 
 var startingMode = null
+# The save chosen with Load game on the title screen
+var loadName = ""
 
 # Game modes
 const MODE_NONE = 0

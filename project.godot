@@ -49,6 +49,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/Monster.gd"
 }, {
+"base": "Reference",
+"class": "Morgue",
+"language": "GDScript",
+"path": "res://scripts/utils/Morgue.gd"
+}, {
+"base": "Reference",
+"class": "SaveFiles",
+"language": "GDScript",
+"path": "res://scripts/utils/SaveFiles.gd"
+}, {
 "base": "Node",
 "class": "Skills",
 "language": "GDScript",
@@ -58,6 +68,11 @@ _global_script_classes=[ {
 "class": "SpellDescription",
 "language": "GDScript",
 "path": "res://scripts/menu/SpellDescription.gd"
+}, {
+"base": "CanvasLayer",
+"class": "TextScreen",
+"language": "GDScript",
+"path": "res://scripts/menu/TextScreen.gd"
 }, {
 "base": "Node2D",
 "class": "Trap",
@@ -78,8 +93,11 @@ _global_script_class_icons={
 "Game": "",
 "ItemGenerator": "",
 "Monster": "",
+"Morgue": "",
+"SaveFiles": "",
 "Skills": "",
 "SpellDescription": "",
+"TextScreen": "",
 "Trap": "",
 "Ui": ""
 }
@@ -87,7 +105,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Moria"
-run/main_scene="res://scenes/Game.tscn"
+run/main_scene="res://scenes/UI/TitleScreen.tscn"
 boot_splash/bg_color=Color( 0.141176, 0.192157, 0.215686, 1 )
 config/icon="res://icon.png"
 

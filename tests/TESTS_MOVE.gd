@@ -272,6 +272,12 @@ const tests = {
 		"fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_wait",
 		"fake_wait", "fake_wait", "fake_wait", "fake_wait", "fake_release_right", "assert_walked_far"]
 	],
+	29: [
+		"Title screen helpers",
+		Vector2(10, 12),
+		[],
+		["assert_manual_conversion", "assert_morgue_line", "assert_save_date", "assert_killer_in_summary"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -378,7 +384,7 @@ func assert_help_mode(testId: int):
 func assert_summary_lines(testId: int):
 	var lines = Ref.character.summaryLines()
 	assert(lines.size() >= 5)
-	assert("floor" in lines[2])
+	assert("floor" in "\n".join(lines))
 
 func assert_low_health(testId: int):
 	assert(Fx.lowHealth)
@@ -393,3 +399,22 @@ func assert_traveled(testId: int):
 func assert_walked_far(testId: int):
 	assert(Ref.character.pos.x >= 10)
 	assert(Ref.character.pos.y == 8)
+
+func assert_manual_conversion(testId: int):
+	var out = TextScreen.markdownToBbcode("# Title\n- one **bold** item\n| Key | Does |\n|---|---|\n| S | Search |")
+	assert("[b]Title[/b]" in out)
+	assert("\u2022 one [b]bold[/b] item" in out)
+	assert("Search" in out)
+	assert(not "|" in out)
+
+func assert_morgue_line(testId: int):
+	var line = Morgue.line({"name": "Ana", "class": "Mage", "floor": 3, "level": 2, "kills": 5, "killer": "Goblin", "date": "2026-01-02 03:04"})
+	assert("Ana the Mage" in line and "floor 3" in line and "killed by Goblin" in line)
+
+func assert_save_date(testId: int):
+	assert(SaveFiles.dateText(0).begins_with("1970-01-01"))
+
+func assert_killer_in_summary(testId: int):
+	Ref.character.killedBy = "Goblin"
+	assert("Killed by Goblin" in Ref.character.summaryLines())
+	Ref.character.killedBy = ""

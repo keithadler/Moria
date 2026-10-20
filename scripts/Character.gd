@@ -15,6 +15,8 @@ onready var tween = get_node("SmoothMove")
 var currentVision: Array = []
 var charClass: int = 0
 var kills: int = 0
+var hitBy: String = ""
+var killedBy: String = ""
 var statuses: Dictionary = {}
 var enchants: Dictionary = {}
 var pos = Vector2(0, 0)
@@ -178,6 +180,8 @@ func takeHit(dmg: int, bypassProt: int = 0):
 	stats.hp -= realDmg
 	Ref.ui.writeCharacterTakeHit(realDmg)
 	Fx.hurt(self, realDmg)
+	killedBy = hitBy if hitBy != "" else "an unknown cause"
+	hitBy = ""
 	
 	# Check for death
 	if stats.hp <= 0:
@@ -375,6 +379,7 @@ func die():
 	Ref.game.set_process_input(false)
 	# Brief pause so the death message and sound can land, then show how the run went.
 	# (Was a 4 second wait and an abrupt jump to the title screen.)
+	Morgue.record(morgueEntry())
 	yield(get_tree().create_timer(1.5), "timeout")
 	Ref.game.gameOver.open(summaryLines())
 
@@ -385,9 +390,24 @@ func summaryLines() -> Array:
 	return [
 		title,
 		"",
+		"Killed by " + (killedBy if killedBy != "" else "an unknown cause"),
 		"Reached floor " + str(max(1, WorldHandler.currentFloor)),
 		"Level " + str(stats.level),
 		"Enemies slain: " + str(kills),
 		"Turns survived: " + str(GeneralEngine.turn),
 		"Gold: " + str(inventory.golds),
 	]
+
+func morgueEntry() -> Dictionary:
+	var d = OS.get_datetime()
+	return {
+		"name": stats.charName,
+		"class": Data.classes[charClass][0] if Data.classes.has(charClass) else "",
+		"floor": max(1, WorldHandler.currentFloor),
+		"level": stats.level,
+		"kills": kills,
+		"turns": GeneralEngine.turn,
+		"gold": inventory.golds,
+		"killer": killedBy if killedBy != "" else "an unknown cause",
+		"date": "%04d-%02d-%02d %02d:%02d" % [d["year"], d["month"], d["day"], d["hour"], d["minute"]],
+	}

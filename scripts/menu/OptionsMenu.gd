@@ -1,26 +1,27 @@
 extends CanvasLayer
 
-# Options / pause menu, opened with Esc while exploring. It builds its own controls, so there is
-# no scene file. Up and Down choose, Left and Right change a value, Enter activates, Esc closes.
+# Options menu. In the game it is the pause menu (Esc while exploring), on the title screen it only
+# has the settings. It builds its own controls, so there is no scene file. Up and Down choose,
+# Left and Right change a value, Enter activates, Esc closes.
 
-const ITEMS = ["Resume", "Fullscreen", "Music volume", "Sound effects", "Screen effects", "Controls", "Save game", "Quit to title"]
-const RESUME = 0
-const FULLSCREEN = 1
-const MUSIC = 2
-const SFX = 3
-const EFFECTS = 4
-const CONTROLS = 5
-const SAVE = 6
-const QUIT = 7
+const GAME_ITEMS = [["resume", "Resume"], ["fullscreen", "Fullscreen"], ["music", "Music volume"],
+	["sfx", "Sound effects"], ["effects", "Screen effects"], ["controls", "Controls"], ["save", "Save game"],
+	["quit", "Quit to title"]]
+const TITLE_ITEMS = [["back", "Back"], ["fullscreen", "Fullscreen"], ["music", "Music volume"],
+	["sfx", "Sound effects"], ["effects", "Screen effects"]]
 const STEP = 0.1
+
+signal closed
 
 # Bigger than the in-game text, the menu is read at a glance
 var font: DynamicFont
-var panel: PanelContainer
+var box: VBoxContainer
 var rows = []
+var items = []
 var hint: Label
 var index = 0
 var isOpen = false
+var fromTitle = false
 var message = ""
 var confirmQuit = false
 
@@ -37,7 +38,7 @@ func _ready():
 	var center = CenterContainer.new()
 	center.set_anchors_and_margins_preset(Control.PRESET_WIDE)
 	add_child(center)
-	panel = PanelContainer.new()
+	var panel = PanelContainer.new()
 	var style = StyleBoxFlat.new()
 	style.bg_color = Color(0.05, 0.05, 0.08)
 	style.border_color = Color(1, 1, 1)
@@ -46,21 +47,15 @@ func _ready():
 		style.set_default_margin(margin, 36)
 	panel.add_stylebox_override("panel", style)
 	center.add_child(panel)
-	var box = VBoxContainer.new()
+	box = VBoxContainer.new()
 	box.add_constant_override("separation", 14)
 	panel.add_child(box)
 	var title = makeLabel("OPTIONS")
 	title.align = Label.ALIGN_CENTER
 	box.add_child(title)
-	for _i in range(ITEMS.size()):
-		var row = makeLabel("")
-		row.rect_min_size = Vector2(780, 0)
-		box.add_child(row)
-		rows.append(row)
 	hint = makeLabel("")
 	hint.modulate = Color(1, 1, 1, 0.6)
 	hint.align = Label.ALIGN_CENTER
-	box.add_child(hint)
 
 func makeLabel(text: String) -> Label:
 	var label = Label.new()
@@ -68,19 +63,51 @@ func makeLabel(text: String) -> Label:
 	label.text = text
 	return label
 
+func build(newItems: Array):
+	items = newItems
+	for row in rows:
+		box.remove_child(row)
+		row.queue_free()
+	rows = []
+	if hint.get_parent() != null:
+		box.remove_child(hint)
+	for _i in range(items.size()):
+		var row = makeLabel("")
+		row.rect_min_size = Vector2(780, 0)
+		box.add_child(row)
+		rows.append(row)
+	box.add_child(hint)
+
 func open():
+	fromTitle = false
+	start(GAME_ITEMS)
+	GLOBAL.currentMode = GLOBAL.MODE_OPTIONS
+	MasterInput.setMaster(self)
+
+# The title screen has its own input handling, it is paused while this is open
+func openFromTitle(title):
+	fromTitle = true
+	title.set_process_input(false)
+	connect("closed", title, "set_process_input", [true], CONNECT_ONESHOT)
+	start(TITLE_ITEMS)
+	set_process_input(true)
+
+func start(newItems: Array):
 	index = 0
 	message = ""
 	confirmQuit = false
 	isOpen = true
 	visible = true
-	GLOBAL.currentMode = GLOBAL.MODE_OPTIONS
-	MasterInput.setMaster(self)
+	build(newItems)
 	refresh()
 
 func close():
 	isOpen = false
 	visible = false
+	set_process_input(false)
+	if fromTitle:
+		emit_signal("closed")
+		return
 	GLOBAL.currentMode = GLOBAL.MODE_NORMAL
 	MasterInput.setMaster(Ref.game)
 
@@ -100,46 +127,46 @@ func _input(event):
 		close()
 	get_tree().set_input_as_handled()
 
+func current() -> String:
+	return items[index][0]
+
 func move(direction: int):
-	index = posmod(index + direction, ITEMS.size())
+	index = posmod(index + direction, items.size())
 	message = ""
 	confirmQuit = false
 	Sfx.play("ui_move")
 	refresh()
 
 func change(direction: int):
-	match index:
-		FULLSCREEN:
+	match current():
+		"fullscreen":
 			Settings.setFullscreen(not Settings.fullscreen)
-		MUSIC:
+		"music":
 			Settings.setMusicVolume(stepVolume(Settings.musicVolume, direction))
-		SFX:
+		"sfx":
 			Settings.setSfxVolume(stepVolume(Settings.sfxVolume, direction))
 			Sfx.play("pickup")
-		EFFECTS:
+		"effects":
 			Settings.setEffects(not Settings.effects)
 		_:
 			return
 	refresh()
 
 func activate():
-	match index:
-		RESUME:
+	match current():
+		"resume", "back":
 			Sfx.play("ui_back")
 			close()
-		FULLSCREEN:
-			Sfx.play("ui_accept")
-			change(1)
-		CONTROLS:
+		"controls":
 			Sfx.play("ui_accept")
 			close()
 			Ref.game.helpMenu.open()
-		SAVE:
+		"save":
 			Sfx.play("ui_accept")
 			Ref.game.saveSystem.saveGame()
 			message = "Game saved."
 			refresh()
-		QUIT:
+		"quit":
 			# One slip of the finger must not lose the game
 			if not confirmQuit:
 				confirmQuit = true
@@ -152,22 +179,23 @@ func activate():
 			close()
 			get_tree().change_scene("res://scenes/UI/TitleScreen.tscn")
 		_:
+			Sfx.play("ui_accept")
 			change(1)
 
 func stepVolume(value: float, direction: int) -> float:
 	return stepify(clamp(value + direction * STEP, 0.0, 1.0), STEP)
 
 func refresh():
-	for i in range(ITEMS.size()):
-		var text = ITEMS[i]
-		match i:
-			FULLSCREEN:
+	for i in range(items.size()):
+		var text = items[i][1]
+		match items[i][0]:
+			"fullscreen":
 				text += ":  " + ("On" if Settings.fullscreen else "Off (windowed)")
-			MUSIC:
+			"music":
 				text += ":  " + volumeBar(Settings.musicVolume)
-			SFX:
+			"sfx":
 				text += ":  " + volumeBar(Settings.sfxVolume)
-			EFFECTS:
+			"effects":
 				text += ":  " + ("On (numbers, flash, shake)" if Settings.effects else "Off")
 		rows[i].text = ("> " if i == index else "  ") + text
 		rows[i].modulate = Color(1, 0.85, 0.3) if i == index else Color(1, 1, 1)

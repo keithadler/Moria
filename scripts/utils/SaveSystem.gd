@@ -166,7 +166,9 @@ func loadCharacter(dict: Dictionary):
 	Ref.character.inventory.currentTalismans = dict["inventory"]["currentTalismans"]
 	Ref.character.inventory.weapons = dict["inventory"]["weapons"]
 	# Was assigning the armors entry to rests, the armor list itself was never loaded
-	Ref.character.inventory.armors = dict["inventory"]["armors"]
+	# Saves made before the fix above hold the rest count (a number) here, keep the bag empty then
+	var savedArmors = dict["inventory"]["armors"]
+	Ref.character.inventory.armors = savedArmors if savedArmors is Array else []
 	Ref.character.inventory.potions = dict["inventory"]["potions"]
 	Ref.character.inventory.scrolls = dict["inventory"]["scrolls"]
 	Ref.character.inventory.throwings = dict["inventory"]["throwings"]

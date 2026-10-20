@@ -3,6 +3,15 @@
 You are an adventurer going down through a dungeon that is generated again for every run. You explore, fight,
 loot, and keep going until you die or reach the end. There is no going back up.
 
+## The title screen
+
+- **New game** starts a run.
+- **Load game** continues a saved game. With several saves it shows a list, newest first.
+- **Options** has fullscreen, the volumes and the screen effects switch.
+- **Morgue** lists your finished runs: character, floor, level, enemies slain, what killed you and when.
+- **Manual** is this manual.
+- **Exit** closes the game.
+
 ## Starting
 
 1. Choose a class (arrow keys, Enter).
@@ -92,9 +101,9 @@ sends your summoned allies away, and you cannot rest while hostile creatures are
 
 ## Death
 
-When your health reaches zero the game shows how far you got (floor, level, enemies slain, turns, gold) and returns
-to the title screen. Your last save is still in the save folder: start a new game with the same name and press F5
-to load it.
+When your health reaches zero the game shows what killed you and how far you got (floor, level, enemies slain, turns,
+gold), adds the run to the **Morgue**, and returns to the title screen. Your last save is still there: choose
+**Load game** on the title screen.
 
 ## Options (Esc)
 

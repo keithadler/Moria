@@ -174,6 +174,8 @@ func hit(entity):
 				StatusEngine.decreaseStatusRanks(self, 1, Data.STATUS_MIRROR_IMAGES)
 				Ref.ui.writeCharacterHitImage()
 				return
+			if entity is Character:
+				entity.hitBy = stats.entityName
 			if statuses.has(Data.STATUS_ENCHANT + Data.ENCH_PIERCING):
 				entity.takeHit(rolledDmg, 2)
 			else:

@@ -80,11 +80,19 @@ func _ready():
 			startGame()
 		6:
 			dungeonGenerator.analyzer.generateReport()
+		7:
+			# Was after the catch-all branch below, so Load game on the title screen never ran
+			# and started a new fighter instead
+			chooseClassMenu.close()
+			Ref.character.init(Data.CL_FIGHTER)
+			saveSystem.loadGame(GLOBAL.loadName)
+			Ref.currentLevel.refresh_view()
+			MasterInput.setMaster(self)
+			GLOBAL.currentMode = GLOBAL.MODE_NORMAL
+			Sfx.playMusicForBiome(WorldHandler.currentBiome)
 		_:
 			Ref.character.init(Data.CL_FIGHTER)
 			startGame()
-		7:
-			saveSystem.loadGame(Ref.character.stats.charName)
 
 func _process(delta):
 	if autoexplore:
