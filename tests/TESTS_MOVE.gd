@@ -308,6 +308,20 @@ const tests = {
 		[],
 		["assert_save_size"]
 	],
+	35: [
+		"Gold is picked up by walking over it",
+		Vector2(10, 10),
+		[
+			["spawn_golds", Vector2(11, 10), 40],
+		],
+		["fake_remember_golds", "ui_right", "assert_golds_gained"]
+	],
+	36: [
+		"Screenshot path and quit saving",
+		Vector2(10, 12),
+		[],
+		["assert_screenshot_path", "assert_no_quit_save_in_tests"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -479,3 +493,14 @@ func assert_save_size(testId: int):
 	var saves = Ref.game.saveSystem
 	assert(saves.sizeOf({}) == Vector2(37, 19))
 	assert(saves.sizeOf({"size": Vector2(55, 27)}) == Vector2(55, 27))
+
+func assert_golds_gained(testId: int):
+	assert(Ref.character.inventory.golds >= get_parent().rememberedGolds + 40)
+	assert(not GLOBAL.itemsOnFloor.has(Vector2(11, 10)))
+
+func assert_screenshot_path(testId: int):
+	var path = Settings.screenshotPath()
+	assert(path.begins_with("user://screenshots/moria_") and path.ends_with(".png"))
+
+func assert_no_quit_save_in_tests(testId: int):
+	assert(not Ref.game.canSaveOnQuit())

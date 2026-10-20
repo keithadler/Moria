@@ -18,6 +18,9 @@ func _ready():
 func _input(event):
 	if not (event is InputEventKey) or not event.pressed or event.echo:
 		return
+	if event.scancode == KEY_F12:
+		takeScreenshot()
+		return
 	var isAltEnter = event.alt and (event.scancode == KEY_ENTER or event.scancode == KEY_KP_ENTER)
 	if event.scancode == KEY_F11 or isAltEnter:
 		get_tree().set_input_as_handled()
@@ -78,3 +81,20 @@ func applyWindow():
 	var factor = min(1.0, min(screen.x * 0.9 / WINDOW_SIZE.x, screen.y * 0.85 / WINDOW_SIZE.y))
 	OS.window_size = WINDOW_SIZE * factor
 	OS.center_window()
+
+# F12 saves what is on the screen as a PNG in the user folder
+func screenshotPath() -> String:
+	var d = OS.get_datetime()
+	return "user://screenshots/moria_%04d%02d%02d_%02d%02d%02d.png" % [d["year"], d["month"], d["day"], d["hour"], d["minute"], d["second"]]
+
+func takeScreenshot():
+	var image = get_viewport().get_texture().get_data()
+	image.flip_y()
+	Directory.new().make_dir_recursive("user://screenshots")
+	var path = screenshotPath()
+	if image.save_png(path) != OK:
+		return
+	var message = "Screenshot saved: " + ProjectSettings.globalize_path(path)
+	if is_instance_valid(Ref.game) and Ref.ui != null:
+		Ref.ui.write(message)
+	print(message)

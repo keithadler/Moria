@@ -55,11 +55,26 @@ func move(movement):
 	animator.play("walk")
 	GeneralEngine.newTurn()
 	refreshMapPosition()
+	autoPickup()
 	Ref.ui.write(Ref.currentLevel.getLootMessage(pos))
 	if GLOBAL.trapsByPos.has(pos):
 		var trap = GLOBAL.getTrapByPos(pos)
 		if trap.hidden:
 			TrapEngine.trigger(trap, self)
+
+# Gold and lockpicks are never a choice, walking onto them takes them (P is still needed for the rest).
+# Nothing is taken from a merchant's stock.
+func autoPickup():
+	if GLOBAL.isForSell(pos):
+		return
+	var loots = GLOBAL.getItemList(pos)
+	for key in loots.keys():
+		var ids = loots[key]
+		if ids.empty():
+			continue
+		var type = GLOBAL.items[ids[0]][GLOBAL.IT_TYPE]
+		if type == GLOBAL.GO_TYPE or type == GLOBAL.LO_TYPE:
+			pickItem(ids)
 
 func moveAsync(movement):
 	var cellState = Ref.currentLevel.isCellFree(pos + movement)

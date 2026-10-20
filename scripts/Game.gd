@@ -366,6 +366,16 @@ func newFloor():
 
 # Was: key repeat was ignored (is_action_pressed skips echo events), so holding an arrow key moved
 # exactly one step and a corridor meant tapping once per cell
+# Closing the window keeps the run. Was losing everything since the last stairs.
+func _notification(what):
+	if what == NOTIFICATION_WM_QUIT_REQUEST and canSaveOnQuit():
+		saveSystem.saveGame()
+
+func canSaveOnQuit() -> bool:
+	if start == 2 or Ref.character == null or not is_instance_valid(Ref.character):
+		return false
+	return Ref.character.stats.hp > 0 and Ref.character.charClass >= 0 and GLOBAL.currentMode != GLOBAL.MODE_GAMEOVER
+
 func _physics_process(delta):
 	if GLOBAL.currentMode != GLOBAL.MODE_NORMAL or traveling or autoexplore or Ref.character == null or Fx.transitioning:
 		holdTime = 0.0

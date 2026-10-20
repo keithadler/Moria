@@ -170,11 +170,12 @@ func activate():
 			# One slip of the finger must not lose the game
 			if not confirmQuit:
 				confirmQuit = true
-				message = "Press Enter again to quit. Unsaved progress is lost."
+				message = "Press Enter again to quit to the title screen. The game is saved."
 				Sfx.play("ui_move")
 				refresh()
 				return
 			Sfx.play("ui_accept")
+			Ref.game.saveSystem.saveGame()
 			Fx.clearWarning()
 			close()
 			get_tree().change_scene("res://scenes/UI/TitleScreen.tscn")

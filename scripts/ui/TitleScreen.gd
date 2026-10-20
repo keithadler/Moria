@@ -19,13 +19,14 @@ var optionsMenu = preload("res://scripts/menu/OptionsMenu.gd").new()
 var listScreen = preload("res://scripts/menu/ListScreen.gd").new()
 var textScreen = preload("res://scripts/menu/TextScreen.gd").new()
 var messageLabel: Label
+var font: DynamicFont
 
 func _ready():
 	add_child(optionsMenu)
 	add_child(listScreen)
 	add_child(textScreen)
 	messageLabel = Label.new()
-	var font = preload("res://fonts/normalFont.tres").duplicate()
+	font = preload("res://fonts/normalFont.tres").duplicate()
 	font.size = 36
 	messageLabel.add_font_override("font", font)
 	messageLabel.rect_position = Vector2(0, 980)
@@ -33,7 +34,18 @@ func _ready():
 	messageLabel.align = Label.ALIGN_CENTER
 	messageLabel.modulate = Color(1, 0.85, 0.3, 0)
 	add_child(messageLabel)
-	setChoice(0)
+	# With a saved game the cursor starts on Load game, and C continues the newest one at once
+	var saves = SaveFiles.list()
+	setChoice(LOAD_GAME if not saves.empty() else NEW_GAME)
+	if not saves.empty():
+		var hint = Label.new()
+		hint.add_font_override("font", font)
+		hint.text = "C: continue " + saves[0]["name"]
+		hint.rect_position = Vector2(0, 1030)
+		hint.rect_size = Vector2(1920, 40)
+		hint.align = Label.ALIGN_CENTER
+		hint.modulate = Color(1, 1, 1, 0.6)
+		add_child(hint)
 	Sfx.playMusic("dungeon")
 	if GLOBAL.titleMessage != "":
 		showMessage(GLOBAL.titleMessage)
@@ -41,6 +53,11 @@ func _ready():
 	set_process_input(true)
 
 func _input(event):
+	if event is InputEventKey and event.pressed and not event.echo and event.scancode == KEY_C:
+		var saves = SaveFiles.list()
+		if not saves.empty():
+			startLoading(saves[0]["name"])
+		return
 	if event.is_action_released("ui_down"):
 		Sfx.play("ui_move")
 		setChoice(choice + 1)

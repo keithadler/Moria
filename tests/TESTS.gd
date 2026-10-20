@@ -16,6 +16,7 @@ const TEST_INPUTS = 3
 var spawnedItems: Array = []
 var rememberedThrowings: int = 0
 var rememberedXp: int = 0
+var rememberedGolds: int = 0
 var rememberedMusic: float = 0.0
 
 func runAll():
@@ -132,6 +133,9 @@ func fake_many_traps(_testId: int):
 func fake_next_floor(_testId: int):
 	WorldHandler.setLocation(1, Data.BIOME_DUNGEON)
 	Ref.game.nextFloor()
+
+func fake_remember_golds(_testId: int):
+	rememberedGolds = Ref.character.inventory.golds
 
 func fake_wait(_testId: int):
 	pass
