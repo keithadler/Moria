@@ -28,11 +28,11 @@ func runAll():
 	get_tree().quit()
 
 func runCollection(tester: Node):
-	var time_start = Time.get_unix_time_from_system()
+	var time_start = OS.get_ticks_msec() / 1000.0
 	for testId in tester.tests.keys():
 		runTest(tester, testId)
 		yield(self, "tested")
-	var time_elapsed = Time.get_unix_time_from_system() - time_start
+	var time_elapsed = OS.get_ticks_msec() / 1000.0 - time_start
 	prints("Tested", tester.tests.size(), "/", tester.tests.size(), "in", time_elapsed, "seconds")
 	emit_signal("done")
 

@@ -615,9 +615,9 @@ func poisonCloud(caster, entity, rank: int):
 			playEffect(cell, 3, 5)
 			auraCells.append(cell)
 	if rank < 2:
-		Aura.create(auraCells, Aura.POISON_CLOUD_I, turns, caster is Character)
+		Aura.create(auraCells, Aura.POISON_CLOUD_I, turns, caster is Character or caster.status == "help")
 	else:
-		Aura.create(auraCells, Aura.POISON_CLOUD_II, turns, caster is Character)
+		Aura.create(auraCells, Aura.POISON_CLOUD_II, turns, caster is Character or caster.status == "help")
 
 func animatedDead(caster, rank: int):
 	for _i in range(2):
