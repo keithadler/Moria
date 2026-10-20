@@ -358,6 +358,15 @@ func mapTalismanToItem(talisman):
 	item[GLOBAL.IT_TYPE] = GLOBAL.TA_TYPE
 	return item
 
+# Rations, torches and ammo are lockpick-type items with another base
+func generateSupply(kind: int, count: int):
+	var result = generateLockpicks(count)
+	var item = GLOBAL.items[result[0]]
+	item[GLOBAL.IT_BASE] = kind
+	item[GLOBAL.IT_ICON] = Data.SUP_ICONS[kind]
+	item[GLOBAL.IT_NAME] = Data.SUP_NAMES[kind]
+	return result
+
 func generateLockpicks(count = null):
 	id += 1
 	var item  = []
@@ -365,6 +374,7 @@ func generateLockpicks(count = null):
 	item[GLOBAL.IT_ICON] = Data.LOCKPICK_ICON
 	item[GLOBAL.IT_NAME] = Data.LOCKPICK_NAME
 	item[GLOBAL.IT_TYPE] = GLOBAL.LO_TYPE
+	item[GLOBAL.IT_BASE] = Data.SUP_LOCKPICK
 	if count == null:
 		item[GLOBAL.IT_SPEC] = 1 + (randi() % 3)
 	else:

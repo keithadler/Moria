@@ -59,6 +59,7 @@ The game shows the real list on the **H** screen. The usual ones:
 | M / C | Spell list / cast a spell |
 | A | Drink a potion |
 | R | Read a scroll |
+| F | Fire the wielded sling or bow at a target |
 | T | Throw a knife, axe, bomb... |
 | D | Drop an item |
 | Z | Rest |
@@ -110,6 +111,17 @@ right trigger casts a spell.
 - Monsters will also attack the creatures you summon, not only you.
 - Killing monsters gives experience. A level up gives **skill points** and **feat points**: open the character
   sheet (K) to spend them.
+
+## Food, light and ammo
+
+- Food runs down every turn. When you get hungry a ration is eaten for you (600 turns of food). With no food left you
+  starve, one point of damage every few turns. Resting costs 150 food and some torch. Easy hunger is slower, Hard faster.
+- A torch burns 400 turns and is replaced from your spare torches. It dims near the end, and with none left you only
+  see four steps around you.
+- The side panel shows `Food` (turns left, spare rations), `Light` (torch turns left, spare torches) and `Ammo`.
+- Every floor holds rations and torches, and sometimes arrows or sling stones. Walk over them to take them.
+- A sling (1d6) or shortbow (1d8) is fired with F: it asks for a target and uses one stone or arrow, a third of which
+  you get back. In melee they only bash for 1d2. Rangers start with a shortbow and 20 arrows.
 
 ## Magic, scrolls and potions
 

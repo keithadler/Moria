@@ -16,6 +16,15 @@ var throwings = []
 var talismans = []
 var lockpicks = 0 setget updateLockpicks
 var golds = 100 setget updateGolds
+# Food and light, see Supplies. The ammo is whatever the wielded weapon shoots.
+var food = 1000 setget updateFood
+var hungerTick = 0.0
+var starveTick = 0
+var light = 400 setget updateLight
+var rations = 0 setget updateRations
+var torches = 0 setget updateTorches
+var arrows = 0 setget updateArrows
+var stones = 0 setget updateStones
 
 func init(charClass: int):
 	rests = Settings.startRests()
@@ -64,6 +73,15 @@ func init(charClass: int):
 	talismans = []
 	updateLockpicks(classKit[Data.KIT_LO])
 	updateGolds(classKit[Data.KIT_GO] + 30)
+	# Every character starts fed and lit, with two spare rations and torches
+	updateFood(Supplies.FOOD_START)
+	hungerTick = 0.0
+	starveTick = 0
+	updateLight(Supplies.LIGHT_MAX)
+	updateRations(2)
+	updateTorches(2)
+	updateArrows(20 if classKit[Data.KIT_WP] == Data.W_SHORTBOW else 0)
+	updateStones(0)
 
 func getWeapon():
 	return int(currentWeapon.x)
@@ -90,6 +108,38 @@ func updateLockpicks(newValue: int):
 func updateGolds(newValue: int):
 	golds = newValue
 	Ref.ui.updateStat(Data.CHAR_GOLD, newValue)
+
+func updateFood(newValue: int):
+	food = newValue
+	refreshSupplies()
+
+func updateLight(newValue: int):
+	light = newValue
+	refreshSupplies()
+
+func updateRations(newValue: int):
+	rations = newValue
+	refreshSupplies()
+
+func updateTorches(newValue: int):
+	torches = newValue
+	refreshSupplies()
+
+func updateArrows(newValue: int):
+	arrows = newValue
+	refreshSupplies()
+
+func updateStones(newValue: int):
+	stones = newValue
+	refreshSupplies()
+
+func refreshSupplies():
+	if Ref.ui == null or not is_instance_valid(Ref.ui):
+		return
+	Ref.ui.updateStat(Data.CHAR_FOOD, String(food) + " +" + String(rations))
+	Ref.ui.updateStat(Data.CHAR_LIGHT, String(light) + " +" + String(torches))
+	var ammo = Supplies.ammoCount()
+	Ref.ui.updateStat(Data.CHAR_AMMO, "-" if ammo < 0 else String(ammo))
 
 func pay(amount: int):
 	updateGolds(max(0, golds - amount))
@@ -204,6 +254,7 @@ func equipWeapon(idx: int):
 		for e in item[GLOBAL.IT_SPEC]:
 			EnchantEngine.applyEffect(get_parent(), e, idx)
 	get_parent().stats.computeStats()
+	refreshSupplies()
 
 func switchArmor(idx: int):
 	if (currentArmor.x == idx) or (currentArmor.y == idx):

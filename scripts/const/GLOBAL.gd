@@ -142,7 +142,7 @@ func dropItemOnFloor(idx: int, cell: Vector2, toSell: bool = false, price: int =
 	if itemsOnFloor.has(cell):
 		if items[idx][IT_TYPE] == LO_TYPE or items[idx][IT_TYPE] == GO_TYPE:
 			for i in itemsOnFloor[cell][0]:
-				if items[i][IT_TYPE] == items[idx][IT_TYPE]:
+				if items[i][IT_TYPE] == items[idx][IT_TYPE] and items[i][IT_BASE] == items[idx][IT_BASE]:
 					items[i][IT_SPEC] += items[idx][IT_SPEC]
 					return
 		itemsOnFloor[cell][FLOOR_IDS].append(idx)

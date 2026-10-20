@@ -71,9 +71,11 @@ func refresh_view():
 	clearFog()
 	GLOBAL.targets.clear()
 	Ref.character.currentVision.clear()
-	for i in range(-GLOBAL.VIEW_RANGE+1, GLOBAL.VIEW_RANGE):
-		for j in range(-GLOBAL.VIEW_RANGE+1, GLOBAL.VIEW_RANGE):
-			if pow(i, 2) + pow(j, 2) <= pow(GLOBAL.VIEW_RANGE, 2):
+	# Was always the full range: a torch that runs out now shrinks the lit circle (Supplies)
+	var radius = Supplies.lightRadius()
+	for i in range(-radius+1, radius):
+		for j in range(-radius+1, radius):
+			if pow(i, 2) + pow(j, 2) <= pow(radius, 2):
 				var pos = Ref.character.pos
 				var points = Ref.game.pathfinder.get_line(pos, pos+Vector2(i,j))
 				var currentPath = []

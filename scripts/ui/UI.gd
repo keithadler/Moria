@@ -28,6 +28,9 @@ onready var dmgLabel = get_node("SideMenu/DmgContainer/Label/Current")
 onready var hitLabel = get_node("SideMenu/HitContainer/Label/Current")
 onready var lockLabel = get_node("SideMenu/LockContainer/Label/Current")
 onready var goldLabel = get_node("SideMenu/GoldContainer/Label/Current")
+onready var foodLabel = get_node("SideMenu/FoodContainer/Label/Current")
+onready var lightLabel = get_node("SideMenu/LightContainer/Label/Current")
+onready var ammoLabel = get_node("SideMenu/AmmoContainer/Label/Current")
 onready var rFire = get_node("SideMenu/rFire/Label/Current")
 onready var rPois = get_node("SideMenu/rPoison/Label/Current")
 onready var statusBar = get_node("StatusBar")
@@ -529,6 +532,12 @@ func updateStat(stat: int, value):
 			lockLabel.text = String(value)
 		Data.CHAR_GOLD:
 			goldLabel.text = String(value)
+		Data.CHAR_FOOD:
+			foodLabel.text = String(value)
+		Data.CHAR_LIGHT:
+			lightLabel.text = String(value)
+		Data.CHAR_AMMO:
+			ammoLabel.text = String(value)
 		Data.CHAR_LVL:
 			levelLabel.text = String(value)
 		Data.CHAR_XP:

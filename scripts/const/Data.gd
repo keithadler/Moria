@@ -767,6 +767,9 @@ const CHAR_R_ICE = 17
 const CHAR_R_LIGHTNING = 18
 const CHAR_FATIGUE = 19
 const CHAR_FATIGUEMAX = 20
+const CHAR_FOOD = 21
+const CHAR_LIGHT = 22
+const CHAR_AMMO = 23
 
 # Items general
 var itemByStack = {}
@@ -780,6 +783,7 @@ const W_SHORTSWORD = 4
 const W_AXE = 5
 const W_LONGSWORD = 6
 const W_MORNING = 7
+const W_SLING = 8
 const W_STAFF = 100
 const W_GREATCLUB = 101
 const W_FELLING_AXE = 102
@@ -788,6 +792,7 @@ const W_BROADSWORD = 104
 const W_HALBERD = 105
 const W_GREATAXE = 106
 const W_ZWEIHANDER = 107
+const W_SHORTBOW = 108
 
 const W_NAME = 0
 const W_HIT = 1 #Not used
@@ -816,6 +821,9 @@ const weapons = {
 	W_HALBERD:		["Halberd",		null, Vector2(3, 10), "S", 5, true, 4, 13],
 	W_GREATAXE:		["Greataxe",	null, Vector2(3, 12), "S", 6, true, 4, 14],
 	W_ZWEIHANDER:	["Zweihander",	null, Vector2(4,  8), "S", 7, true, 4, 15],
+	# Ranged weapons: F fires them at a target and uses up one stone or arrow, see Supplies. In melee they only bash.
+	W_SLING:		["Sling",		null, Vector2(1,  6), "B", 1, false, 0, 61],
+	W_SHORTBOW:		["Shortbow",	null, Vector2(1,  8), "P", 3, true, 0, 60],
 }
 
 const weaponDescriptions = {
@@ -836,10 +844,18 @@ const weaponDescriptions = {
 	W_BROADSWORD: "A heavy blade designed to be used two-handed.",
 	W_HALBERD: "",
 	W_GREATAXE: "",
+	W_SLING: "A leather strap that throws stones. F fires it and uses one stone. In melee it only bashes.",
+	W_SHORTBOW: "A bow for hunting. F fires it and uses one arrow. In melee it only bashes.",
 	W_ZWEIHANDER: "",
 }
 
 var weaponsByRarity = {}
+
+func isRanged(weaponBase: int) -> bool:
+	return weaponBase == W_SLING or weaponBase == W_SHORTBOW
+
+func ammoFor(weaponBase: int) -> int:
+	return SUP_STONES if weaponBase == W_SLING else SUP_ARROWS
 
 func weaponsReader():
 	for idx in weapons.keys():
@@ -1143,6 +1159,7 @@ const KIT_FIGHTER = [W_HATCHET, SH_BUCKLER, A_PADDED, [PO_HEALING, PO_HEALING], 
 const KIT_THIEF =	[W_DAGGER, -1, A_PADDED, [PO_HEALING, PO_HEALING], [SC_BLINK], [TH_KNIFE, TH_KNIFE, TH_KNIFE], 45, 3]
 const KIT_MAGE = 	[W_STAFF, -1, A_ROBE, [PO_HEALING, PO_HEALING], [SC_ANIMALS], [], 30, 2]
 const KIT_CLERIC = 	[W_CLUB, SH_BUCKLER, A_ROBE, [PO_HEALING, PO_HEALING], [], [TH_HOLY], 30, 2]
+const KIT_RANGER = [W_SHORTBOW, -1, A_PADDED, [PO_HEALING, PO_HEALING], [], [TH_KNIFE], 30, 2]
 const KIT_PALADIN = [W_GREATCLUB, -1, A_PADDED, [PO_HEALING, PO_HEALING], [], [], 30, 2]
 
 const CLASS_KITS = {
@@ -1153,7 +1170,7 @@ const CLASS_KITS = {
 	CL_MAGE: KIT_MAGE,
 	CL_DRUID: KIT_MAGE,
 	CL_CLERIC: KIT_CLERIC,
-	CL_RANGER: KIT_PALADIN,
+	CL_RANGER: KIT_RANGER,
 	CL_PALADIN: KIT_PALADIN,
 }
 
@@ -1280,6 +1297,15 @@ func enchantsReader():
 # Gold
 const GOLD_NAME = "Gold coins"
 const GOLD_ICON = 59
+
+# Supplies share the lockpick item type, the item base tells them apart
+const SUP_LOCKPICK = 0
+const SUP_RATION = 1
+const SUP_TORCH = 2
+const SUP_ARROWS = 3
+const SUP_STONES = 4
+const SUP_NAMES = {SUP_LOCKPICK: "Lockpick", SUP_RATION: "Ration", SUP_TORCH: "Torch", SUP_ARROWS: "Arrow", SUP_STONES: "Sling stone"}
+const SUP_ICONS = {SUP_LOCKPICK: 58, SUP_RATION: 64, SUP_TORCH: 65, SUP_ARROWS: 62, SUP_STONES: 63}
 
 # Lockpick
 const LOCKPICK_NAME = "Lockpick"

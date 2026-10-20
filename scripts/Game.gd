@@ -358,6 +358,20 @@ func merchantFloor():
 		Ref.currentLevel.placeCharacter(spawnPos)
 		Ref.currentLevel.levelBuffer.currentLevel = "merchant"
 
+# Every floor holds some food and torches, and now and then ammo. Without them the dungeon starves you.
+func placeSupplies():
+	var wanted = [[Data.SUP_RATION, 1], [Data.SUP_TORCH, 1]]
+	if randf() < 0.5:
+		wanted.append([Data.SUP_RATION, 1])
+	if randf() < 0.5:
+		wanted.append([Data.SUP_ARROWS, 4 + randi() % 8])
+	if randf() < 0.5:
+		wanted.append([Data.SUP_STONES, 5 + randi() % 8])
+	for w in wanted:
+		var cell = Ref.currentLevel.getRandomFreeCell()
+		for id in itemGenerator.generateSupply(w[0], w[1]):
+			GLOBAL.dropItemOnFloor(id, cell)
+
 func newFloor():
 	seed(floorSeed())
 	# The encounter balance (diffCR) used to carry over from the floor before, which changed how many random
@@ -396,6 +410,7 @@ func newFloor():
 		Ref.currentLevel.createChest()
 	for _i in range(int(round((3 + (randi() % 4)) * GLOBAL.CONTENT_SCALE))):
 		Ref.currentLevel.dropItem()
+	placeSupplies()
 	Sfx.playMusicForBiome(WorldHandler.currentBiome)
 	# The floor is built from the seed, everything after it (fights, loot rolls) is random again
 	randomize()
@@ -541,6 +556,8 @@ func _input(event):
 		pickupLootHandler.pickupLootAsync()
 	elif (event.is_action_released("search")):
 		Ref.character.search()
+	elif event.is_action_released("fire"):
+		Ref.character.fire()
 	elif event.is_action_released("rest"):
 		restHandler.askrForRest()
 	elif event.is_action_released("debug_new_floor") and debugKeys():

@@ -273,6 +273,37 @@ func fake_regeneration(_testId: int):
 	for _i in range(3):
 		StatusEngine.decreaseStatusesTime(Ref.character)
 
+func fake_hunger(_testId: int):
+	Ref.character.inventory.food = Supplies.HUNGRY + 1
+	Supplies.burnFood(2)
+
+func fake_burn_out_torches(_testId: int):
+	Ref.character.inventory.light = 1
+	Ref.character.inventory.torches = 1
+	Supplies.tick()
+	Ref.character.inventory.light = 1
+	Supplies.tick()
+
+func spawn_supply(kind: int, pos: Vector2):
+	var items = Ref.game.itemGenerator.generateSupply(kind, 1)
+	GLOBAL.dropItemOnFloor(items[0], pos)
+
+func fake_pick_supplies(_testId: int):
+	rememberedXp = Ref.character.inventory.lockpicks
+	for id in GLOBAL.itemsOnFloor[Vector2(11, 10)][GLOBAL.FLOOR_IDS].duplicate():
+		Ref.character.pickItem([id])
+
+func fake_wield_sling(_testId: int):
+	Ref.character.inventory.equipWeapon(Ref.character.inventory.weapons[0])
+	Ref.character.inventory.stones = 5
+
+# Fires without the targeting UI: the shot itself
+func fake_fire_sling(_testId: int):
+	var weapon = Ref.character.inventory.getWeapon()
+	spawn_monster(Data.MO_DUMMY, Vector2(14, 10))
+	var target = instance_from_id(GLOBAL.monstersByPosition[Vector2(14, 10)])
+	Ref.game.throwHandler.fireResolve(weapon, Data.W_SLING, target, false)
+
 func fake_wait(_testId: int):
 	pass
 

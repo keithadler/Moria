@@ -240,6 +240,36 @@ const tests = {
 		[],
 		["fake_regeneration", "assert_regeneration"]
 	],
+	21: [
+		"Hunger eats a ration when you get hungry",
+		Vector2(10, 10),
+		[],
+		["fake_hunger", "assert_ate_ration"]
+	],
+	22: [
+		"A torch that runs out is replaced, and with none left the view shrinks",
+		Vector2(10, 10),
+		[],
+		["assert_full_light", "fake_burn_out_torches", "assert_dark"]
+	],
+	23: [
+		"Rations and lockpicks on the same floor cell stay separate",
+		Vector2(10, 10),
+		[
+			["spawn_supply", Data.SUP_RATION, Vector2(11, 10)],
+			["spawn_supply", Data.SUP_LOCKPICK, Vector2(11, 10)],
+			["spawn_supply", Data.SUP_RATION, Vector2(11, 10)],
+		],
+		["assert_supplies_not_merged", "fake_pick_supplies", "assert_supplies_counted"]
+	],
+	24: [
+		"Firing a sling uses a stone, a sling in melee only bashes",
+		Vector2(10, 10),
+		[
+			["spawn_weapon", Data.W_SLING, null],
+		],
+		["fake_wield_sling", "assert_sling_bashes", "fake_fire_sling", "assert_stone_used"]
+	],
 }
 func assert_choice_mode(testId: int):
 	assert(GLOBAL.currentMode == GLOBAL.MODE_CHOICE)
@@ -358,3 +388,31 @@ func assert_potion_effects(testId: int):
 func assert_regeneration(testId: int):
 	var c = Ref.character
 	assert(c.stats.hp == get_parent().rememberedXp + 3)
+
+func assert_ate_ration(testId: int):
+	var inv = Ref.character.inventory
+	assert(inv.rations == 1)
+	assert(inv.food > Supplies.HUNGRY)
+
+func assert_full_light(testId: int):
+	assert(Supplies.lightRadius() == GLOBAL.VIEW_RANGE)
+
+func assert_dark(testId: int):
+	assert(Supplies.lightRadius() == Supplies.DARK_RADIUS)
+	assert(Ref.character.inventory.torches == 0)
+
+func assert_supplies_not_merged(testId: int):
+	var cell = Vector2(11, 10)
+	assert(GLOBAL.itemsOnFloor[cell][GLOBAL.FLOOR_IDS].size() == 2)
+
+func assert_supplies_counted(testId: int):
+	var inv = Ref.character.inventory
+	assert(inv.rations == 2 + 2)
+	assert(inv.lockpicks == get_parent().rememberedXp + 1)
+
+func assert_sling_bashes(testId: int):
+	assert(Ref.character.stats.dmgDices[0].dice.d == 2)
+	assert(Supplies.ammoCount() == 5)
+
+func assert_stone_used(testId: int):
+	assert(Ref.character.inventory.stones == 4)

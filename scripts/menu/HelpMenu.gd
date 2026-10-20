@@ -15,6 +15,7 @@ const ROWS = [
 	["Drink a potion", "quaffPotion"],
 	["Read a scroll", "readScroll"],
 	["Throw something", "throw"],
+	["Fire sling or bow", "fire"],
 	["Drop an item", "dropItem"],
 	["Rest", "rest"],
 	["Auto-explore", "autoexplore"],

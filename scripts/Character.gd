@@ -245,7 +245,7 @@ func pickItem(items: Array, price: int = 0):
 				shortcuts.refreshShortcuts(item[GLOBAL.IT_STACK])
 				
 			GLOBAL.TA_TYPE: inventory.talismans.append(idx)
-			GLOBAL.LO_TYPE: inventory.lockpicks += item[GLOBAL.IT_SPEC]
+			GLOBAL.LO_TYPE: pickSupply(item)
 			GLOBAL.GO_TYPE: inventory.golds += item[GLOBAL.IT_SPEC]
 	if price > 0:
 		inventory.pay(price)
@@ -258,6 +258,17 @@ func pickItem(items: Array, price: int = 0):
 			Ref.ui.writePickupLoot(item[GLOBAL.IT_NAME], item[GLOBAL.IT_SPEC])
 		else:
 			Ref.ui.writePickupLoot(item[GLOBAL.IT_NAME], items.size())
+
+# Lockpicks, rations, torches and ammo are counted, not carried as items
+func pickSupply(item):
+	var amount = item[GLOBAL.IT_SPEC]
+	match item[GLOBAL.IT_BASE]:
+		Data.SUP_RATION: inventory.rations += amount
+		Data.SUP_TORCH: inventory.torches += amount
+		Data.SUP_ARROWS: inventory.arrows += amount
+		Data.SUP_STONES: inventory.stones += amount
+		_: inventory.lockpicks += amount
+	inventory.refreshSupplies()
 
 func dropItem(idx):
 	var item = GLOBAL.items[idx]
@@ -324,6 +335,9 @@ func readScroll(item: int):
 func castSpell(spell: int):
 	Ref.game.spellHandler.castSpellAsync(spell)
 
+func fire():
+	Ref.game.throwHandler.fireAsync()
+
 func throw(item: int):
 	Ref.game.throwHandler.throwAsync(item)
 
@@ -360,6 +374,7 @@ func rollPerception(cell: Vector2):
 
 func rest():
 	inventory.rests -= 1
+	Supplies.rest()
 	for a in Ref.currentLevel.allies.get_children():
 		a.queue_free()
 	StatusEngine.clearStatuses(self)

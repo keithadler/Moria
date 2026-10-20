@@ -136,6 +136,9 @@ func computeDmg():
 	var weapon = Ref.character.inventory.getWeapon()
 	if weapon != -1:
 		value = [GLOBAL.items[weapon][GLOBAL.IT_DMG].duplicate()]
+		# A sling or bow in melee only bashes
+		if Data.isRanged(GLOBAL.items[weapon][GLOBAL.IT_BASE]):
+			value = [GeneralEngine.dmgDice(1, 2, 0, Data.DMG_BLUNT)]
 	else:
 		value = [GeneralEngine.dmgDice(1, 1, 0, Data.DMG_BLUNT)]
 	updateDmg(value)

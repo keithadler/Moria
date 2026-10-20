@@ -160,6 +160,12 @@ func saveCharacter() -> Dictionary:
 			"talismans": Ref.character.inventory.talismans,
 			"lockpicks": Ref.character.inventory.lockpicks,
 			"golds": Ref.character.inventory.golds,
+			"food": Ref.character.inventory.food,
+			"light": Ref.character.inventory.light,
+			"rations": Ref.character.inventory.rations,
+			"torches": Ref.character.inventory.torches,
+			"arrows": Ref.character.inventory.arrows,
+			"stones": Ref.character.inventory.stones,
 		},
 		"stats": {
 			"name": Ref.character.stats.charName,
@@ -206,6 +212,14 @@ func loadCharacter(dict: Dictionary):
 	Ref.character.inventory.talismans = dict["inventory"]["talismans"]
 	Ref.character.inventory.lockpicks = dict["inventory"]["lockpicks"]
 	Ref.character.inventory.golds = dict["inventory"]["golds"]
+	# Saves from before food and light start fed and lit
+	var inv = dict["inventory"]
+	Ref.character.inventory.food = inv.get("food", Supplies.FOOD_START)
+	Ref.character.inventory.light = inv.get("light", Supplies.LIGHT_MAX)
+	Ref.character.inventory.rations = inv.get("rations", 2)
+	Ref.character.inventory.torches = inv.get("torches", 2)
+	Ref.character.inventory.arrows = inv.get("arrows", 0)
+	Ref.character.inventory.stones = inv.get("stones", 0)
 	Ref.character.stats.charName = dict["stats"]["name"]
 	Ref.character.stats.xp = dict["stats"]["xp"]
 	Ref.character.stats.level = dict["stats"]["level"]
