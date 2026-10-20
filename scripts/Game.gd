@@ -427,6 +427,11 @@ func openHistory():
 func onHistoryClosed():
 	GLOBAL.currentMode = GLOBAL.MODE_NORMAL
 
+# Was always on: / (and so ? and Shift+/, the key matching ignores Shift) skipped to the next floor.
+# The cheat is still there for development: the debugMode export, or MORIA_DEBUG=1 in the environment.
+func debugKeys() -> bool:
+	return debugMode or OS.has_environment("MORIA_DEBUG")
+
 func canSaveOnQuit() -> bool:
 	if start == 2 or Ref.character == null or not is_instance_valid(Ref.character):
 		return false
@@ -515,7 +520,7 @@ func _input(event):
 		Ref.character.search()
 	elif event.is_action_released("rest"):
 		restHandler.askrForRest()
-	elif (event.is_action_released("debug_new_floor")):
+	elif event.is_action_released("debug_new_floor") and debugKeys():
 		print("====================")
 #		Ref.character.setPosition(dungeonGenerator.newFloor())
 		nextFloor()

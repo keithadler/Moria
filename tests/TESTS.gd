@@ -203,6 +203,9 @@ func flood(start: Vector2) -> Dictionary:
 			queue.append(n)
 	return seen
 
+func fake_debug_key(_testId: int):
+	WorldHandler.setLocation(1, Data.BIOME_DUNGEON)
+
 func fake_wait(_testId: int):
 	pass
 

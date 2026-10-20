@@ -38,6 +38,11 @@ The tests are part of the game: they play it with faked input and check what hap
 Headless, for CI: `MORIA_NO_SAVE=1 godot --path . --no-window scenes/Game.tscn` after setting Start to `Tests` (do not commit that change).
 `MORIA_NO_SAVE=1` keeps tests and bots from writing your real settings and saves.
 
+## Debug keys
+
+`/` skips to the next floor. It is off in normal play: switch on `debugMode` on the `Game` node or run with
+`MORIA_DEBUG=1`.
+
 ## Folders
 
 | Folder | What is in it |

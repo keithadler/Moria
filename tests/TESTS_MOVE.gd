@@ -367,6 +367,12 @@ const tests = {
 		[],
 		["fake_special_rooms", "assert_special_rooms"]
 	],
+	44: [
+		"The slash key no longer skips floors, ? opens the controls",
+		Vector2(10, 12),
+		[],
+		["fake_debug_key", "debug_new_floor", "fake_wait", "fake_wait", "assert_floor_unchanged", "assert_question_mark_is_help"]
+	],
 }
 
 func assert_last_printed(testId: int, msg: String):
@@ -589,3 +595,13 @@ func assert_special_rooms(testId: int):
 	assert(t.specialSeen["vault"] >= 1)
 	assert(t.specialSeen["lair"] >= 1)
 	assert(t.specialProblems == 0)
+
+func assert_floor_unchanged(testId: int):
+	assert(WorldHandler.currentFloor == 1)
+
+func assert_question_mark_is_help(testId: int):
+	var found = false
+	for e in InputMap.get_action_list("help"):
+		if e is InputEventKey and e.scancode == KEY_SLASH and e.shift:
+			found = true
+	assert(found)
